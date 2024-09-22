@@ -3,14 +3,14 @@
 
 class Book {
 private:
-    string bookId;
-    string title;
-    string author;
-    string genre;
-    int totalCopies;
-    int availableCopies;
+    string bookId;        // Mã định danh của sách.
+    string title;         // Tiêu đề của sách.
+    string author;        // Tên tác giả.
+    string genre;         // Thể loại sách.
+    int totalCopies;      // Tổng số bản sao của sách.
+    int availableCopies;  // Số lượng sách còn lại có thể cho mượn.
 public:
-    string getDetails();
-    bool isAvailable();
+    string getDetails();  // Lấy thông tin chi tiết của sách.
+    bool isAvailable();   // Kiểm tra sách có sẵn để mượn hay không.
     // Other methods...
 };
