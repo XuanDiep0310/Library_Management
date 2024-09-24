@@ -18,4 +18,5 @@ public:
     void requestBook(Book book);             // Yêu cầu mượn một cuốn sách.
     void cancelRequest(Book book);           // Hủy yêu cầu mượn sách.
     // Other methods...
+    //Test
 };
