@@ -33,6 +33,11 @@ public:
     // Destructor: Giải phóng bộ nhớ
     ~LinkedList();
 
+    //Em Hoàng thêm vào
+    Node getNode(int index);
+
+    int getSize();
+
     // Thêm phần tử vào cuối danh sách
     void addTail(Temp data);
 
@@ -45,6 +50,25 @@ public:
     // Hiển thị toàn bộ danh sách
     void display();
 };
+
+//Em Hoàng thêm
+template<typename Temp>
+Node LinkedList<Temp>::getNode(int index) {
+    if(index < 0 || index >= size) throw std::out_of_range("Chỉ số không hợp lệ!");
+    Node<Temp> *curr = head;
+    for (int i = 0; i < index; ++i) current = current->next;  
+    return current->data;  
+}
+template<typename Temp>
+int LinkedList<Temp>::getSize() {
+    int size = 0;
+    Node<Temp> *curr = head;
+    while(curr) {
+        size++;
+        curr = curr->next;
+    }
+    return size;  
+}
 
 // Constructor: Khởi tạo danh sách rỗng
 template<typename Temp>
