@@ -1,0 +1,7 @@
+{
+  "files.associations": {
+    "utility": "cpp",
+    "map": "cpp",
+    "random": "cpp"
+  }
+}
