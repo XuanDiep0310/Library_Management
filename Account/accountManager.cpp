@@ -60,7 +60,7 @@ void Account::registerAccout()
     this->username = username;
 
     // Nhap Password
-
+    
     cout << "Nhap Mat Khau: ";
     this->password = inputPassword(password);
     // Xac Nhan lai Mk
