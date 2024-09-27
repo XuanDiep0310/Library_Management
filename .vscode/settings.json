@@ -2,6 +2,13 @@
   "files.associations": {
     "utility": "cpp",
     "map": "cpp",
-    "random": "cpp"
+    "random": "cpp",
+    "*.tcc": "cpp",
+    "compare": "cpp",
+    "format": "cpp",
+    "limits": "cpp",
+    "optional": "cpp",
+    "type_traits": "cpp",
+    "variant": "cpp"
   }
 }
