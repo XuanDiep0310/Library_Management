@@ -9,6 +9,7 @@
     "limits": "cpp",
     "optional": "cpp",
     "type_traits": "cpp",
-    "variant": "cpp"
+    "variant": "cpp",
+    "iosfwd": "cpp"
   }
 }

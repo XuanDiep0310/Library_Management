@@ -1,241 +1,362 @@
 #pragma once
+
 #include <iostream>
+#include <string>
+#include <vector>
+#include <iomanip>
+#include <ctime>
 using namespace std;
-
-class Date {
+class Date
+{
 private:
-    int day;
-    int month;
-    int year;
+    int day, month, year;
 
-    // Kiểm tra xem năm có phải năm nhuận không
-    bool isLeapYear(int year) const;
-
-    // Kiểm tra xem ngày có hợp lệ với tháng và năm không
-    bool isValidDate(int day, int month, int year) const;
- 
 public:
-    Date();  // Constructor mặc định
-    Date(int d, int m, int y);  // Constructor với tham số
-
-    // Getters
-    int getDay() const;
-    int getMonth() const;
-    int getYear() const;
-
-    // Setters
-    void setDay(int d);
-    void setMonth(int m);
-    void setYear(int y);
-
-    // Phương thức nhập ngày
-    void input();
-
-    // Phương thức xuất ngày
-    void display() const;
-
-    // Kiểm tra ngày hợp lệ
-    bool isValid() const;
-
-    // Cộng ngày, trừ ngày
-    Date addDays(int days);
-    Date subtractDays(int days);
-
-    // So sánh hai đối tượng Date
-    bool operator==(const Date& other) const;
-    bool operator!=(const Date& other) const;
-    bool operator<(const Date& other) const;
-    bool operator>(const Date& other) const;
-
-    // Tính khoảng cách ngày giữa hai Date
-    int daysBetween(const Date& other) const;
-
-    // Cộng tháng và năm (tùy chọn)
-    Date addMonths(int months);
-    Date addYears(int years);
+    // Constructor
+    Date();
+    Date(int day, int month, int year);
+    Date(string fullday);
+    Date(const Date &D);
+    // Get
+    int getday();
+    int getmonth();
+    int getyear();
+    // Set
+    void setday(int day);
+    void setmonth(int month);
+    void setyear(int year);
+    // friend >>, <<
+    friend istream &operator>>(istream &in, Date &D);
+    friend ostream &operator<<(ostream &out, const Date &D);
+    bool operator>(const Date &D);
+    bool operator==(const Date &D);
+    bool operator<(const Date &D);
+    // Trả về ngày hiện tại
+    Date now();
+    // Tính thời gian quá hạn dựa vào số ngày mượn cụ thể
+    Date expiry(int time);
+    // Tính số ngày quá hạn (với 1 ngày quá hạn được cung cấp)
+    int overdue(Date dayExpiry);
 };
 
-// Constructor mặc định
-Date::Date() {
-    day = 1;
-    month = 1;
-    year = 1;
+// Ngày trong các của năm Nhuận và năm Không Nhuận
+vector<int> nummonth({0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31});
+vector<int> nummonthplus({0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31});
+
+bool leapYear(int year)
+{
+    return ((year % 400 == 0) || (year % 4 == 0 && year % 100 != 0));
 }
 
-// Constructor với tham số
-Date::Date(int d, int m, int y) {
-    if (isValidDate(d, m, y)) {
-        day = d;
-        month = m;
-        year = y;
-    } else {
-        day = 1;
-        month = 1;
-        year = 1;
-    }
+Date::Date()
+{
+    this->day = 1;
+    this->month = 1;
+    this->year = 2000;
 }
 
-// Getters
-int Date::getDay() const { return day; }
-int Date::getMonth() const { return month; }
-int Date::getYear() const { return year; }
-
-// Setters
-void Date::setDay(int d) {
-    if (isValidDate(d, month, year)) {
-        day = d;
-    } else {
-        cout << "Ngày không hợp lệ!" << endl;
-    }
-}
-
-void Date::setMonth(int m) {
-    if (isValidDate(day, m, year)) {
-        month = m;
-    } else {
-        cout << "Tháng không hợp lệ!" << endl;
-    }
-}
-
-void Date::setYear(int y) {
-    if (isValidDate(day, month, y)) {
-        year = y;
-    } else {
-        cout << "Năm không hợp lệ!" << endl;
-    }
-}
-
-// Kiểm tra năm nhuận
-bool Date::isLeapYear(int y) const {
-    return (y % 4 == 0 && y % 100 != 0) || (y % 400 == 0);
-}
-
-// Kiểm tra ngày hợp lệ
-bool Date::isValidDate(int d, int m, int y) const {
-    if (m < 1 || m > 12 || d < 1) return false;
-
-    int daysInMonth[] = {31, isLeapYear(y) ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-
-    return d <= daysInMonth[m - 1];
-}
-
-// Phương thức nhập ngày
-void Date::input() {
-    int d, m, y;
-    cout << "Nhập ngày: ";
-    cin >> d;
-    cout << "Nhập tháng: ";
-    cin >> m;
-    cout << "Nhập năm: ";
-    cin >> y;
-
-    if (isValidDate(d, m, y)) {
-        day = d;
-        month = m;
-        year = y;
-    } else {
-        cout << "Ngày tháng không hợp lệ!" << endl;
-    }
-}
-
-// Phương thức xuất ngày
-void Date::display() const {
-    cout << day << "/" << month << "/" << year << endl;
-}
-
-// Kiểm tra ngày có hợp lệ hay không
-bool Date::isValid() const {
-    return isValidDate(day, month, year);
-}
-
-// So sánh hai ngày
-bool Date::operator==(const Date& other) const {
-    return (day == other.day && month == other.month && year == other.year);
-}
-
-bool Date::operator!=(const Date& other) const {
-    return !(*this == other);
-}
-
-bool Date::operator<(const Date& other) const {
-    if (year < other.year) return true;
-    if (year == other.year && month < other.month) return true;
-    if (year == other.year && month == other.month && day < other.day) return true;
-    return false;
-}
-
-bool Date::operator>(const Date& other) const {
-    return !(*this < other) && *this != other;
-}
-
-// Cộng số ngày vào Date
-Date Date::addDays(int days) {
-    Date newDate = *this;
-    newDate.day += days;
-
-    // Kiểm tra và điều chỉnh tháng nếu số ngày vượt quá ngày trong tháng
-    while (!isValidDate(newDate.day, newDate.month, newDate.year)) {
-        newDate.day -= 31;  // giả định tháng có nhiều nhất 31 ngày
-        newDate.month++;
-        if (newDate.month > 12) {
-            newDate.month = 1;
-            newDate.year++;
+Date::Date(int day, int month, int year)
+{
+    this->year = year;
+    if (month >= 1 && month <= 12)
+    {
+        this->month = month;
+        if (leapYear(year) == true && day >= 1 && day <= nummonthplus[month])
+        {
+            this->day = day;
+        }
+        else if (leapYear(year) == false && day >= 1 && day <= nummonth[month])
+        {
+            this->day = day;
+        }
+        else
+        {
+            cout << "Du lieu khong hop le !!!" << endl;
         }
     }
-    return newDate;
+    else
+    {
+        cout << "Du lieu khong hop le !!!" << endl;
+    }
 }
 
-// Trừ số ngày từ Date
-Date Date::subtractDays(int days) {
-    Date newDate = *this;
-    newDate.day -= days;
+int Date::getday()
+{
+    return day;
+}
 
-    // Kiểm tra và điều chỉnh tháng nếu số ngày nhỏ hơn 1
-    while (newDate.day < 1) {
-        newDate.month--;
-        if (newDate.month < 1) {
-            newDate.month = 12;
-            newDate.year--;
+int Date::getmonth()
+{
+    return month;
+}
+
+int Date::getyear()
+{
+    return year;
+}
+
+void Date::setday(int day)
+{
+    this->day = day;
+}
+
+void Date::setmonth(int month)
+{
+    this->month = month;
+}
+
+void Date::setyear(int year)
+{
+    this->year = year;
+}
+
+Date::Date(string fullday)
+{
+    string Day;
+    string Month;
+    string Year;
+    size_t pos = 0;
+    string delimiter = "/";
+    pos = fullday.find(delimiter);
+    Day = fullday.substr(0, pos);
+    fullday.erase(0, pos + 1);
+    pos = fullday.find(delimiter);
+    Month = fullday.substr(0, pos);
+    delimiter = "\n";
+    fullday.erase(0, pos + 1);
+    pos = fullday.find(delimiter);
+    Year = fullday.substr(0, pos);
+    fullday.erase(0, pos + 1);
+
+    int day = stoi(Day);
+    int month = stoi(Month);
+    int year = stoi(Year);
+    this->year = year;
+    if (month >= 1 && month <= 12)
+    {
+        this->month = month;
+        if (leapYear(year) == true && day >= 1 && day <= nummonthplus[month])
+        {
+            this->day = day;
         }
-        newDate.day += 31;  // giả định tháng có nhiều nhất 31 ngày
+        else if (leapYear(year) == false && day >= 1 && day <= nummonth[month])
+        {
+            this->day = day;
+        }
+        else
+        {
+            cout << "Sai du lieu !!!" << endl;
+        }
     }
-    return newDate;
+    else
+    {
+        cout << "Sai du lieu !!!" << endl;
+    }
 }
 
-// Tính số ngày giữa hai Date
-int Date::daysBetween(const Date& other) const {
-    int daysCount = 0;
-    Date temp = *this;
-
-    // Nếu temp nhỏ hơn other, tính số ngày từ temp đến other
-    while (temp < other) {
-        temp = temp.addDays(1);
-        daysCount++;
-    }
-
-    // Nếu temp lớn hơn other, tính số ngày từ other đến temp
-    while (temp > other) {
-        temp = temp.subtractDays(1);
-        daysCount--;
-    }
-
-    return daysCount;
+Date::Date(const Date &D)
+{
+    this->day = D.day;
+    this->month = D.month;
+    this->year = D.year;
 }
 
-// Cộng tháng
-Date Date::addMonths(int months) {
-    Date newDate = *this;
-    newDate.month += months;
-    while (newDate.month > 12) {
-        newDate.month -= 12;
-        newDate.year++;
-    }
-    return newDate;
+istream &operator>>(istream &in, Date &D)
+{
+    cout << "Nhap nam : ";
+    in >> D.year;
+    do
+    {
+        cout << "Nhap thang :";
+        in >> D.month;
+        if (D.month >= 1 && D.month <= 12)
+        {
+            bool check = false;
+            do
+            {
+
+                cout << "Nhap ngay :";
+                in >> D.day;
+                if (leapYear(D.year) == true && D.day >= 1 && D.day <= nummonthplus[D.month])
+                {
+                    check = true;
+                }
+                else if (leapYear(D.year) == false && D.day >= 1 && D.day <= nummonth[D.month])
+                {
+                    check = true;
+                }
+                else
+                {
+
+                    cout << "Sai du lieu !!!" << endl;
+                }
+            } while (check == false);
+        }
+        else
+        {
+            cout << "Sai du lieu !!!" << endl;
+        }
+    } while (D.month < 1 || D.month > 12);
+    return in;
 }
 
-// Cộng năm
-Date Date::addYears(int years) {
-    Date newDate = *this;
-    newDate.year += years;
-    return newDate;
+ostream &operator<<(ostream &out, const Date &D)
+{
+    if (D.year == 0)
+    {
+        out << D.day << "/" << D.month << "/" << "0000";
+    }
+    else
+    {
+        out << D.day << "/" << D.month << "/" << D.year;
+    }
+    return out;
+}
+
+bool Date::operator>(const Date &D)
+{
+    if (this->year > D.year)
+    {
+        return true;
+    }
+    else if (this->year == D.year)
+    {
+        if (this->month > D.month)
+        {
+            return true;
+        }
+        else if (this->month == D.month)
+        {
+            if (this->day > D.day)
+            {
+                return true;
+            }
+            else
+                return false;
+        }
+        else
+            return false;
+    }
+    else
+        return false;
+}
+
+bool Date::operator==(const Date &D)
+{
+    if (this->year == D.year)
+    {
+        if (this->month == D.month)
+        {
+            if (this->day == D.day)
+            {
+                return true;
+            }
+            else
+                return false;
+        }
+        else
+            return false;
+    }
+    else
+        return false;
+}
+
+bool Date::operator<(const Date &D)
+{
+    if (this->year < D.year)
+    {
+        return true;
+    }
+    else if (this->year == D.year)
+    {
+        if (this->month < D.month)
+        {
+            return true;
+        }
+        else if (this->month == D.month)
+        {
+            if (this->day < D.day)
+            {
+                return true;
+            }
+            else
+                return false;
+        }
+        else
+            return false;
+    }
+    else
+        return false;
+}
+
+Date Date::now()
+{
+    time_t now = time(0);
+    tm *ltm = localtime(&now);
+    this->year = 1900 + ltm->tm_year;
+    this->month = 1 + ltm->tm_mon;
+    this->day = ltm->tm_mday;
+    return *this;
+}
+// Tính thời gian quá hạn dựa vào số ngày mượn cụ thể (time la so ngay)
+Date Date::expiry(int time)
+{
+    Date D = this->now();
+    int tg = time + D.day;
+
+    while (tg > (leapYear(D.year) ? nummonthplus[D.month] : nummonth[D.month]))
+    {
+        tg -= (leapYear(D.year) ? nummonthplus[D.month] : nummonth[D.month]);
+        D.month++;
+        if (D.month > 12)
+        {
+            D.month = 1;
+            D.year++;
+        }
+    }
+    D.day = tg;
+
+    return D;
+}
+// Tính số ngày quá hạn (với 1 ngày quá hạn được cung cấp)
+int Date::overdue(Date dayExpiry)
+{
+    Date D = D.now();
+    int tg = 0;
+
+    int curDay = D.day;
+    int curMonth = D.month;
+    int curYear = D.year;
+
+    if (curYear == dayExpiry.year && curMonth == dayExpiry.month)
+    {
+        return curDay - dayExpiry.day;
+    }
+    tg = curDay;
+    curMonth--;
+    if (curMonth == 0)
+    {
+        curMonth = 12;
+        curYear--;
+    }
+
+    vector<int> monthDay = leapYear(curYear) ? nummonthplus : nummonth;
+    while (curYear > dayExpiry.year || (curYear == dayExpiry.year && curMonth >= dayExpiry.month))
+    {
+        if (curYear == dayExpiry.year && curMonth == dayExpiry.month)
+        {
+            tg += monthDay[curMonth] - dayExpiry.day;
+            break;
+        }
+        tg += monthDay[curMonth];
+        curMonth--;
+         if (curMonth == 0) 
+        {
+            curMonth = 12;
+            curYear--; 
+        }
+
+        monthDay = leapYear(curYear) ? nummonthplus : nummonth;
+    }
+    return tg;
 }
