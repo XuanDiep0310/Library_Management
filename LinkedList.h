@@ -1,172 +1,206 @@
 #pragma once
-#include <iostream>
-using namespace std;
-
-// Định nghĩa template cho lớp node
+#include "Book.h"
+#include "User.h"
+#include "Access.h"
 template <typename T>
-class node
+class Node
 {
 private:
-    T data;              // Dữ liệu của node
-    node<T> *next;       // Con trỏ đến node kế tiếp
-    node<T> *prev;       // Con trỏ đến node trước đó
-
+    T data;
+    Node<T>* next;
+    Node<T>* prev;
 public:
-    // Các constructor của node
-    node(); 
-    node(node<T> *next, node<T> *prev, T data);
-
-    // Các phương thức getter và setter cho dữ liệu và liên kết
+    Node();
+    Node(Node<T>* next, Node<T>* prev, T data);
     void setData(T data);
     T getData();
-    void setNext(node<T> *next);
-    node<T> *getNext();
-    void setPrev(node<T> *prev);
-    node<T> *getPrev();
-
-    // Phương thức in dữ liệu của node, được định nghĩa đặc biệt cho từng loại
-    void print(node<T> *tmp);
-
-    // Định nghĩa các toán tử so sánh == và != giữa các node
-    bool operator!=(const node<T> &other) const;
-    bool operator==(const node<T> &other) const;
-
-    // Khai báo LinkedList là friend class để có thể truy cập các thành viên private
+    void setNext(Node<T>* next);
+    Node<T>* getNext();
+    void setPrev(Node<T>* prev);
+    Node<T>* getPrev();
+    void print(Node<User>* tmp, int i, int c);
+    void print(Node<Book>* tmp, int i, int c);
+    int operator != (int N);
+    int operator == (int N);
     friend class LinkedList<T>;
 };
 
-// Lớp LinkedList được định nghĩa như một template
+
 template <typename T>
 class LinkedList
 {
 private:
-    node<T> *head;   // Con trỏ đầu danh sách
-    node<T> *tail;   // Con trỏ cuối danh sách
-    int count;       // Số lượng node trong danh sách
-
+    Node<T>* head;
+    Node<T>* tail;
+    int count;
 public:
-    // Constructor và Destructor để quản lý bộ nhớ
     LinkedList();
-    ~LinkedList();
-
-    // Các phương thức getter và setter cho head và tail
-    void setHead(node<T> *head);
-    void setTail(node<T> *tail);
-    node<T> *getHead();
-    node<T> *getTail();
-
-    // Phương thức tìm kiếm node theo ID
-    node<T> *get(string ID);
-    node<T> *getAvailable(string ID); // Tìm sách còn có số lượng
-
-    // Phương thức in dữ liệu các node
-    void printNext();                // In tất cả node
-    void printNextAvailable();       // In các node có sách còn số lượng
-
-    // Phương thức thêm một node vào cuối danh sách
+    void setHead(Node<T>* head);
+    void setTail(Node<T>* tail);
+    Node<T>* getHead();
+    Node<T>* getTail();
+    Node<T>* get(string ID);
+    Node<T>* getAvailable(string ID);
+    void printNext();
+    void printNextavailble();
     void addTail(T data);
-
-    // Getter và setter cho biến đếm số node
     int getCount();
     void setCount(int count);
 };
 
-// Constructor mặc định của node
 template <typename T>
-node<T>::node() {}
+Node<T>::Node() {
 
-// Constructor có tham số của node
+}
+
 template <typename T>
-node<T>::node(node<T> *next, node<T> *prev, T data)
+Node<T>::Node(Node<T>* next, Node<T>* prev, T data)
 {
     this->data = data;
     this->next = next;
     this->prev = prev;
 }
 
-// Setter và getter cho con trỏ next
 template <typename T>
-void node<T>::setNext(node<T> *next)
+void Node<T>::setNext(Node<T>* next)
 {
     this->next = next;
 }
 
 template <typename T>
-node<T> *node<T>::getNext()
+Node<T>* Node<T>::getNext()
 {
     return next;
 }
 
-// Setter và getter cho con trỏ prev
 template <typename T>
-void node<T>::setPrev(node<T> *prev)
+void Node<T>::setPrev(Node<T>* prev)
 {
     this->prev = prev;
 }
 
 template <typename T>
-node<T> *node<T>::getPrev()
+Node<T>* Node<T>::getPrev()
 {
     return prev;
 }
 
-// Setter và getter cho dữ liệu của node
 template <typename T>
-void node<T>::setData(T data)
+void Node<T>::setData(T data)
 {
     this->data = data;
 }
 
 template <typename T>
-T node<T>::getData()
+T Node<T>::getData()
 {
     return data;
 }
 
-// Phương thức in thông tin của đối tượng User
-template <>
-void node<User>::print(node<User> *tmp)
-{
-    cout << "User ID: " << tmp->getData().getID() << endl;
-    cout << "Name: " << tmp->getData().getName() << endl;
-    cout << "Date of Birth: " << tmp->getData().getDob() << endl;
-    cout << "Phone Number: " << tmp->getData().getPhone() << endl;
-    cout << "Number of Borrowed Books: " << tmp->getData().getNumborrow() << endl;
-    cout << "Number of Requests: " << tmp->getData().getNumrequest() << endl;
-    cout << "----------------------------------------" << endl;
-}
-
-// Phương thức in thông tin của đối tượng Book
-template <>
-void node<Book>::print(node<Book> *tmp)
-{
-    cout << "Book ID: " << tmp->getData().getID() << endl;
-    cout << "Title: " << tmp->getData().getName() << endl;
-    cout << "Category: " << tmp->getData().getCategory() << endl;
-    cout << "Publisher: " << tmp->getData().getPublisher() << endl;
-    cout << "Publication Year: " << tmp->getData().getYear() << endl;
-    cout << "Author: " << tmp->getData().getAuthor() << endl;
-    cout << "Location: " << tmp->getData().getlocation() << endl;
-    cout << "Available Copies: " << tmp->getData().getAmount() << endl;
-    cout << "Total Copies: " << tmp->getData().getfixedAmount() << endl;
-    cout << "----------------------------------------" << endl;
-}
-
-// Toán tử so sánh != giữa hai node
 template <typename T>
-bool node<T>::operator!=(const node<T> &other) const
+void Node<T>::print(Node<User>* tmp, int i, int c)
 {
-    return data != other.data;  // So sánh dựa trên dữ liệu của node
+    box(1, 7 + i, 20, 2, 11, 1, tmp->data.getID());
+    gotoXY(1, 7 + i); cout << char(195);
+    box(21, 7 + i, 30, 2, 11, 1, tmp->data.getName());
+    box(51, 7 + i, 20, 2, 11, 1, tmp->data.getDob());
+    box(71, 7 + i, 20, 2, 11, 1, tmp->data.getPhone());
+    box(91, 7 + i, 20, 2, 11, 1, 4 - tmp->data.getNumborrow());
+    box(111, 7 + i, 14, 2, 11, 1, 4 - tmp->data.getNumrequest());
+    if (c == 1)
+    {
+        gotoXY(21, 7 + i); cout << char(197);
+        gotoXY(21, 9 + i); cout << char(197);
+        gotoXY(51, 7 + i); cout << char(197);
+        gotoXY(51, 9 + i); cout << char(197);
+        gotoXY(71, 7 + i); cout << char(197);
+        gotoXY(71, 9 + i); cout << char(197);
+        gotoXY(91, 7 + i); cout << char(197);
+        gotoXY(91, 9 + i); cout << char(197);
+        gotoXY(111, 7 + i); cout << char(197);
+        gotoXY(111, 9 + i); cout << char(197);
+        gotoXY(125, 7 + i); cout << char(180);
+    }
+    else if (c == 0)
+    {
+        gotoXY(21, 7 + i); cout << char(197);
+        gotoXY(21, 9 + i); cout << char(193);
+        gotoXY(51, 7 + i); cout << char(197);
+        gotoXY(51, 9 + i); cout << char(193);
+        gotoXY(71, 7 + i); cout << char(197);
+        gotoXY(71, 9 + i); cout << char(193);
+        gotoXY(91, 7 + i); cout << char(197);
+        gotoXY(91, 9 + i); cout << char(193);
+        gotoXY(111, 7 + i); cout << char(197);
+        gotoXY(111, 9 + i); cout << char(193);
+        gotoXY(125, 7 + i); cout << char(180);
+    }
 }
 
-// Toán tử so sánh == giữa hai node
 template <typename T>
-bool node<T>::operator==(const node<T> &other) const
+void Node<T>::print(Node<Book>* tmp, int i, int c)
 {
-    return data == other.data;  // So sánh dựa trên dữ liệu của node
+    box(1, 7 + i, 15, 2, 11, 1, tmp->data.getID());
+    gotoXY(1, 7 + i); cout << char(195);
+    box(12, 7 + i, 25, 2, 11, 1, tmp->data.getName());
+    box(37, 7 + i, 15, 2, 11, 1, tmp->data.getCategory());
+    box(52, 7 + i, 20, 2, 11, 1, tmp->data.getPublisher());
+    box(72, 7 + i, 15, 2, 11, 1, tmp->data.getYear());
+    box(87, 7 + i, 20, 2, 11, 1, tmp->data.getAuthor());
+    box(107, 7 + i, 9, 2, 11, 1, tmp->data.getlocation());
+    box(116, 7 + i, 9, 2, 11, 1, tmp->data.getAmount(), tmp->data.getFixedAmount());
+    if (c == 1)
+    {
+        gotoXY(12, 7 + i); cout << char(197);
+        gotoXY(12, 9 + i); cout << char(197);
+        gotoXY(37, 7 + i); cout << char(197);
+        gotoXY(37, 9 + i); cout << char(197);
+        gotoXY(52, 7 + i); cout << char(197);
+        gotoXY(52, 9 + i); cout << char(197);
+        gotoXY(72, 7 + i); cout << char(197);
+        gotoXY(72, 9 + i); cout << char(197);
+        gotoXY(87, 7 + i); cout << char(197);
+        gotoXY(87, 9 + i); cout << char(197);
+        gotoXY(107, 7 + i); cout << char(197);
+        gotoXY(107, 9 + i); cout << char(197);
+        gotoXY(116, 7 + i); cout << char(197);
+        gotoXY(116, 9 + i); cout << char(197);
+        gotoXY(125, 7 + i); cout << char(180);
+    }
+    else if (c == 0)
+    {
+        gotoXY(12, 7 + i); cout << char(197);
+        gotoXY(12, 9 + i); cout << char(193);
+        gotoXY(37, 7 + i); cout << char(197);
+        gotoXY(37, 9 + i); cout << char(193);
+        gotoXY(52, 7 + i); cout << char(197);
+        gotoXY(52, 9 + i); cout << char(193);
+        gotoXY(72, 7 + i); cout << char(197);
+        gotoXY(72, 9 + i); cout << char(193);
+        gotoXY(87, 7 + i); cout << char(197);
+        gotoXY(87, 9 + i); cout << char(193);
+        gotoXY(107, 7 + i); cout << char(197);
+        gotoXY(107, 9 + i); cout << char(193);
+        gotoXY(116, 7 + i); cout << char(197);
+        gotoXY(116, 9 + i); cout << char(193);
+        gotoXY(125, 7 + i); cout << char(180);
+    }
 }
 
-// Constructor mặc định của LinkedList
+template <typename T>
+int Node<T>:: operator != (int N)
+{
+    if (this != NULL) return 1;
+    else return 0;
+}
+
+template <typename T>
+int Node<T>:: operator == (int N)
+{
+    if (this == NULL) return 1;
+    else return 0;
+}
+
 template <typename T>
 LinkedList<T>::LinkedList()
 {
@@ -175,49 +209,35 @@ LinkedList<T>::LinkedList()
     count = 0;
 }
 
-// Destructor để giải phóng bộ nhớ của tất cả các node trong danh sách
 template <typename T>
-LinkedList<T>::~LinkedList() {
-    node<T> *tmp;
-    while (head != NULL) {
-        tmp = head;
-        head = head->getNext();
-        delete tmp;  // Giải phóng bộ nhớ của từng node
-    }
-}
-
-// Setter và getter cho tail
-template <typename T>
-void LinkedList<T>::setTail(node<T> *tmp)
+void LinkedList<T>::setTail(Node<T>* tmp)
 {
     this->tail = tmp;
 }
 
-// Setter và getter cho head
 template <typename T>
-void LinkedList<T>::setHead(node<T> *tmp)
+void LinkedList<T>::setHead(Node<T>* tmp)
 {
     this->head = tmp;
-    this->head->setPrev(NULL);  // Head không có node trước nó
+    this->head->setPrev(NULL);
 }
 
 template <typename T>
-node<T> *LinkedList<T>::getHead()
+Node<T>* LinkedList<T>::getHead()
 {
     return head;
 }
 
 template <typename T>
-node<T> *LinkedList<T>::getTail()
+Node<T>* LinkedList<T>::getTail()
 {
     return tail;
 }
 
-// Tìm kiếm node theo ID, trả về con trỏ đến node tương ứng
 template <typename T>
-node<T> *LinkedList<T>::get(string ID)
+Node<T>* LinkedList<T>::get(string ID)
 {
-    node<T> *P;
+    Node<T>* P;
     for (P = head; P != NULL; P = P->getNext())
     {
         if (P->getData().getID() == ID)
@@ -228,11 +248,10 @@ node<T> *LinkedList<T>::get(string ID)
     return P;
 }
 
-// Tìm sách còn số lượng theo ID
 template <typename T>
-node<T> *LinkedList<T>::getAvailable(string ID)
+Node<T>* LinkedList<T>::getAvailable(string ID)
 {
-    node<T> *P;
+    Node<T>* P;
     for (P = head; P != NULL; P = P->getNext())
     {
         if (P->getData().getID() == ID && P->getData().getAmount() > 0)
@@ -243,60 +262,57 @@ node<T> *LinkedList<T>::getAvailable(string ID)
     return P;
 }
 
-// Phương thức in thông tin tất cả các node trong danh sách
 template <typename T>
 void LinkedList<T>::printNext()
 {
-    node<T> *tmp = head;
+    int i = 2;
+    Node<T>* tmp = head;
     while (tmp != NULL)
     {
-        tmp->print(tmp); // Gọi phương thức print của node
+        tmp->print(tmp, i, 1);
+        i += 2;
         tmp = tmp->getNext();
     }
 }
 
-// Phương thức in thông tin các node có sách còn số lượng
 template <typename T>
-void LinkedList<T>::printNextAvailable()
+void LinkedList<T>::printNextavailble()
 {
-    node<T> *tmp = head;
+    int i = 2;
+    Node<T>* tmp = head;
     while (tmp != NULL)
     {
-        // Kiểm tra điều kiện cho những book có `Amount` lớn hơn 0
         if (tmp->getData().getAmount() > 0)
         {
-            tmp->print(tmp); // Gọi phương thức print cho node hiện tại
+            tmp->print(tmp, i, 1);
+            i += 2;
         }
         tmp = tmp->getNext();
     }
+
 }
 
-// Thêm một node vào cuối danh sách
 template <typename T>
 void LinkedList<T>::addTail(T data)
 {
-    node<T> *tmp = new node<T>(NULL, NULL, data);  // Tạo node mới
+    Node<T>* tmp = new Node<T>(NULL, NULL, data);
+    count++;
     if (head == NULL)
     {
-        head = tail = tmp;  // Nếu danh sách rỗng, node mới là head và tail
+        head = tail = tmp;
+        return;
     }
-    else
-    {
-        tmp->setPrev(tail); // Liên kết node mới với node tail hiện tại
-        tail->setNext(tmp); // Cập nhật liên kết của tail hiện tại
-        tail = tmp;         // Đặt tail mới
-    }
-    count++; // Tăng số lượng node sau khi thêm thành công
+    tmp->setPrev(tail);
+    tail->setNext(tmp);
+    setTail(tmp);
 }
 
-// Getter cho số lượng node trong danh sách
 template <typename T>
 int LinkedList<T>::getCount()
 {
     return count;
 }
 
-// Setter cho số lượng node trong danh sách
 template <typename T>
 void LinkedList<T>::setCount(int count)
 {
