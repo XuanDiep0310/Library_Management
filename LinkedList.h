@@ -100,10 +100,10 @@ T Node<T>::getData()
 template <typename T>
 void Node<T>::print(Node<User>* tmp, int i, int c)
 {
-    box(1, 7 + i, 20, 2, 11, 1, tmp->data.getID());
+    box(1, 7 + i, 20, 2, 11, 1, tmp->data.getId());
     gotoXY(1, 7 + i); cout << char(195);
     box(21, 7 + i, 30, 2, 11, 1, tmp->data.getName());
-    box(51, 7 + i, 20, 2, 11, 1, tmp->data.getDob());
+    box(51, 7 + i, 20, 2, 11, 1, tmp->data.getDateOfBirth());
     box(71, 7 + i, 20, 2, 11, 1, tmp->data.getPhone());
     box(91, 7 + i, 20, 2, 11, 1, 4 - tmp->data.getNumborrow());
     box(111, 7 + i, 14, 2, 11, 1, 4 - tmp->data.getNumrequest());

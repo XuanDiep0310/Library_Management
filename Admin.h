@@ -1,16 +1,23 @@
 #pragma once
 #include <iostream>
-#include "User.h"
+#include "Person.h"
 #include "Book.h"
+#include "LinkedList.h"
+#include "User.h"
 
-class Admin : public User {
-public:
-    void addBook(Book book);                      // Thêm sách mới vào thư viện.
-    void removeBook(string bookId);               // Xóa sách khỏi thư viện (chỉ xóa khi số lượng sách đủ).
-    void updateBook(string bookId, Book newInfo); // Cập nhật thông tin của sách.
-    void viewUsers();                             // Xem danh sách tất cả người dùng.
-    void approveRequest(User user, Book book);    // Duyệt yêu cầu mượn sách của người dùng.
-    void returnBook(User user, string bookId);    // Xử lý trả sách từ người dùng, kiểm tra số ngày quá hạn và tính phí phạt.
-    void viewStatistics();                        // Xem thống kê về số lượng sách, số sách đã mượn, số người dùng, v.v.
-    // Other methods...
+class Admin : public Person 
+{
+    public:
+        Admin();
+        LinkedList<Book>* fixBook(LinkedList<Book>* lbook, LinkedList<User>* luser);
+        LinkedList<Book>* addBook(LinkedList<Book>* lbook);
+        LinkedList<Book>* delBook(LinkedList<Book>* lbook);
+        void displayUser(LinkedList<User>* luser);
+        list delUser(list l);
+        void findUser(LinkedList<User>* luser, LinkedList<Book>* lbook);
+        void borrowBook(list l, int time);
+        void giveBackBook(list l, int money);
+        void resetPasswork(LinkedList<User>* luser);
+        void updateIF(LinkedList<User>* luser);
+        void thongKe(LinkedList<Book>* lbook,LinkedList<User>* luser);
 };
