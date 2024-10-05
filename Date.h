@@ -18,13 +18,13 @@ public:
     Date(string fullday);
     Date(const Date &D);
     // Get
-    int getday();
-    int getmonth();
-    int getyear();
+    int getDay();
+    int getMonth();
+    int getYear();
     // Set
-    void setday(int day);
-    void setmonth(int month);
-    void setyear(int year);
+    void setDay(int day);
+    void setMonth(int month);
+    void setYear(int year);
     // friend >>, <<
     friend istream &operator>>(istream &in, Date &D);
     friend ostream &operator<<(ostream &out, const Date &D);
@@ -80,32 +80,32 @@ Date::Date(int day, int month, int year)
     }
 }
 
-int Date::getday()
+int Date::getDay()
 {
     return day;
 }
 
-int Date::getmonth()
+int Date::getMonth()
 {
     return month;
 }
 
-int Date::getyear()
+int Date::getYear()
 {
     return year;
 }
 
-void Date::setday(int day)
+void Date::setDay(int day)
 {
     this->day = day;
 }
 
-void Date::setmonth(int month)
+void Date::setMonth(int month)
 {
     this->month = month;
 }
 
-void Date::setyear(int year)
+void Date::setYear(int year)
 {
     this->year = year;
 }
