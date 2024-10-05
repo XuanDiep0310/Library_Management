@@ -18,30 +18,30 @@ int dynamicFixMenu(int xp, int yp, int xcu, int ycu, bool kt)
         if (kt == true)
         {
             gotoXY(xcu, ycu);
-            if (ycu == 7) lightBar(xcu, ycu, 30, 2, 1, "       SUA MA SO SACH");
-            if (ycu == 9) lightBar(xcu, ycu, 30, 2, 1, "        SUA TEN SACH");
-            if (ycu == 11) lightBar(xcu, ycu, 30, 2, 1, "      SUA THE LOAI SACH");
-            if (ycu == 13) lightBar(xcu, ycu, 30, 2, 1, "      SUA NHA XUAT BAN");
-            if (ycu == 15) lightBar(xcu, ycu, 30, 2, 1, "         SUA TAC GIA");
-            if (ycu == 17) lightBar(xcu, ycu, 30, 2, 1, "      SUA NAM XUAT BAN");
-            if (ycu == 19) lightBar(xcu, ycu, 30, 2, 1, "    SUA SO LUONG HIEN CO");
-            if (ycu == 21) lightBar(xcu, ycu, 30, 2, 1, "    SUA SO LUONG BAN DAU");
-            if (ycu == 23) lightBar(xcu, ycu, 30, 2, 1, "        SUA VI TRI");
-            if (ycu == 25) lightBar(xcu, ycu, 30, 2, 1, "           QUAY LAI");
-            if (ycu == 27) lightBar(xcu, ycu, 30, 2, 1, "            THOAT");
+            if (ycu == 7) lightbar(xcu, ycu, 30, 2, 1, "       SUA MA SO SACH");
+            if (ycu == 9) lightbar(xcu, ycu, 30, 2, 1, "        SUA TEN SACH");
+            if (ycu == 11) lightbar(xcu, ycu, 30, 2, 1, "      SUA THE LOAI SACH");
+            if (ycu == 13) lightbar(xcu, ycu, 30, 2, 1, "      SUA NHA XUAT BAN");
+            if (ycu == 15) lightbar(xcu, ycu, 30, 2, 1, "         SUA TAC GIA");
+            if (ycu == 17) lightbar(xcu, ycu, 30, 2, 1, "      SUA NAM XUAT BAN");
+            if (ycu == 19) lightbar(xcu, ycu, 30, 2, 1, "    SUA SO LUONG HIEN CO");
+            if (ycu == 21) lightbar(xcu, ycu, 30, 2, 1, "    SUA SO LUONG BAN DAU");
+            if (ycu == 23) lightbar(xcu, ycu, 30, 2, 1, "        SUA VI TRI");
+            if (ycu == 25) lightbar(xcu, ycu, 30, 2, 1, "           QUAY LAI");
+            if (ycu == 27) lightbar(xcu, ycu, 30, 2, 1, "            THOAT");
             xcu = xp;
             ycu = yp;
-            if (yp == 7) lightBar(xp, yp, 30, 2, 75, "       SUA MA SO SACH");
-            if (yp == 9) lightBar(xp, yp, 30, 2, 75, "        SUA TEN SACH");
-            if (yp == 11) lightBar(xp, yp, 30, 2, 75, "      SUA THE LOAI SACH");
-            if (yp == 13) lightBar(xp, yp, 30, 2, 75, "      SUA NHA XUAT BAN");
-            if (yp == 15) lightBar(xp, yp, 30, 2, 75, "         SUA TAC GIA");
-            if (yp == 17) lightBar(xp, yp, 30, 2, 75, "      SUA NAM XUAT BAN");
-            if (yp == 19) lightBar(xp, yp, 30, 2, 75, "    SUA SO LUONG HIEN CO");
-            if (yp == 21) lightBar(xp, yp, 30, 2, 75, "    SUA SO LUONG BAN DAU");
-            if (yp == 23) lightBar(xp, yp, 30, 2, 75, "        SUA VI TRI");
-            if (yp == 25) lightBar(xp, yp, 30, 2, 75, "           QUAY LAI");
-            if (yp == 27) lightBar(xp, yp, 30, 2, 75, "            THOAT");
+            if (yp == 7) lightbar(xp, yp, 30, 2, 75, "       SUA MA SO SACH");
+            if (yp == 9) lightbar(xp, yp, 30, 2, 75, "        SUA TEN SACH");
+            if (yp == 11) lightbar(xp, yp, 30, 2, 75, "      SUA THE LOAI SACH");
+            if (yp == 13) lightbar(xp, yp, 30, 2, 75, "      SUA NHA XUAT BAN");
+            if (yp == 15) lightbar(xp, yp, 30, 2, 75, "         SUA TAC GIA");
+            if (yp == 17) lightbar(xp, yp, 30, 2, 75, "      SUA NAM XUAT BAN");
+            if (yp == 19) lightbar(xp, yp, 30, 2, 75, "    SUA SO LUONG HIEN CO");
+            if (yp == 21) lightbar(xp, yp, 30, 2, 75, "    SUA SO LUONG BAN DAU");
+            if (yp == 23) lightbar(xp, yp, 30, 2, 75, "        SUA VI TRI");
+            if (yp == 25) lightbar(xp, yp, 30, 2, 75, "           QUAY LAI");
+            if (yp == 27) lightbar(xp, yp, 30, 2, 75, "            THOAT");
             kt = false;
         }
         if (_kbhit())
@@ -172,9 +172,9 @@ LinkedList<Book>* Admin::fixBook(LinkedList<Book>* lbook, LinkedList<User>* luse
                             for (int i = 4; i >= U.getNumRequest() + 1; i--)
                             {
 
-                                if (U.getRequest(i).IDrequest == ms)
+                                if (U.getRequest(i).idRequest == ms)
                                 {
-                                    U.setRequest(ID, U.getRequest(i).Accept, i);
+                                    U.setRequest(ID, U.getRequest(i).accept, i);
                                 }
                             }
                             K->setData(U);
@@ -899,10 +899,10 @@ void Admin::borrowBook(List l, int time)
                 box(85, 5 + ya, 16, 2, 11, 1);
                 gotoXY(85, 5 + ya); cout << char(197);
                 gotoXY(2, 6 + ya);
-                cout << "Sinh vien ma so " << C.getID() << " yeu cau muon sach ma so " << C.getRequest(i).IDrequest << " : " << endl;
+                cout << "Sinh vien ma so " << C.getId() << " yeu cau muon sach ma so " << C.getRequest(i).idRequest << " : " << endl;
                 gotoXY(93, 6 + ya);
                 cout << i;
-                if (C.getRequest(i).Accept == 0)
+                if (C.getRequest(i).accept == 0)
                 {
                     box(101, 5 + ya, 24, 2, 11, 1);
                     gotoXY(101, 5 + ya); cout << char(197);
@@ -910,7 +910,7 @@ void Admin::borrowBook(List l, int time)
                     gotoXY(102, 6 + ya);
                     cout << "Dang cho duyet.";
                 }
-                else if (C.getRequest(i).Accept == 1)
+                else if (C.getRequest(i).accept == 1)
                 {
                     box(101, 5 + ya, 24, 2, 11, 1);
                     gotoXY(101, 5 + ya); cout << char(197);
@@ -918,7 +918,7 @@ void Admin::borrowBook(List l, int time)
                     gotoXY(102, 6 + ya);
                     cout << "Chap nhan.";
                 }
-                else if (C.getRequest(i).Accept == 2)
+                else if (C.getRequest(i).accept == 2)
                 {
                     box(101, 5 + ya, 24, 2, 11, 1);
                     gotoXY(101, 5 + ya); cout << char(197);
@@ -945,7 +945,7 @@ void Admin::borrowBook(List l, int time)
                 {
                     for (int i = 4; i >= C.getNumRequest() + 1; i--)
                     {
-                        if (C.getRequest(i).IDrequest == IDbook && i == ms && C.getRequest(i).Accept == 0)
+                        if (C.getRequest(i).idRequest == IDbook && i == ms && C.getRequest(i).accept == 0)
                         {
                             Node<Book>* P = l.lbook()->get(IDbook);
                             Book B = P->getData();
@@ -976,7 +976,7 @@ void Admin::borrowBook(List l, int time)
                             U->setData(C);
                             break;
                         }
-                        else if (C.getRequest(i).IDrequest == IDbook && i == ms && (C.getRequest(i).Accept == 1 || C.getRequest(i).Accept == 2))
+                        else if (C.getRequest(i).idRequest == IDbook && i == ms && (C.getRequest(i).accept == 1 || C.getRequest(i).accept == 2))
                         {
                             check = true;
                             gotoXY(60, 6);
@@ -1186,8 +1186,8 @@ void Admin::resetPasswork(LinkedList<User>* luser)
         {
             Node<User>* P = luser->get(ID);
             User U = P->getData();
-            U.setUsername(U.getID());
-            U.setPassword(U.getID());
+            U.setUsername(U.getId());
+            U.setPassword(U.getId());
             gotoXY(35, 10); cout << U.getUsername();
             gotoXY(35, 12); cout << U.getPassword();
             P->setData(U);
@@ -1219,20 +1219,20 @@ int dynamicFixedUserMenu(int xp, int yp, int xcu, int ycu, bool kt)
         if (kt == true)
         {
             gotoXY(xcu, ycu);
-            if (ycu == 7) lightBar(xcu, ycu, 30, 2, 1, "     SUA MA SO SINH VIEN");
-            if (ycu == 9) lightBar(xcu, ycu, 30, 2, 1, "     SUA TEN NGUOI DUNG");
-            if (ycu == 11) lightBar(xcu, ycu, 30, 2, 1, "        SUA NGAY SINH");
-            if (ycu == 13) lightBar(xcu, ycu, 30, 2, 1, "      SUA SO DIEN THOAI");
-            if (ycu == 15) lightBar(xcu, ycu, 30, 2, 1, "           QUAY LAI");
-            if (ycu == 17) lightBar(xcu, ycu, 30, 2, 1, "            THOAT");
+            if (ycu == 7) lightbar(xcu, ycu, 30, 2, 1, "     SUA MA SO SINH VIEN");
+            if (ycu == 9) lightbar(xcu, ycu, 30, 2, 1, "     SUA TEN NGUOI DUNG");
+            if (ycu == 11) lightbar(xcu, ycu, 30, 2, 1, "        SUA NGAY SINH");
+            if (ycu == 13) lightbar(xcu, ycu, 30, 2, 1, "      SUA SO DIEN THOAI");
+            if (ycu == 15) lightbar(xcu, ycu, 30, 2, 1, "           QUAY LAI");
+            if (ycu == 17) lightbar(xcu, ycu, 30, 2, 1, "            THOAT");
             xcu = xp;
             ycu = yp;
-            if (yp == 7) lightBar(xp, yp, 30, 2, 75, "     SUA MA SO SINH VIEN");
-            if (yp == 9) lightBar(xp, yp, 30, 2, 75, "     SUA TEN NGUOI DUNG");
-            if (yp == 11) lightBar(xp, yp, 30, 2, 75, "        SUA NGAY SINH");
-            if (yp == 13) lightBar(xp, yp, 30, 2, 75, "      SUA SO DIEN THOAI");
-            if (yp == 15) lightBar(xp, yp, 30, 2, 75, "           QUAY LAI");
-            if (yp == 17) lightBar(xp, yp, 30, 2, 75, "            THOAT");
+            if (yp == 7) lightbar(xp, yp, 30, 2, 75, "     SUA MA SO SINH VIEN");
+            if (yp == 9) lightbar(xp, yp, 30, 2, 75, "     SUA TEN NGUOI DUNG");
+            if (yp == 11) lightbar(xp, yp, 30, 2, 75, "        SUA NGAY SINH");
+            if (yp == 13) lightbar(xp, yp, 30, 2, 75, "      SUA SO DIEN THOAI");
+            if (yp == 15) lightbar(xp, yp, 30, 2, 75, "           QUAY LAI");
+            if (yp == 17) lightbar(xp, yp, 30, 2, 75, "            THOAT");
             kt = false;
         }
         if (_kbhit())
@@ -1323,7 +1323,7 @@ void Admin::updateInfor(LinkedList<User>* luser)
                     cin.ignore();
                     box(55, 10, 50, 10, 11, 1);
                     gotoXY(60, 14);
-                    cout << "Ma so sinh vien hien tai:          " << P->getData().getID();
+                    cout << "Ma so sinh vien hien tai:          " << P->getData().getId();
                     gotoXY(60, 16);
                     cout << "Ma so sinh vien moi:";
                     gotoXY(90, 16);
@@ -1331,7 +1331,7 @@ void Admin::updateInfor(LinkedList<User>* luser)
                     if (luser->get(ID) == NULL && ID.empty() == false && ID.length() == 9)
                     {
                         S = P->getData();
-                        S.setID(ID);
+                        S.setId(ID);
                         P->setData(S);
                         gotoXY(70, 18);
                         cout << "Thay doi thanh cong !!!" << endl;
@@ -1377,7 +1377,7 @@ void Admin::updateInfor(LinkedList<User>* luser)
                 case 11:
                     box(55, 10, 50, 10, 11, 1);
                     gotoXY(60, 11);
-                    cout << "Ngay sinh hien tai:   " << P->getData().getDob();
+                    cout << "Ngay sinh hien tai:   " << P->getData().getDateOfBirth();
                     gotoXY(60, 13);
                     cout << "Nam sinh moi:";
                     gotoXY(60, 15);
@@ -1418,7 +1418,7 @@ void Admin::updateInfor(LinkedList<User>* luser)
                     if (kt)
                     {
                         S = P->getData();
-                        S.setDob(Dob);
+                        S.setDateOfBirth(Dob);
                         P->setData(S);
                         gotoXY(70, 19);
                         cout << "Thay doi thanh cong !!!" << endl;

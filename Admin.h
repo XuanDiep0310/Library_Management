@@ -15,10 +15,10 @@ public:
     LinkedList<Book>* addBook(LinkedList<Book>* lbook);
     LinkedList<Book>* delBook(LinkedList<Book>* lbook);
     void displayUser(LinkedList<User>* luser);
-    list delUser(list l);
+    List delUser(List l);
     void findUser(LinkedList<User>* luser, LinkedList<Book>* lbook);
-    void borrowBook(list l, int time);
-    void giveBackBook(list l, int money);
+    void borrowBook(List l, int time);
+    void giveBackBook(List l, int money);
     void resetPasswork(LinkedList<User>* luser);
     void updateInfor(LinkedList<User>* luser);
     void statistic(LinkedList<Book>* lbook, LinkedList<User>* luser);

@@ -1,5 +1,6 @@
 #pragma once
 #include "Person.h"
+#include "LinkedList.h"
 #include "Book.h"
 #include "Date.h"
 #include<iomanip>
@@ -8,9 +9,6 @@
 #include <vector>
 
 using namespace std;
-template <typename T>
-class linkedlist;
-
 struct borrow 
 {
     string idBorrow;
@@ -29,121 +27,36 @@ class User : public Person
 private:
     string id;
     string name;
-    Date dayOfBirth;
+    Date dateOfBirth;
     string phone;
     int numborrow;
     int numrequest;
-    vector<borrow> Borrow;
-    vector<request> Request;
+    borrow Borrow[5];
+    request Request[5];
 public:
     User();
     void setId(string id);
     void setName(string name);
-    void setDayOfBirth(Date dayOfBirth);
+    void setDateOfBirth(Date dateOfBirth);
     void setPhone(string phone);
-    void setNumborrow(int numborrow);
+    void setNumBorrow(int numborrow);
     void setNumRequest(int numrequest);
-    void setBorrow(string idBorrow,Date dayBorrow,Date dayExpiry);
-    void setRequest(string idRequest,int accept);
+    void setBorrow(string idBorrow,Date dayBorrow,Date dayExpiry, int pos);
+    void setRequest(string idRequest,int accept, int pos);
     string getId();
     string getName();
-    Date getDayOfBirth();
+    Date getDateOfBirth();
     string getPhone();
-    int getNumborrow();
-    int getNumrequest();
+    int getNumBorrow();
+    int getNumRequest();
     borrow getBorrow(int pos);
     request getRequest(int pos);
+
+    int displayBorrow(LinkedList<Book>* lbook,int t); 
+    int displayRequest(LinkedList<Book>* lbook,int k);
+    void newUsername(LinkedList<User>* luser);
+    void newPassword();
+    void request(LinkedList<Book>* lbook,int i);
+    void cancelRequest(LinkedList<Book>* lbook,int i);
+    void menuRequest(LinkedList<Book>* lbook);
 };
-User::User() 
-{
-    this->numborrow = 4;
-    this->numrequest = 4;
-    Borrow.resize(10);
-    Request.resize(10);
-    for(int i = 0; i <10; i++) 
-    {
-        Borrow[i].idBorrow = '0';
-        Request[i].idRequest = '0';
-        Request[i].accept = 0;
-    }
-}
-    
-void User::setId(string id) 
-{
-    this->id = id;
-}
-    
-void User::setName(string name) 
-{
-    this->name = name;
-}
-
-void User::setDayOfBirth(Date dayOfBirth) 
-{
-    this->dayOfBirth = dayOfBirth;
-}
-    
-void User::setPhone(string phone) 
-{
-    this->phone = phone;
-}
-
-void User::setNumborrow(int numborrow) 
-{
-    this->numborrow = numborrow;
-}
-
-void User::setNumRequest(int numrequest) 
-{
-    this->numrequest = numrequest;
-} 
-    
-void User::setBorrow(string idBorrow,Date dayBorrow,Date dayExpiry) 
-{
-    Borrow.push_back({idBorrow, dayBorrow, dayExpiry});
-}
-    
-void User::setRequest(string idRequest,int accept) 
-{
-    Request.push_back({idRequest, accept});
-}
-
-string User::getId() 
-{
-    return id;
-}
-
-string User::getName() 
-{
-    return name;
-}
-
-Date User::getDayOfBirth() 
-{
-    return dayOfBirth;
-}
-    
-string User::getPhone() 
-{
-    return phone;
-}
-
-int User::getNumborrow() 
-{
-    return this->numborrow;
-}
-
-int User::getNumrequest() 
-{
-    return this->numrequest;
-}
-
-borrow User::getBorrow(int pos) 
-{
-    return this->Borrow[pos];
-}
-
-request User::getRequest(int pos) 
-{
-    return this->Request[pos];
-}
