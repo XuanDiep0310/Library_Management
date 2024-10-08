@@ -17,3 +17,4 @@ void ShowCur(bool CursorVisibility);
 //======= trả về mã phím người dùng bấm =========
 int inputKey();
 void TextColor(int x);
+	

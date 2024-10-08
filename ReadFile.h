@@ -1,7 +1,7 @@
 #pragma once
-#include "LinkedList.h"
-#include "Access.h"
+#include "Node.h"
+#include "truycap.h"
 
-LinkedList<User>* readFileUser();
-LinkedList<Book>* docFileBook();
-List readFileData();
+linkedlist<User>* readfileuser();
+linkedlist<Book>* docfilebook();
+list readfiledata();
