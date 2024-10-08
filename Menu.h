@@ -1,6 +1,6 @@
 #pragma once
-#include "LinkedList.h"
-#include "Access.h"
+#include "Node.h"
+#include "truycap.h"
 
-List menuAdmin(List l);
-List menuUser(List l, Node<User>* P);
+list MenuAdmin(list l);
+list MenuUser(list l, node<User>* P);
