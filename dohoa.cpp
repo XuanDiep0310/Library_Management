@@ -2,7 +2,7 @@
 
 #include <stdio.h>
 #include <conio.h>
-#include <ctime> 
+#include<ctime> 
 #include "windows.h" 
 //======= lấy tọa độ x của con trỏ hiện tại =============
 #define KEY_NONE	-1
