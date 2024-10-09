@@ -1,27 +1,29 @@
 #pragma once
 #include "Book.h"
 #include <string>
-#include "LinkedList.h"
 #include <iostream>
 using namespace std;
+
+using namespace std;
+template <typename T>
+class linkedlist;
 
 class Person
 {
 private:
-    string username;
-    string password;
-
+    string un;
+    string pw;
 public:
     Person();
-    Person(string username, string password);
-    void setUsername(string username);
-    void setPassword(string password);
-    string getUsername();
-    string getPassword();
-    void displayAvailable(LinkedList<Book> *lbook);
-    void findCategory(LinkedList<Book> *lbook);
-    void findBookName(LinkedList<Book> *lbook);
-    void findAuthor(LinkedList<Book> *lbook);
-    void displayBook(LinkedList<Book> *lbook);
+    Person(string, string);
+    void setUn(string);
+    void setPw(string);
+    string getUn();
+    string getPw();
+    void displayAvailable(linkedlist<Book>* lbook);
+    void findCategory(linkedlist<Book>* lbook);
+    void findbookname(linkedlist<Book>* lbook);
+    void findAuthor(linkedlist<Book>* lbook);
+    void displaybook(linkedlist<Book>* lbook);
 };
 

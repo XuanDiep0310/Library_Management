@@ -1,4 +1,4 @@
-#include "Admin.h"
+#include "admin.h"
 #include <cstring>
 #include <iostream>
 
@@ -10,7 +10,7 @@ Admin::Admin()
 
 }
 
-int dynamicFixMenu(int xp, int yp, int xcu, int ycu, bool kt)
+int menudongfix(int xp, int yp, int xcu, int ycu, bool kt)
 {
     ShowCur(0);
     while (true)
@@ -18,30 +18,30 @@ int dynamicFixMenu(int xp, int yp, int xcu, int ycu, bool kt)
         if (kt == true)
         {
             gotoXY(xcu, ycu);
-            if (ycu == 7) lightbar(xcu, ycu, 30, 2, 1, "       SUA MA SO SACH");
-            if (ycu == 9) lightbar(xcu, ycu, 30, 2, 1, "        SUA TEN SACH");
-            if (ycu == 11) lightbar(xcu, ycu, 30, 2, 1, "      SUA THE LOAI SACH");
-            if (ycu == 13) lightbar(xcu, ycu, 30, 2, 1, "      SUA NHA XUAT BAN");
-            if (ycu == 15) lightbar(xcu, ycu, 30, 2, 1, "         SUA TAC GIA");
-            if (ycu == 17) lightbar(xcu, ycu, 30, 2, 1, "      SUA NAM XUAT BAN");
-            if (ycu == 19) lightbar(xcu, ycu, 30, 2, 1, "    SUA SO LUONG HIEN CO");
-            if (ycu == 21) lightbar(xcu, ycu, 30, 2, 1, "    SUA SO LUONG BAN DAU");
-            if (ycu == 23) lightbar(xcu, ycu, 30, 2, 1, "        SUA VI TRI");
-            if (ycu == 25) lightbar(xcu, ycu, 30, 2, 1, "           QUAY LAI");
-            if (ycu == 27) lightbar(xcu, ycu, 30, 2, 1, "            THOAT");
+            if (ycu == 7) thanhsang(xcu, ycu, 30, 2, 1, "       SUA MA SO SACH");
+            if (ycu == 9) thanhsang(xcu, ycu, 30, 2, 1, "        SUA TEN SACH");
+            if (ycu == 11) thanhsang(xcu, ycu, 30, 2, 1, "      SUA THE LOAI SACH");
+            if (ycu == 13) thanhsang(xcu, ycu, 30, 2, 1, "      SUA NHA XUAT BAN");
+            if (ycu == 15) thanhsang(xcu, ycu, 30, 2, 1, "         SUA TAC GIA");
+            if (ycu == 17) thanhsang(xcu, ycu, 30, 2, 1, "      SUA NAM XUAT BAN");
+            if (ycu == 19) thanhsang(xcu, ycu, 30, 2, 1, "    SUA SO LUONG HIEN CO");
+            if (ycu == 21) thanhsang(xcu, ycu, 30, 2, 1, "    SUA SO LUONG BAN DAU");
+            if (ycu == 23) thanhsang(xcu, ycu, 30, 2, 1, "        SUA VI TRI");
+            if (ycu == 25) thanhsang(xcu, ycu, 30, 2, 1, "           QUAY LAI");
+            if (ycu == 27) thanhsang(xcu, ycu, 30, 2, 1, "            THOAT");
             xcu = xp;
             ycu = yp;
-            if (yp == 7) lightbar(xp, yp, 30, 2, 75, "       SUA MA SO SACH");
-            if (yp == 9) lightbar(xp, yp, 30, 2, 75, "        SUA TEN SACH");
-            if (yp == 11) lightbar(xp, yp, 30, 2, 75, "      SUA THE LOAI SACH");
-            if (yp == 13) lightbar(xp, yp, 30, 2, 75, "      SUA NHA XUAT BAN");
-            if (yp == 15) lightbar(xp, yp, 30, 2, 75, "         SUA TAC GIA");
-            if (yp == 17) lightbar(xp, yp, 30, 2, 75, "      SUA NAM XUAT BAN");
-            if (yp == 19) lightbar(xp, yp, 30, 2, 75, "    SUA SO LUONG HIEN CO");
-            if (yp == 21) lightbar(xp, yp, 30, 2, 75, "    SUA SO LUONG BAN DAU");
-            if (yp == 23) lightbar(xp, yp, 30, 2, 75, "        SUA VI TRI");
-            if (yp == 25) lightbar(xp, yp, 30, 2, 75, "           QUAY LAI");
-            if (yp == 27) lightbar(xp, yp, 30, 2, 75, "            THOAT");
+            if (yp == 7) thanhsang(xp, yp, 30, 2, 75, "       SUA MA SO SACH");
+            if (yp == 9) thanhsang(xp, yp, 30, 2, 75, "        SUA TEN SACH");
+            if (yp == 11) thanhsang(xp, yp, 30, 2, 75, "      SUA THE LOAI SACH");
+            if (yp == 13) thanhsang(xp, yp, 30, 2, 75, "      SUA NHA XUAT BAN");
+            if (yp == 15) thanhsang(xp, yp, 30, 2, 75, "         SUA TAC GIA");
+            if (yp == 17) thanhsang(xp, yp, 30, 2, 75, "      SUA NAM XUAT BAN");
+            if (yp == 19) thanhsang(xp, yp, 30, 2, 75, "    SUA SO LUONG HIEN CO");
+            if (yp == 21) thanhsang(xp, yp, 30, 2, 75, "    SUA SO LUONG BAN DAU");
+            if (yp == 23) thanhsang(xp, yp, 30, 2, 75, "        SUA VI TRI");
+            if (yp == 25) thanhsang(xp, yp, 30, 2, 75, "           QUAY LAI");
+            if (yp == 27) thanhsang(xp, yp, 30, 2, 75, "            THOAT");
             kt = false;
         }
         if (_kbhit())
@@ -80,7 +80,7 @@ int dynamicFixMenu(int xp, int yp, int xcu, int ycu, bool kt)
     }
 }
 
-LinkedList<Book>* Admin::fixBook(LinkedList<Book>* lbook, LinkedList<User>* luser)
+linkedlist<Book>* Admin::fixbook(linkedlist<Book>* lbook, linkedlist<User>* luser)
 {
     cin.ignore();
     Book S;
@@ -103,8 +103,8 @@ LinkedList<Book>* Admin::fixBook(LinkedList<Book>* lbook, LinkedList<User>* luse
         gotoXY(1, 3); cout << char(195);
         gotoXY(125, 3); cout << char(180);
         gotoXY(35, 4);
-        string ms(limit(35, 4, 20));
-        Node<Book>* P = lbook->get(ms);
+        string ms(gioihan(35, 4, 20));
+        node<Book>* P = lbook->get(ms);
         if (P != NULL)
         {
             box(1, 7, 30, 2, 11, 1, "       SUA MA SO SACH");
@@ -142,7 +142,7 @@ LinkedList<Book>* Admin::fixBook(LinkedList<Book>* lbook, LinkedList<User>* luse
             bool check2 = true;
             while (check2)
             {
-                int option = dynamicFixMenu(1, 7, 1, 7, true);
+                int option = menudongfix(1, 7, 1, 7, true);
                 switch (option)
                 {
                 case 7:
@@ -153,28 +153,28 @@ LinkedList<Book>* Admin::fixBook(LinkedList<Book>* lbook, LinkedList<User>* luse
                     gotoXY(60, 16);
                     cout << "Ma so sach moi:";
                     gotoXY(90, 16);
-                    ID = limit(90, 16, 15);
+                    ID = gioihan(90, 16, 15);
                     if (lbook->get(ID) == NULL && ID.empty() == false)
                     {
                         S = P->getData();
                         S.setID(ID);
                         P->setData(S);
-                        for (Node<User>* K = luser->getHead(); K != NULL; K = K->getNext())
+                        for (node<User>* K = luser->getHead(); K != NULL; K = K->getNext())
                         {
                             User U = K->getData();
-                            for (int i = 4; i >= U.getNumBorrow() + 1; i--)
+                            for (int i = 4; i >= U.getNumborrow() + 1; i--)
                             {
                                 if (U.getBorrow(i).IDborrow == ms)
                                 {
                                     U.setBorrow(ID, U.getBorrow(i).Dayborrow, U.getBorrow(i).Dayexpiry, i);
                                 }
                             }
-                            for (int i = 4; i >= U.getNumRequest() + 1; i--)
+                            for (int i = 4; i >= U.getNumrequest() + 1; i--)
                             {
 
-                                if (U.getRequest(i).idRequest == ms)
+                                if (U.getRequest(i).IDrequest == ms)
                                 {
-                                    U.setRequest(ID, U.getRequest(i).accept, i);
+                                    U.setRequest(ID, U.getRequest(i).Accept, i);
                                 }
                             }
                             K->setData(U);
@@ -203,7 +203,7 @@ LinkedList<Book>* Admin::fixBook(LinkedList<Book>* lbook, LinkedList<User>* luse
                     gotoXY(60, 16);
                     cout << "Ten sach moi:";
                     gotoXY(83, 16);
-                    Name = limit(83, 16, 22);
+                    Name = gioihan(83, 16, 22);
                     if (Name.empty() == false)
                     {
                         S = P->getData();
@@ -227,7 +227,7 @@ LinkedList<Book>* Admin::fixBook(LinkedList<Book>* lbook, LinkedList<User>* luse
                     gotoXY(60, 16);
                     cout << "The loai moi:";
                     gotoXY(83, 16);
-                    Category = limit(83, 16, 22);
+                    Category = gioihan(83, 16, 22);
                     if (Category.empty() == false)
                     {
                         S = P->getData();
@@ -251,7 +251,7 @@ LinkedList<Book>* Admin::fixBook(LinkedList<Book>* lbook, LinkedList<User>* luse
                     gotoXY(60, 16);
                     cout << "Nha xuat ban moi:";
                     gotoXY(83, 16);
-                    Publisher = limit(83, 16, 22);
+                    Publisher = gioihan(83, 16, 22);
                     if (Publisher.empty() == false)
                     {
                         S = P->getData();
@@ -275,7 +275,7 @@ LinkedList<Book>* Admin::fixBook(LinkedList<Book>* lbook, LinkedList<User>* luse
                     gotoXY(60, 16);
                     cout << "Tac gia moi:";
                     gotoXY(83, 16);
-                    Author = limit(83, 16, 22);
+                    Author = gioihan(83, 16, 22);
                     if (Author.empty() == false)
                     {
                         S = P->getData();
@@ -300,7 +300,7 @@ LinkedList<Book>* Admin::fixBook(LinkedList<Book>* lbook, LinkedList<User>* luse
                     cout << "Nam xuat ban moi:";
                     gotoXY(83, 16);
                     cin >> Year;
-                    if (Year <= D.now().getYear() && Year >= 0)
+                    if (Year <= D.now().getyear() && Year >= 0)
                     {
                         S = P->getData();
                         S.setYear(Year);
@@ -324,7 +324,7 @@ LinkedList<Book>* Admin::fixBook(LinkedList<Book>* lbook, LinkedList<User>* luse
                     cout << "So luong hien co moi:";
                     gotoXY(83, 16);
                     cin >> Amount;
-                    if (Amount >= 0 && Amount <= P->getData().getFixedAmount())
+                    if (Amount >= 0 && Amount <= P->getData().getfixedAmount())
                     {
                         S = P->getData();
                         S.setAmount(Amount);
@@ -343,7 +343,7 @@ LinkedList<Book>* Admin::fixBook(LinkedList<Book>* lbook, LinkedList<User>* luse
                 case 21:
                     box(55, 10, 50, 10, 11, 1);
                     gotoXY(60, 14);
-                    cout << "So luong ban dau hien tai:   " << P->getData().getFixedAmount();
+                    cout << "So luong ban dau hien tai:   " << P->getData().getfixedAmount();
                     gotoXY(60, 16);
                     cout << "So luong ban dau moi:";
                     gotoXY(83, 16);
@@ -351,7 +351,7 @@ LinkedList<Book>* Admin::fixBook(LinkedList<Book>* lbook, LinkedList<User>* luse
                     if (fixedAmount >= 0 && fixedAmount >= P->getData().getAmount())
                     {
                         S = P->getData();
-                        S.setFixedAmount(fixedAmount);
+                        S.setfixedAmount(fixedAmount);
                         P->setData(S);
                         gotoXY(70, 18);
                         cout << "Thay doi thanh cong !!!" << endl;
@@ -367,17 +367,17 @@ LinkedList<Book>* Admin::fixBook(LinkedList<Book>* lbook, LinkedList<User>* luse
                 case 23:
                     box(55, 10, 50, 10, 11, 1);
                     gotoXY(60, 14);
-                    cout << "Vi tri hien tai:   " << P->getData().getLocation();
+                    cout << "Vi tri hien tai:   " << P->getData().getlocation();
                     gotoXY(60, 16);
                     cout << "Vi tri moi:";
                     gotoXY(83, 16);
-                    location = limit(83, 16, 22);
+                    location = gioihan(83, 16, 22);
                     if (location.empty() == false)
                     {
                         bool check3 = true;
-                        for (Node<Book>* P = lbook->getHead(); P != NULL; P = P->getNext())
+                        for (node<Book>* P = lbook->getHead(); P != NULL; P = P->getNext())
                         {
-                            if (location == P->getData().getLocation())
+                            if (location == P->getData().getlocation())
                             {
                                 check3 = false;
                                 break;
@@ -386,7 +386,7 @@ LinkedList<Book>* Admin::fixBook(LinkedList<Book>* lbook, LinkedList<User>* luse
                         if (check3 == true)
                         {
                             S = P->getData();
-                            S.setLocation(location);
+                            S.setlocation(location);
                             P->setData(S);
                             gotoXY(70, 18);
                             cout << "Thay doi thanh cong !!!" << endl;
@@ -434,7 +434,7 @@ LinkedList<Book>* Admin::fixBook(LinkedList<Book>* lbook, LinkedList<User>* luse
     }
 }
 
-LinkedList<Book>* Admin::addBook(LinkedList<Book>* lbook)
+linkedlist<Book>* Admin::addbook(linkedlist<Book>* lbook)
 {
     ShowCur(1);
     cin.ignore();
@@ -487,22 +487,22 @@ LinkedList<Book>* Admin::addBook(LinkedList<Book>* lbook)
         gotoXY(49, 25); cout << char(195);
         gotoXY(79, 25); cout << char(180);
         gotoXY(51, 12);
-        string ID(limit(51, 12, 28));
+        string ID(gioihan(51, 12, 28));
         gotoXY(51, 14);
-        string Name(limit(51, 14, 28));
+        string Name(gioihan(51, 14, 28));
         gotoXY(51, 16);
-        string Category(limit(51, 16, 28));
+        string Category(gioihan(51, 16, 28));
         gotoXY(51, 18);
-        string Publisher(limit(51, 18, 28));
+        string Publisher(gioihan(51, 18, 28));
         gotoXY(51, 20);
-        string Author(limit(51, 20, 28));
+        string Author(gioihan(51, 20, 28));
         gotoXY(51, 22);
         cin >> Year;
         gotoXY(51, 24);
         cin >> fixedAmount;
         gotoXY(51, 26);
         cin.ignore();
-        string location(limit(51, 26, 28));
+        string location(gioihan(51, 26, 28));
         bool kt = true;
         if (ID.length() != 5)
         {
@@ -540,7 +540,7 @@ LinkedList<Book>* Admin::addBook(LinkedList<Book>* lbook)
             gotoXY(82, 20);
             cout << "Khong the trong !!!" << endl;
         }
-        if (Year > D.now().getYear() || Year <= 0)
+        if (Year > D.now().getyear() || Year <= 0)
         {
             kt = false;
             gotoXY(82, 22);
@@ -560,9 +560,9 @@ LinkedList<Book>* Admin::addBook(LinkedList<Book>* lbook)
         }
         else
         {
-            for (Node<Book>* P = lbook->getHead(); P != NULL; P = P->getNext())
+            for (node<Book>* P = lbook->getHead(); P != NULL; P = P->getNext())
             {
-                if (location == P->getData().getLocation())
+                if (location == P->getData().getlocation())
                 {
                     check2 = false;
                     break;
@@ -584,9 +584,9 @@ LinkedList<Book>* Admin::addBook(LinkedList<Book>* lbook)
             P.setPublisher(Publisher);
             P.setAuthor(Author);
             P.setYear(Year);
-            P.setFixedAmount(fixedAmount);
+            P.setfixedAmount(fixedAmount);
             P.setAmount(fixedAmount);
-            P.setLocation(location);
+            P.setlocation(location);
             lbook->addTail(P);
             gotoXY(51, 28);
             cout << "Them sach thanh cong !!!" << endl;
@@ -602,7 +602,7 @@ LinkedList<Book>* Admin::addBook(LinkedList<Book>* lbook)
     }
 }
 
-LinkedList<Book>* Admin::delBook(LinkedList<Book>* lbook)
+linkedlist<Book>* Admin::delbook(linkedlist<Book>* lbook)
 {
     ShowCur(1);
     cin.ignore();
@@ -615,13 +615,13 @@ LinkedList<Book>* Admin::delBook(LinkedList<Book>* lbook)
         gotoXY(1, 3); cout << char(195);
         gotoXY(125, 3); cout << char(180);
         gotoXY(35, 4);
-        ID = limit(35, 4, 20);
-        Node<Book>* head = lbook->getHead();
-        Node<Book>* tail = lbook->getTail();
-        Node<Book>* p = lbook->get(ID);
+        ID = gioihan(35, 4, 20);
+        node<Book>* head = lbook->getHead();
+        node<Book>* tail = lbook->getTail();
+        node<Book>* p = lbook->get(ID);
         if (p != NULL)
         {
-            if (p->getData().getFixedAmount() == p->getData().getAmount())
+            if (p->getData().getfixedAmount() == p->getData().getAmount())
             {
                 if (head == NULL)
                 {
@@ -678,7 +678,7 @@ LinkedList<Book>* Admin::delBook(LinkedList<Book>* lbook)
     }
 }
 
-void Admin::displayUser(LinkedList<User>* luser)
+void Admin::displayuser(linkedlist<User>* luser)
 {
     system("cls");
     box(1, 5, 124, 2, 11, 1, "*********************************************TOAN BO NGUOI DUNG TRONG THU VIEN**********************************************");
@@ -710,11 +710,11 @@ void Admin::displayUser(LinkedList<User>* luser)
     cin.get();
 }
 
-List Admin::delUser(List l)
+list Admin::deluser(list l)
 {
     ShowCur(1);
     cin.ignore();
-    LinkedList<User>* luser = l.luser();
+    linkedlist<User>* luser = l.luser();
     string ID;
     while (true)
     {
@@ -726,13 +726,13 @@ List Admin::delUser(List l)
         gotoXY(2, 8);
         cout << "Nhap ma nguoi dung can xoa : ";
         gotoXY(40, 8);
-        ID = limit(40, 8, 30);
-        Node<User>* head = luser->getHead();
-        Node<User>* tail = luser->getTail();
-        Node<User>* p = luser->get(ID);
+        ID = gioihan(40, 8, 30);
+        node<User>* head = luser->getHead();
+        node<User>* tail = luser->getTail();
+        node<User>* p = luser->get(ID);
         if (p != NULL)
         {
-            if (p->getData().getNumBorrow() == 4)
+            if (p->getData().getNumborrow() == 4)
             {
                 if (head == NULL)
                 {
@@ -744,7 +744,7 @@ List Admin::delUser(List l)
                 {
                     head = head->getNext();
                     luser->setHead(head);
-                    l.setListUser(luser);
+                    l.setluser(luser);
                     gotoXY(70, 8);
                     cout << "Xoa thanh cong !!!" << endl;
                     cin.get();
@@ -754,7 +754,7 @@ List Admin::delUser(List l)
                     tail->getPrev()->setNext(NULL);
                     tail = tail->getPrev();
                     luser->setTail(tail);
-                    l.setListUser(luser);
+                    l.setluser(luser);
                     gotoXY(70, 8);
                     cout << "Xoa thanh cong !!!" << endl;
                     cin.get();
@@ -791,7 +791,7 @@ List Admin::delUser(List l)
     }
 }
 
-void Admin::findUser(LinkedList<User>* luser, LinkedList<Book>* lbook)
+void Admin::finduser(linkedlist<User>* luser, linkedlist<Book>* lbook)
 {
     cin.ignore();
     while (true)
@@ -803,10 +803,10 @@ void Admin::findUser(LinkedList<User>* luser, LinkedList<Book>* lbook)
         gotoXY(1, 3); cout << char(195);
         gotoXY(125, 3); cout << char(180);
         gotoXY(50, 4);
-        ID = limit(50, 4, 15);
+        ID = gioihan(50, 4, 15);
         if (luser->get(ID) != NULL)
         {
-            Node<User>* P = luser->get(ID);
+            node<User>* P = luser->get(ID);
             box(1, 5, 20, 2, 11, 1, " MA SO NGUOI DUNG");
             gotoXY(1, 5); cout << char(195);
             box(21, 5, 30, 2, 11, 1, "       TEN NGUOI DUNG");
@@ -826,8 +826,8 @@ void Admin::findUser(LinkedList<User>* luser, LinkedList<Book>* lbook)
             gotoXY(111, 7); cout << char(193);
             gotoXY(125, 5); cout << char(180);
             P->print(P, 0, 0);
-            int k = P->getData().displayBorrow(lbook, 4);
-            P->getData().displayRequest(lbook, 6 + k);
+            int k = P->getData().displayborrow(lbook, 4);
+            P->getData().displayrequest(lbook, 6 + k);
             cin.get();
         }
         else
@@ -846,10 +846,10 @@ void Admin::findUser(LinkedList<User>* luser, LinkedList<Book>* lbook)
     }
 }
 
-void Admin::borrowBook(List l, int time)
+void Admin::borrowbook(list l, int time)
 {
-    LinkedList<User>* luser = l.luser();
-    LinkedList<Book>* lbook = l.lbook();
+    linkedlist<User>* luser = l.luser();
+    linkedlist<Book>* lbook = l.lbook();
     string IDuser;
     cin.ignore();
     while (true)
@@ -886,23 +886,23 @@ void Admin::borrowBook(List l, int time)
         gotoXY(101, 9); cout << char(193);
         gotoXY(125, 7); cout << char(180);
         gotoXY(19, 4);
-        IDuser = limit(19, 4, 20);
+        IDuser = gioihan(19, 4, 20);
         if (luser->get(IDuser) != NULL)
         {
-            Node<User>* U = luser->get(IDuser);
+            node<User>* U = luser->get(IDuser);
             User C = U->getData();
             int ya = 4;
-            for (int i = 4; i >= C.getNumRequest() + 1; i--)
+            for (int i = 4; i >= C.getNumrequest() + 1; i--)
             {
                 box(1, 5 + ya, 84, 2, 11, 1);
                 gotoXY(1, 5 + ya); cout << char(195);
                 box(85, 5 + ya, 16, 2, 11, 1);
                 gotoXY(85, 5 + ya); cout << char(197);
                 gotoXY(2, 6 + ya);
-                cout << "Sinh vien ma so " << C.getId() << " yeu cau muon sach ma so " << C.getRequest(i).idRequest << " : " << endl;
+                cout << "Sinh vien ma so " << C.getID() << " yeu cau muon sach ma so " << C.getRequest(i).IDrequest << " : " << endl;
                 gotoXY(93, 6 + ya);
                 cout << i;
-                if (C.getRequest(i).accept == 0)
+                if (C.getRequest(i).Accept == 0)
                 {
                     box(101, 5 + ya, 24, 2, 11, 1);
                     gotoXY(101, 5 + ya); cout << char(197);
@@ -910,7 +910,7 @@ void Admin::borrowBook(List l, int time)
                     gotoXY(102, 6 + ya);
                     cout << "Dang cho duyet.";
                 }
-                else if (C.getRequest(i).accept == 1)
+                else if (C.getRequest(i).Accept == 1)
                 {
                     box(101, 5 + ya, 24, 2, 11, 1);
                     gotoXY(101, 5 + ya); cout << char(197);
@@ -918,7 +918,7 @@ void Admin::borrowBook(List l, int time)
                     gotoXY(102, 6 + ya);
                     cout << "Chap nhan.";
                 }
-                else if (C.getRequest(i).accept == 2)
+                else if (C.getRequest(i).Accept == 2)
                 {
                     box(101, 5 + ya, 24, 2, 11, 1);
                     gotoXY(101, 5 + ya); cout << char(197);
@@ -929,25 +929,25 @@ void Admin::borrowBook(List l, int time)
                 ya += 2;
             }
 
-            if (C.getNumBorrow() >= 0)
+            if (C.getNumborrow() >= 0)
             {
                 string IDbook;
                 int ms;
                 int yc;
                 bool check = false;
                 gotoXY(61, 4);
-                IDbook = limit(61, 4, 16);
+                IDbook = gioihan(61, 4, 16);
                 gotoXY(93, 4);
                 cin >> ms;
                 gotoXY(121, 4);
                 cin >> yc;
                 if (l.lbook()->get(IDbook) != NULL && yc >= 1 && yc <= 2)
                 {
-                    for (int i = 4; i >= C.getNumRequest() + 1; i--)
+                    for (int i = 4; i >= C.getNumrequest() + 1; i--)
                     {
-                        if (C.getRequest(i).idRequest == IDbook && i == ms && C.getRequest(i).accept == 0)
+                        if (C.getRequest(i).IDrequest == IDbook && i == ms && C.getRequest(i).Accept == 0)
                         {
-                            Node<Book>* P = l.lbook()->get(IDbook);
+                            node<Book>* P = l.lbook()->get(IDbook);
                             Book B = P->getData();
                             if (yc == 1)
                             {
@@ -958,8 +958,8 @@ void Admin::borrowBook(List l, int time)
                                 D = D.now();
                                 Date De;
                                 De = De.now();
-                                C.setBorrow(IDbook, D, De.expiry(time), C.getNumBorrow());
-                                C.setNumBorrow(C.getNumBorrow() - 1);
+                                C.setBorrow(IDbook, D, De.expiry(time), C.getNumborrow());
+                                C.setNumborrow(C.getNumborrow() - 1);
                                 gotoXY(60, 6);
                                 cout << "Muon sach thanh cong !";
                                 _getch();
@@ -976,7 +976,7 @@ void Admin::borrowBook(List l, int time)
                             U->setData(C);
                             break;
                         }
-                        else if (C.getRequest(i).idRequest == IDbook && i == ms && (C.getRequest(i).accept == 1 || C.getRequest(i).accept == 2))
+                        else if (C.getRequest(i).IDrequest == IDbook && i == ms && (C.getRequest(i).Accept == 1 || C.getRequest(i).Accept == 2))
                         {
                             check = true;
                             gotoXY(60, 6);
@@ -1022,10 +1022,10 @@ void Admin::borrowBook(List l, int time)
     }
 }
 
-void Admin::giveBackBook(List l, int money)
+void Admin::givebackbook(list l, int money)
 {
-    LinkedList<User>* luser = l.luser();
-    LinkedList<Book>* lbook = l.lbook();
+    linkedlist<User>* luser = l.luser();
+    linkedlist<Book>* lbook = l.lbook();
     cin.ignore();
     while (true)
     {
@@ -1046,18 +1046,18 @@ void Admin::giveBackBook(List l, int money)
         gotoXY(125, 11); cout << char(180);
         string IDuser;
         gotoXY(30, 8);
-        IDuser = limit(30, 8, 20);
+        IDuser = gioihan(30, 8, 20);
         if (luser->get(IDuser) != NULL)
         {
             int nop = 1;
-            Node<User>* U = luser->get(IDuser);
+            node<User>* U = luser->get(IDuser);
             User C = U->getData();
             string ID;
             Date D;
             bool check = false;
             gotoXY(30, 10);
-            ID = limit(30, 10, 25);
-            for (int i = C.getNumBorrow() + 1; i <= 4; i++)
+            ID = gioihan(30, 10, 25);
+            for (int i = C.getNumborrow() + 1; i <= 4; i++)
             {
                 if (ID == C.getBorrow(i).IDborrow)
                 {
@@ -1078,17 +1078,17 @@ void Admin::giveBackBook(List l, int money)
                     }
                     if ((D.now() < C.getBorrow(i).Dayexpiry || D.now() == C.getBorrow(i).Dayexpiry) && nop == 1)
                     {
-                        for (int j = i; j > C.getNumBorrow() + 1; j--)
+                        for (int j = i; j > C.getNumborrow() + 1; j--)
                         {
                             C.setBorrow(C.getBorrow(j - 1).IDborrow, C.getBorrow(j - 1).Dayborrow, C.getBorrow(j - 1).Dayexpiry, j);
                         }
-                        for (int t = C.getNumBorrow() + 1; t >= 0; t--)
+                        for (int t = C.getNumborrow() + 1; t >= 0; t--)
                         {
                             Date D(1, 1, 1900);
                             C.setBorrow("0", D, D, t);
                         }
-                        C.setNumBorrow(C.getNumBorrow() + 1);
-                        Node<Book>* P = lbook->get(ID);
+                        C.setNumborrow(C.getNumborrow() + 1);
+                        node<Book>* P = lbook->get(ID);
                         Book B = P->getData();
                         B.setAmount(P->getData().getAmount() + 1);
                         P->setData(B);
@@ -1100,17 +1100,17 @@ void Admin::giveBackBook(List l, int money)
                     }
                     else if (C.getBorrow(i).Dayexpiry < D.now() && nop == 1)
                     {
-                        for (int j = i; j > C.getNumBorrow() + 1; j--)
+                        for (int j = i; j > C.getNumborrow() + 1; j--)
                         {
                             C.setBorrow(C.getBorrow(j - 1).IDborrow, C.getBorrow(j - 1).Dayborrow, C.getBorrow(j - 1).Dayexpiry, j);
                         }
-                        for (int t = C.getNumBorrow() + 1; t >= 0; t--)
+                        for (int t = C.getNumborrow() + 1; t >= 0; t--)
                         {
                             Date D(1, 1, 1900);
                             C.setBorrow("0", D, D, t);
                         }
-                        C.setNumBorrow(C.getNumBorrow() + 1);
-                        Node<Book>* P = lbook->get(ID);
+                        C.setNumborrow(C.getNumborrow() + 1);
+                        node<Book>* P = lbook->get(ID);
                         Book B = P->getData();
                         B.setAmount(P->getData().getAmount() + 1);
                         P->setData(B);
@@ -1157,7 +1157,7 @@ void Admin::giveBackBook(List l, int money)
     }
 }
 
-void Admin::resetPasswork(LinkedList<User>* luser)
+void Admin::resetpw(linkedlist<User>* luser)
 {
     string ID;
     cin.ignore();
@@ -1181,15 +1181,15 @@ void Admin::resetPasswork(LinkedList<User>* luser)
         gotoXY(1, 11); cout << char(195);
         gotoXY(125, 11); cout << char(180);
         gotoXY(50, 8);
-        ID = limit(50, 8, 30);
+        ID = gioihan(50, 8, 30);
         if (luser->get(ID) != NULL)
         {
-            Node<User>* P = luser->get(ID);
+            node<User>* P = luser->get(ID);
             User U = P->getData();
-            U.setUsername(U.getId());
-            U.setPassword(U.getId());
-            gotoXY(35, 10); cout << U.getUsername();
-            gotoXY(35, 12); cout << U.getPassword();
+            U.setUn(U.getID());
+            U.setPw(U.getID());
+            gotoXY(35, 10); cout << U.getUn();
+            gotoXY(35, 12); cout << U.getPw();
             P->setData(U);
         }
         else
@@ -1211,7 +1211,7 @@ void Admin::resetPasswork(LinkedList<User>* luser)
 int nummonthu[] = { 0,31,28,31,30,31,30,31,31,30,31,30,31 };
 int nummonthplusu[] = { 0,31,29,31,30,31,30,31,31,30,31,30,31 };
 
-int dynamicFixedUserMenu(int xp, int yp, int xcu, int ycu, bool kt)
+int menudongfixuser(int xp, int yp, int xcu, int ycu, bool kt)
 {
     ShowCur(0);
     while (true)
@@ -1219,20 +1219,20 @@ int dynamicFixedUserMenu(int xp, int yp, int xcu, int ycu, bool kt)
         if (kt == true)
         {
             gotoXY(xcu, ycu);
-            if (ycu == 7) lightbar(xcu, ycu, 30, 2, 1, "     SUA MA SO SINH VIEN");
-            if (ycu == 9) lightbar(xcu, ycu, 30, 2, 1, "     SUA TEN NGUOI DUNG");
-            if (ycu == 11) lightbar(xcu, ycu, 30, 2, 1, "        SUA NGAY SINH");
-            if (ycu == 13) lightbar(xcu, ycu, 30, 2, 1, "      SUA SO DIEN THOAI");
-            if (ycu == 15) lightbar(xcu, ycu, 30, 2, 1, "           QUAY LAI");
-            if (ycu == 17) lightbar(xcu, ycu, 30, 2, 1, "            THOAT");
+            if (ycu == 7) thanhsang(xcu, ycu, 30, 2, 1, "     SUA MA SO SINH VIEN");
+            if (ycu == 9) thanhsang(xcu, ycu, 30, 2, 1, "     SUA TEN NGUOI DUNG");
+            if (ycu == 11) thanhsang(xcu, ycu, 30, 2, 1, "        SUA NGAY SINH");
+            if (ycu == 13) thanhsang(xcu, ycu, 30, 2, 1, "      SUA SO DIEN THOAI");
+            if (ycu == 15) thanhsang(xcu, ycu, 30, 2, 1, "           QUAY LAI");
+            if (ycu == 17) thanhsang(xcu, ycu, 30, 2, 1, "            THOAT");
             xcu = xp;
             ycu = yp;
-            if (yp == 7) lightbar(xp, yp, 30, 2, 75, "     SUA MA SO SINH VIEN");
-            if (yp == 9) lightbar(xp, yp, 30, 2, 75, "     SUA TEN NGUOI DUNG");
-            if (yp == 11) lightbar(xp, yp, 30, 2, 75, "        SUA NGAY SINH");
-            if (yp == 13) lightbar(xp, yp, 30, 2, 75, "      SUA SO DIEN THOAI");
-            if (yp == 15) lightbar(xp, yp, 30, 2, 75, "           QUAY LAI");
-            if (yp == 17) lightbar(xp, yp, 30, 2, 75, "            THOAT");
+            if (yp == 7) thanhsang(xp, yp, 30, 2, 75, "     SUA MA SO SINH VIEN");
+            if (yp == 9) thanhsang(xp, yp, 30, 2, 75, "     SUA TEN NGUOI DUNG");
+            if (yp == 11) thanhsang(xp, yp, 30, 2, 75, "        SUA NGAY SINH");
+            if (yp == 13) thanhsang(xp, yp, 30, 2, 75, "      SUA SO DIEN THOAI");
+            if (yp == 15) thanhsang(xp, yp, 30, 2, 75, "           QUAY LAI");
+            if (yp == 17) thanhsang(xp, yp, 30, 2, 75, "            THOAT");
             kt = false;
         }
         if (_kbhit())
@@ -1271,7 +1271,7 @@ int dynamicFixedUserMenu(int xp, int yp, int xcu, int ycu, bool kt)
     }
 }
 
-void Admin::updateInfor(LinkedList<User>* luser)
+void Admin::updateIF(linkedlist<User>* luser)
 {
     cin.ignore();
     User S;
@@ -1292,8 +1292,8 @@ void Admin::updateInfor(LinkedList<User>* luser)
         gotoXY(1, 3); cout << char(195);
         gotoXY(125, 3); cout << char(180);
         gotoXY(35, 4);
-        ms = limit(35, 4, 20);
-        Node<User>* P = luser->get(ms);
+        ms = gioihan(35, 4, 20);
+        node<User>* P = luser->get(ms);
         if (P != NULL)
         {
             box(1, 7, 30, 2, 11, 1, "     SUA MA SO SINH VIEN");
@@ -1316,22 +1316,22 @@ void Admin::updateInfor(LinkedList<User>* luser)
             bool check2 = true;
             while (check2)
             {
-                int option = dynamicFixedUserMenu(1, 7, 1, 7, true);
+                int option = menudongfixuser(1, 7, 1, 7, true);
                 switch (option)
                 {
                 case 7:
                     cin.ignore();
                     box(55, 10, 50, 10, 11, 1);
                     gotoXY(60, 14);
-                    cout << "Ma so sinh vien hien tai:          " << P->getData().getId();
+                    cout << "Ma so sinh vien hien tai:          " << P->getData().getID();
                     gotoXY(60, 16);
                     cout << "Ma so sinh vien moi:";
                     gotoXY(90, 16);
-                    ID = limit(90, 16, 15);
+                    ID = gioihan(90, 16, 15);
                     if (luser->get(ID) == NULL && ID.empty() == false && ID.length() == 9)
                     {
                         S = P->getData();
-                        S.setId(ID);
+                        S.setID(ID);
                         P->setData(S);
                         gotoXY(70, 18);
                         cout << "Thay doi thanh cong !!!" << endl;
@@ -1357,7 +1357,7 @@ void Admin::updateInfor(LinkedList<User>* luser)
                     gotoXY(60, 16);
                     cout << "Ten nguoi dung moi:";
                     gotoXY(83, 16);
-                    Name = limit(83, 16, 22);
+                    Name = gioihan(83, 16, 22);
                     if (Name.empty() == false)
                     {
                         S = P->getData();
@@ -1377,7 +1377,7 @@ void Admin::updateInfor(LinkedList<User>* luser)
                 case 11:
                     box(55, 10, 50, 10, 11, 1);
                     gotoXY(60, 11);
-                    cout << "Ngay sinh hien tai:   " << P->getData().getDateOfBirth();
+                    cout << "Ngay sinh hien tai:   " << P->getData().getDob();
                     gotoXY(60, 13);
                     cout << "Nam sinh moi:";
                     gotoXY(60, 15);
@@ -1386,25 +1386,25 @@ void Admin::updateInfor(LinkedList<User>* luser)
                     cout << "Ngay sinh moi:";
                     gotoXY(80, 13);
                     cin >> year;
-                    Dob.setYear(year);
+                    Dob.setyear(year);
                     gotoXY(80, 15);
                     cin >> month;
-                    Dob.setMonth(month);
+                    Dob.setmonth(month);
                     gotoXY(80, 17);
                     cin >> day;
-                    Dob.setDay(day);
-                    if (Dob.getYear() > D.now().getYear() || Dob.getYear() < 1900 || Dob.getMonth() < 1 || Dob.getMonth() > 12)
+                    Dob.setday(day);
+                    if (Dob.getyear() > D.now().getyear() || Dob.getyear() < 1900 || Dob.getmonth() < 1 || Dob.getmonth() > 12)
                     {
                         kt = false;
                         gotoXY(70, 19);
                         cout << "Sai du lieu !!!" << endl;
                         cin.get();
                     }
-                    else if (leapYearu(Dob.getYear()) == true && Dob.getDay() >= 1 && Dob.getDay() <= nummonthplusu[Dob.getMonth()])
+                    else if (leapYearu(Dob.getyear()) == true && Dob.getday() >= 1 && Dob.getday() <= nummonthplusu[Dob.getmonth()])
                     {
                         kt = true;
                     }
-                    else if (leapYearu(Dob.getYear()) == false && Dob.getDay() >= 1 && Dob.getDay() <= nummonthu[Dob.getMonth()])
+                    else if (leapYearu(Dob.getyear()) == false && Dob.getday() >= 1 && Dob.getday() <= nummonthu[Dob.getmonth()])
                     {
                         kt = true;
                     }
@@ -1418,7 +1418,7 @@ void Admin::updateInfor(LinkedList<User>* luser)
                     if (kt)
                     {
                         S = P->getData();
-                        S.setDateOfBirth(Dob);
+                        S.setDob(Dob);
                         P->setData(S);
                         gotoXY(70, 19);
                         cout << "Thay doi thanh cong !!!" << endl;
@@ -1432,7 +1432,7 @@ void Admin::updateInfor(LinkedList<User>* luser)
                     gotoXY(60, 16);
                     cout << "So dien thoai moi:";
                     gotoXY(85, 16);
-                    Phone = limit(85, 16, 20);
+                    Phone = gioihan(85, 16, 20);
                     if (Phone.empty() == false)
                     {
                         S = P->getData();
@@ -1477,7 +1477,7 @@ void Admin::updateInfor(LinkedList<User>* luser)
     }
 }
 
-void Admin::statistic(LinkedList<Book>* lbook, LinkedList<User>* luser)
+void Admin::thongke(linkedlist<Book>* lbook, linkedlist<User>* luser)
 {
     int Sosach = 0;
     int Sosachmuon = 0;
@@ -1495,9 +1495,9 @@ void Admin::statistic(LinkedList<Book>* lbook, LinkedList<User>* luser)
     gotoXY(100, 14); cout << char(180);
     gotoXY(65, 22); cout << char(193);
     gotoXY(31, 15); cout << "So dau sach:" << lbook->getCount();
-    for (Node<Book>* P = lbook->getHead(); P != NULL; P = P->getNext())
+    for (node<Book>* P = lbook->getHead(); P != NULL; P = P->getNext())
     {
-        Sosach += P->getData().getFixedAmount();
+        Sosach += P->getData().getfixedAmount();
         Sosachmuon += P->getData().getAmount();
         if (P->getData().getAmount() == 0)
         {

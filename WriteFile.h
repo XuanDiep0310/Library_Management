@@ -3,10 +3,10 @@
 #include <cstdlib>
 #include <string>
 #include <fstream>
-#include "LinkedList.h"
+#include "Node.h"
 
 using namespace std;
 
-void writrFileUser(LinkedList<User>* luser);
-void writrFileBook(LinkedList<Book>* lbook);
-void writeFileData(int money,int time);
+void writrfileuser(linkedlist<User>* luser);
+void writrfilebook(linkedlist<Book>* lbook);
+void writefiledata(int money, int time);

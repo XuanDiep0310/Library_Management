@@ -1,6 +1,9 @@
-#include "Graphic.h"
+#include "dohoa.h"
 
-
+#include <stdio.h>
+#include <conio.h>
+#include <ctime> 
+#include "windows.h" 
 //======= lấy tọa độ x của con trỏ hiện tại =============
 #define KEY_NONE	-1
 int whereX()
@@ -74,6 +77,6 @@ int inputKey()
 
 void TextColor(int x)
 {
-    HANDLE h= GetStdHandle(STD_OUTPUT_HANDLE);
-    SetConsoleTextAttribute(h, x);
+	HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
+	SetConsoleTextAttribute(h, x);
 }

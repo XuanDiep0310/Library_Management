@@ -519,7 +519,7 @@ list MenuAdmin(list l)
     while (TRUE)
     {
         system("cls");
-        box(49, 5, 30, 2, 11, 1, "       THU VIEN DH GTVT       ");
+        box(49, 5, 30, 2, 11, 1, "       THU VIEN DH GTVT      ");
         box(49, 10, 30, 2, 11, 1, "=============MENU=============");
         box(49, 12, 30, 2, 11, 1, "         QUAN LY SACH");
         gotoXY(49, 12); cout << char(195);
@@ -634,7 +634,7 @@ list MenuUser(list l, node<User>* P)
     while (TRUE)
     {
         system("cls");
-        box(49, 5, 30, 2, 11, 1, "       THU VIEN DH GTVT       ");
+        box(49, 5, 30, 2, 11, 1, "       THU VIEN DH GTVT      ");
         box(49, 10, 30, 2, 11, 1, "=============MENU=============");
         box(49, 12, 30, 2, 11, 1, "       XEM TOAN BO SACH ");
         gotoXY(49, 12); cout << char(195);
