@@ -1,43 +1,44 @@
-#include "User.h"
+#include "user.h"
 #include <cstring>
 #include <iostream>
+#include "Node.h"
 using namespace std;
+
+
 
 User::User()
 {
     this->numborrow = 4;
     this->numrequest = 4;
-    Borrow.resize(10);
-    Request.resize(10);
-    for (int i = 0; i < 10; i++)
+    for (int i = 4; i >= 0; i--)
     {
-        Borrow[i].idBorrow = '0';
-        Request[i].idRequest = '0';
-        Request[i].accept = 0;
+        Borrow[i].IDborrow = '0';
+        Request[i].IDrequest = '0';
+        Request[i].Accept = 0;
     }
 }
 
-void User::setId(string id)
+void User::setID(string ID)
 {
-    this->id = id;
+    this->ID = ID;
 }
 
-void User::setName(string name)
+void User::setName(string Name)
 {
-    this->name = name;
+    this->Name = Name;
 }
 
-void User::setDateOfBirth(Date dateOfBirth)
+void User::setDob(Date Dob)
 {
-    this->dateOfBirth = dateOfBirth;
+    this->Dob = Dob;
 }
 
-void User::setPhone(string phone)
+void User::setPhone(string Phone)
 {
-    this->phone = phone;
+    this->Phone = Phone;
 }
 
-void User::setNumBorrow(int numborrow)
+void User::setNumborrow(int numborrow)
 {
     this->numborrow = numborrow;
 }
@@ -47,60 +48,60 @@ void User::setNumRequest(int numrequest)
     this->numrequest = numrequest;
 }
 
-void User::setBorrow(string idBorrow, Date dayBorrow, Date dayExpiry, int pos)
+void User::setBorrow(string IDborrow, Date Dayborrow, Date Dayexpiry, int i)
 {
-    Borrow[pos].IDborrow = idBorrow;
-    Borrow[pos].dayBorrow = dayBorrow;
-    Borrow[pos].dayExpiry = dayExpiry;
+    Borrow[i].IDborrow = IDborrow;
+    Borrow[i].Dayborrow = Dayborrow;
+    Borrow[i].Dayexpiry = Dayexpiry;
 }
 
-void User::setRequest(string idRequest, int accept, int pos)
+void User::setRequest(string IDrequest, int Accept, int i)
 {
-    Request[pos].idRequest = idRequest;
-    Request[pos].accept = accept;
+    Request[i].IDrequest = IDrequest;
+    Request[i].Accept = Accept;
 }
 
-string User::getId()
+string User::getID()
 {
-    return id;
+    return ID;
 }
 
 string User::getName()
 {
-    return name;
+    return Name;
 }
 
-Date User::getDateOfBirth()
+Date User::getDob()
 {
-    return dateOfBirth;
+    return Dob;
 }
 
 string User::getPhone()
 {
-    return phone;
+    return Phone;
 }
 
-int User::getNumBorrow()
+int User::getNumborrow()
 {
     return this->numborrow;
 }
 
-int User::getNumRequest()
+int User::getNumrequest()
 {
     return this->numrequest;
 }
 
-borrow User::getBorrow(int pos)
+borrow User::getBorrow(int i)
 {
-    return this->Borrow[pos];
+    return this->Borrow[i];
 }
 
-request User::getRequest(int pos)
+request User::getRequest(int i)
 {
-    return this->Request[pos];
+    return this->Request[i];
 }
 
-int User::displayBorrow(LinkedList<Book> *lbook, int t)
+int User::displayborrow(linkedlist<Book>* lbook, int t)
 {
     if (t == 0)
     {
@@ -110,23 +111,15 @@ int User::displayBorrow(LinkedList<Book> *lbook, int t)
     box(1, 7 + t, 11, 2, 11, 1, "MA SO SACH");
     if (t != 0)
     {
-        gotoXY(1, 5 + t);
-        cout << char(195);
-        gotoXY(21, 5 + t);
-        cout << char(193);
-        gotoXY(51, 5 + t);
-        cout << char(193);
-        gotoXY(71, 5 + t);
-        cout << char(193);
-        gotoXY(91, 5 + t);
-        cout << char(193);
-        gotoXY(111, 5 + t);
-        cout << char(193);
-        gotoXY(125, 5 + t);
-        cout << char(180);
+        gotoXY(1, 5 + t); cout << char(195);
+        gotoXY(21, 5 + t); cout << char(193);
+        gotoXY(51, 5 + t); cout << char(193);
+        gotoXY(71, 5 + t); cout << char(193);
+        gotoXY(91, 5 + t); cout << char(193);
+        gotoXY(111, 5 + t); cout << char(193);
+        gotoXY(125, 5 + t); cout << char(180);
     }
-    gotoXY(1, 7 + t);
-    cout << char(195);
+    gotoXY(1, 7 + t); cout << char(195);
     box(12, 7 + t, 20, 2, 11, 1, "      TEN SACH");
     box(32, 7 + t, 15, 2, 11, 1, "   THE LOAI");
     box(47, 7 + t, 15, 2, 11, 1, " NHA XUAT BAN");
@@ -135,109 +128,66 @@ int User::displayBorrow(LinkedList<Book> *lbook, int t)
     box(94, 7 + t, 9, 2, 11, 1, "SO LUONG");
     box(103, 7 + t, 11, 2, 11, 1, "NGAY MUON");
     box(114, 7 + t, 11, 2, 11, 1, "  HET HAN");
-    gotoXY(12, 7 + t);
-    cout << char(194);
-    gotoXY(12, 9 + t);
-    cout << char(193);
-    gotoXY(32, 7 + t);
-    cout << char(194);
-    gotoXY(32, 9 + t);
-    cout << char(193);
-    gotoXY(47, 7 + t);
-    cout << char(194);
-    gotoXY(47, 9 + t);
-    cout << char(193);
-    gotoXY(62, 7 + t);
-    cout << char(194);
-    gotoXY(62, 9 + t);
-    cout << char(193);
-    gotoXY(75, 7 + t);
-    cout << char(194);
-    gotoXY(75, 9 + t);
-    cout << char(193);
-    gotoXY(94, 7 + t);
-    cout << char(194);
-    gotoXY(94, 9 + t);
-    cout << char(193);
-    gotoXY(103, 7 + t);
-    cout << char(194);
-    gotoXY(103, 9 + t);
-    cout << char(193);
-    gotoXY(114, 7 + t);
-    cout << char(194);
-    gotoXY(114, 9 + t);
-    cout << char(193);
-    gotoXY(125, 7 + t);
-    cout << char(180);
+    gotoXY(12, 7 + t); cout << char(194);
+    gotoXY(12, 9 + t); cout << char(193);
+    gotoXY(32, 7 + t); cout << char(194);
+    gotoXY(32, 9 + t); cout << char(193);
+    gotoXY(47, 7 + t); cout << char(194);
+    gotoXY(47, 9 + t); cout << char(193);
+    gotoXY(62, 7 + t); cout << char(194);
+    gotoXY(62, 9 + t); cout << char(193);
+    gotoXY(75, 7 + t); cout << char(194);
+    gotoXY(75, 9 + t); cout << char(193);
+    gotoXY(94, 7 + t); cout << char(194);
+    gotoXY(94, 9 + t); cout << char(193);
+    gotoXY(103, 7 + t); cout << char(194);
+    gotoXY(103, 9 + t); cout << char(193);
+    gotoXY(114, 7 + t); cout << char(194);
+    gotoXY(114, 9 + t); cout << char(193);
+    gotoXY(125, 7 + t); cout << char(180);
     int i = 2;
     for (int s = this->numborrow + 1; s <= 4; s++)
     {
         string ID = this->Borrow[s].IDborrow;
-        Node<Book> *tmp = lbook->get(ID);
+        node<Book>* tmp = lbook->get(ID);
         Book B = tmp->getData();
         box(1, 7 + i + t, 11, 2, 11, 1, B.getID());
-        gotoXY(1, 7 + i + t);
-        cout << char(195);
+        gotoXY(1, 7 + i + t); cout << char(195);
         box(12, 7 + i + t, 20, 2, 11, 1, B.getName());
         box(32, 7 + i + t, 15, 2, 11, 1, B.getCategory());
         box(47, 7 + i + t, 15, 2, 11, 1, B.getPublisher());
         box(62, 7 + i + t, 13, 2, 11, 1, B.getYear());
         box(75, 7 + i + t, 20, 2, 11, 1, B.getAuthor());
-        box(94, 7 + i + t, 9, 2, 11, 1, B.getAmount(), B.getFixedAmount());
+        box(94, 7 + i + t, 9, 2, 11, 1, B.getAmount(), B.getfixedAmount());
         box(103, 7 + i + t, 11, 2, 11, 1, this->Borrow[s].Dayborrow);
         box(114, 7 + i + t, 11, 2, 11, 1, this->Borrow[s].Dayexpiry);
-        gotoXY(12, 7 + i + t);
-        cout << char(197);
-        gotoXY(12, 9 + i + t);
-        cout << char(197);
-        gotoXY(32, 7 + i + t);
-        cout << char(197);
-        gotoXY(32, 9 + i + t);
-        cout << char(197);
-        gotoXY(47, 7 + i + t);
-        cout << char(197);
-        gotoXY(47, 9 + i + t);
-        cout << char(197);
-        gotoXY(62, 7 + i + t);
-        cout << char(197);
-        gotoXY(62, 9 + i + t);
-        cout << char(197);
-        gotoXY(75, 7 + i + t);
-        cout << char(197);
-        gotoXY(75, 9 + i + t);
-        cout << char(197);
-        gotoXY(94, 7 + i + t);
-        cout << char(197);
-        gotoXY(94, 9 + i + t);
-        cout << char(197);
-        gotoXY(103, 7 + i + t);
-        cout << char(197);
-        gotoXY(103, 9 + i + t);
-        cout << char(197);
-        gotoXY(114, 7 + i + t);
-        cout << char(197);
-        gotoXY(114, 9 + i + t);
-        cout << char(197);
-        gotoXY(125, 7 + i + t);
-        cout << char(180);
+        gotoXY(12, 7 + i + t); cout << char(197);
+        gotoXY(12, 9 + i + t); cout << char(197);
+        gotoXY(32, 7 + i + t); cout << char(197);
+        gotoXY(32, 9 + i + t); cout << char(197);
+        gotoXY(47, 7 + i + t); cout << char(197);
+        gotoXY(47, 9 + i + t); cout << char(197);
+        gotoXY(62, 7 + i + t); cout << char(197);
+        gotoXY(62, 9 + i + t); cout << char(197);
+        gotoXY(75, 7 + i + t); cout << char(197);
+        gotoXY(75, 9 + i + t); cout << char(197);
+        gotoXY(94, 7 + i + t); cout << char(197);
+        gotoXY(94, 9 + i + t); cout << char(197);
+        gotoXY(103, 7 + i + t); cout << char(197);
+        gotoXY(103, 9 + i + t); cout << char(197);
+        gotoXY(114, 7 + i + t); cout << char(197);
+        gotoXY(114, 9 + i + t); cout << char(197);
+        gotoXY(125, 7 + i + t); cout << char(180);
         i += 2;
     }
-    gotoXY(12, 7 + i + t);
-    cout << char(193);
-    gotoXY(32, 7 + i + t);
-    cout << char(193);
-    gotoXY(47, 7 + i + t);
-    cout << char(193);
-    gotoXY(62, 7 + i + t);
-    cout << char(193);
-    gotoXY(75, 7 + i + t);
-    cout << char(193);
-    gotoXY(94, 7 + i + t);
-    cout << char(193);
-    gotoXY(103, 7 + i + t);
-    cout << char(193);
-    gotoXY(114, 7 + i + t);
-    cout << char(193);
+    gotoXY(12, 7 + i + t); cout << char(193);
+    gotoXY(32, 7 + i + t); cout << char(193);
+    gotoXY(47, 7 + i + t); cout << char(193);
+    gotoXY(62, 7 + i + t); cout << char(193);
+    gotoXY(75, 7 + i + t); cout << char(193);
+    gotoXY(94, 7 + i + t); cout << char(193);
+    gotoXY(103, 7 + i + t); cout << char(193);
+    gotoXY(114, 7 + i + t); cout << char(193);
     if (t == 0)
     {
         cin.get();
@@ -245,7 +195,7 @@ int User::displayBorrow(LinkedList<Book> *lbook, int t)
     return i;
 }
 
-void User::newPassword()
+void User::newpassword()
 {
     cin.ignore();
     string pw;
@@ -259,32 +209,26 @@ void User::newPassword()
         gotoXY(20, 17);
         cout << "Nhap mat khau hien tai : ";
         box(49, 16, 30, 2, 11, 1);
-        gotoXY(49, 16);
-        cout << char(195);
-        gotoXY(79, 16);
-        cout << char(180);
+        gotoXY(49, 16); cout << char(195);
+        gotoXY(79, 16); cout << char(180);
         gotoXY(20, 19);
         cout << "Nhap mat khau moi : ";
         box(49, 18, 30, 2, 11, 1);
-        gotoXY(49, 18);
-        cout << char(195);
-        gotoXY(79, 18);
-        cout << char(180);
+        gotoXY(49, 18); cout << char(195);
+        gotoXY(79, 18); cout << char(180);
         gotoXY(20, 21);
         cout << "Nhap lai mat khau moi : ";
         box(49, 20, 30, 2, 11, 1);
-        gotoXY(49, 20);
-        cout << char(195);
-        gotoXY(79, 20);
-        cout << char(180);
+        gotoXY(49, 20); cout << char(195);
+        gotoXY(79, 20); cout << char(180);
         gotoXY(50, 17);
-        pw = limit(50, 17, 29);
-        if (pw == this->getPassword())
+        pw = gioihan(50, 17, 29);
+        if (pw == this->getPw())
         {
             gotoXY(50, 19);
-            npw = limit(50, 19, 29);
+            npw = gioihan(50, 19, 29);
             gotoXY(50, 21);
-            lpw = limit(50, 21, 29);
+            lpw = gioihan(50, 21, 29);
             if (npw.length() >= 6 && lpw.length() <= 15)
             {
                 if (npw != lpw)
@@ -295,7 +239,7 @@ void User::newPassword()
                 }
                 else
                 {
-                    this->setPassword(npw);
+                    this->setPw(npw);
                     gotoXY(49, 24);
                     cout << "Doi thanh cong !!!" << endl;
                     cin.get();
@@ -319,7 +263,7 @@ void User::newPassword()
     }
 }
 
-void User::newUsername(LinkedList<User> *luser)
+void User::newusername(linkedlist<User>* luser)
 {
     string pw;
     string nun;
@@ -332,24 +276,20 @@ void User::newUsername(LinkedList<User> *luser)
         gotoXY(20, 17);
         cout << "Nhap mat khau hien tai : ";
         box(49, 16, 30, 2, 11, 1);
-        gotoXY(49, 16);
-        cout << char(195);
-        gotoXY(79, 16);
-        cout << char(180);
+        gotoXY(49, 16); cout << char(195);
+        gotoXY(79, 16); cout << char(180);
         gotoXY(20, 19);
         cout << "Nhap ten dap nhap: ";
         box(49, 18, 30, 2, 11, 1);
-        gotoXY(49, 18);
-        cout << char(195);
-        gotoXY(79, 18);
-        cout << char(180);
+        gotoXY(49, 18); cout << char(195);
+        gotoXY(79, 18); cout << char(180);
         gotoXY(50, 17);
-        pw = limit(50, 17, 29);
-        if (pw == this->getPassword())
+        pw = gioihan(50, 17, 29);
+        if (pw == this->getPw())
         {
             gotoXY(50, 19);
-            nun = limit(50, 19, 29);
-            for (Node<User> *P = luser->getHead(); P != NULL; P = P->getNext())
+            nun = gioihan(50, 19, 29);
+            for (node<User>* P = luser->getHead(); P != NULL; P = P->getNext())
             {
                 if (nun.length() < 6 || nun.length() > 15)
                 {
@@ -358,7 +298,7 @@ void User::newUsername(LinkedList<User> *luser)
                     cin.get();
                     break;
                 }
-                if (nun == P->getData().getUsername())
+                if (nun == P->getData().getUn())
                 {
                     gotoXY(49, 24);
                     cout << "Ten dap nhap da ton tai !!!" << endl;
@@ -367,7 +307,7 @@ void User::newUsername(LinkedList<User> *luser)
                 }
                 else
                 {
-                    this->setUsername(nun);
+                    this->setUn(nun);
                     gotoXY(49, 24);
                     cout << "Doi thanh cong !!!" << endl;
                     cin.get();
@@ -386,7 +326,7 @@ void User::newUsername(LinkedList<User> *luser)
     }
 }
 
-void User::request(LinkedList<Book> *lbook, int i)
+void User::request(linkedlist<Book>* lbook, int i)
 {
     cin.ignore();
     if (this->numrequest >= 0)
@@ -394,15 +334,13 @@ void User::request(LinkedList<Book> *lbook, int i)
         string ID;
         box(32, 9 + i, 92, 2, 11, 1, "Nhap ma so sach yeu cau muon : ");
         box(32, 11 + i, 92, 2, 11, 1);
-        gotoXY(32, 11 + i);
-        cout << char(195);
-        gotoXY(124, 11 + i);
-        cout << char(180);
+        gotoXY(32, 11 + i); cout << char(195);
+        gotoXY(124, 11 + i); cout << char(180);
         gotoXY(65, 10 + i);
-        ID = limit(65, 10 + i, 58);
+        ID = gioihan(65, 10 + i, 58);
         if (lbook->get(ID) != NULL)
         {
-            this->Request[this->numrequest].idRequest = ID;
+            this->Request[this->numrequest].IDrequest = ID;
             this->numrequest -= 1;
             gotoXY(75, 12 + i);
             cout << "Ban da yeu cau muon ma so sach " << ID;
@@ -414,6 +352,7 @@ void User::request(LinkedList<Book> *lbook, int i)
             cout << "Ma so khong ton tai !!!" << endl;
             cin.get();
         }
+
     }
     else
     {
@@ -422,7 +361,7 @@ void User::request(LinkedList<Book> *lbook, int i)
     }
 }
 
-void User::cancelRequest(LinkedList<Book> *lbook, int i)
+void User::cancelrequest(linkedlist<Book>* lbook, int i)
 {
     cin.ignore();
     if (this->numrequest < 4)
@@ -432,28 +371,26 @@ void User::cancelRequest(LinkedList<Book> *lbook, int i)
         bool check = false;
         box(32, 9 + i, 92, 2, 11, 1, "Nhap ma so sach can huy:");
         box(32, 11 + i, 92, 2, 11, 1);
-        gotoXY(32, 11 + i);
-        cout << char(195);
-        gotoXY(124, 11 + i);
-        cout << char(180);
+        gotoXY(32, 11 + i); cout << char(195);
+        gotoXY(124, 11 + i); cout << char(180);
         gotoXY(80, 10 + i);
         cout << "Nhap ma so yeu cau:";
         gotoXY(60, 10 + i);
-        ID = limit(60, 10 + i, 19);
+        ID = gioihan(60, 10 + i, 19);
         gotoXY(101, 10 + i);
         cin >> ms;
         for (int t = 4; t >= this->numrequest + 1; t--)
         {
-            if (Request[t].idRequest == ID && t == ms)
+            if (Request[t].IDrequest == ID && t == ms)
             {
                 check = true;
                 for (int k = t; k >= this->numrequest + 2; k--)
                 {
-                    this->Request[k].idRequest = this->Request[k - 1].idRequest;
-                    this->Request[k].accept = this->Request[k - 1].accept;
+                    this->Request[k].IDrequest = this->Request[k - 1].IDrequest;
+                    this->Request[k].Accept = this->Request[k - 1].Accept;
                 }
-                this->Request[this->numrequest + 1].idRequest = "0";
-                this->Request[this->numrequest + 1].accept = 0;
+                this->Request[this->numrequest + 1].IDrequest = "0";
+                this->Request[this->numrequest + 1].Accept = 0;
                 this->numrequest += 1;
                 gotoXY(75, 12 + i);
                 cout << "Ban da huy yeu cau muon ma so sach " << ID;
@@ -475,7 +412,8 @@ void User::cancelRequest(LinkedList<Book> *lbook, int i)
     }
 }
 
-int dynamicSystemUserMenu(int xp, int yp, int xcu, int ycu, int i, bool kt)
+
+int menudongrequest(int xp, int yp, int xcu, int ycu, int i, bool kt)
 {
     ShowCur(0);
     while (true)
@@ -483,20 +421,14 @@ int dynamicSystemUserMenu(int xp, int yp, int xcu, int ycu, int i, bool kt)
         if (kt == true)
         {
             gotoXY(xcu, ycu);
-            if (ycu == 9 + i)
-                lightbar(xcu, ycu, 30, 2, 1, "      YEU CAU MUON SACH");
-            if (ycu == 11 + i)
-                lightbar(xcu, ycu, 30, 2, 1, "      HUY YEU CAU MUON");
-            if (ycu == 13 + i)
-                lightbar(xcu, ycu, 30, 2, 1, "          QUAY LAI");
+            if (ycu == 9 + i) thanhsang(xcu, ycu, 30, 2, 1, "      YEU CAU MUON SACH");
+            if (ycu == 11 + i) thanhsang(xcu, ycu, 30, 2, 1, "      HUY YEU CAU MUON");
+            if (ycu == 13 + i) thanhsang(xcu, ycu, 30, 2, 1, "          QUAY LAI");
             xcu = xp;
             ycu = yp;
-            if (yp == 9 + i)
-                lightbar(xp, yp, 30, 2, 75, "      YEU CAU MUON SACH");
-            if (yp == 11 + i)
-                lightbar(xp, yp, 30, 2, 75, "      HUY YEU CAU MUON");
-            if (yp == 13 + i)
-                lightbar(xp, yp, 30, 2, 75, "          QUAY LAI");
+            if (yp == 9 + i) thanhsang(xp, yp, 30, 2, 75, "      YEU CAU MUON SACH");
+            if (yp == 11 + i) thanhsang(xp, yp, 30, 2, 75, "      HUY YEU CAU MUON");
+            if (yp == 13 + i) thanhsang(xp, yp, 30, 2, 75, "          QUAY LAI");
             kt = false;
         }
         if (_kbhit())
@@ -535,58 +467,38 @@ int dynamicSystemUserMenu(int xp, int yp, int xcu, int ycu, int i, bool kt)
     }
 }
 
-void User::menuRequest(LinkedList<Book> *lbook)
+void User::menurequest(linkedlist<Book>* lbook)
 {
     int option;
     bool check = true;
     while (check)
     {
-        int i = displayRequest(lbook, 0);
+        int i = displayrequest(lbook, 0);
         box(1, 7 + i, 30, 2, 11, 1, "=============MENU=============");
-        gotoXY(1, 7 + i);
-        cout << char(195);
+        gotoXY(1, 7 + i); cout << char(195);
         box(1, 9 + i, 30, 2, 11, 1, "      YEU CAU MUON SACH");
-        gotoXY(1, 9 + i);
-        cout << char(195);
-        gotoXY(31, 9 + i);
-        cout << char(180);
+        gotoXY(1, 9 + i); cout << char(195);
+        gotoXY(31, 9 + i); cout << char(180);
         box(1, 11 + i, 30, 2, 11, 1, "      HUY YEU CAU MUON");
-        gotoXY(1, 11 + i);
-        cout << char(195);
-        gotoXY(31, 11 + i);
-        cout << char(180);
+        gotoXY(1, 11 + i); cout << char(195);
+        gotoXY(31, 11 + i); cout << char(180);
         box(1, 13 + i, 30, 2, 11, 1, "          QUAY LAI");
-        gotoXY(1, 13 + i);
-        cout << char(195);
-        gotoXY(31, 13 + i);
-        cout << char(180);
+        gotoXY(1, 13 + i); cout << char(195);
+        gotoXY(31, 13 + i); cout << char(180);
         box(31, 7 + i, 94, 8, 11, 1);
-        gotoXY(12, 7 + i);
-        cout << char(193);
-        gotoXY(37, 7 + i);
-        cout << char(193);
-        gotoXY(52, 7 + i);
-        cout << char(193);
-        gotoXY(72, 7 + i);
-        cout << char(193);
-        gotoXY(85, 7 + i);
-        cout << char(193);
-        gotoXY(104, 7 + i);
-        cout << char(193);
-        gotoXY(113, 7 + i);
-        cout << char(193);
-        gotoXY(125, 7 + i);
-        cout << char(180);
-        gotoXY(31, 7 + i);
-        cout << char(194);
-        gotoXY(31, 9 + i);
-        cout << char(180);
-        gotoXY(31, 11 + i);
-        cout << char(180);
-        gotoXY(31, 13 + i);
-        cout << char(180);
-        gotoXY(31, 15 + i);
-        cout << char(193);
+        gotoXY(12, 7 + i); cout << char(193);
+        gotoXY(37, 7 + i); cout << char(193);
+        gotoXY(52, 7 + i); cout << char(193);
+        gotoXY(72, 7 + i); cout << char(193);
+        gotoXY(85, 7 + i); cout << char(193);
+        gotoXY(104, 7 + i); cout << char(193);
+        gotoXY(113, 7 + i); cout << char(193);
+        gotoXY(125, 7 + i); cout << char(180);
+        gotoXY(31, 7 + i); cout << char(194);
+        gotoXY(31, 9 + i); cout << char(180);
+        gotoXY(31, 11 + i); cout << char(180);
+        gotoXY(31, 13 + i); cout << char(180);
+        gotoXY(31, 15 + i); cout << char(193);
         option = menudongrequest(1, 9 + i, 1, 9 + i, i, true);
         if (option == 9 + i)
         {
@@ -594,7 +506,7 @@ void User::menuRequest(LinkedList<Book> *lbook)
         }
         else if (option == 11 + i)
         {
-            cancelRequest(lbook, i);
+            cancelrequest(lbook, i);
         }
         else if (option == 13 + i)
         {
@@ -603,7 +515,7 @@ void User::menuRequest(LinkedList<Book> *lbook)
     }
 }
 
-int User::displayRequest(LinkedList<Book> *lbook, int k)
+int User::displayrequest(linkedlist<Book>* lbook, int k)
 {
     if (k == 0)
     {
@@ -612,30 +524,19 @@ int User::displayRequest(LinkedList<Book> *lbook, int k)
     box(1, 5 + k, 124, 2, 11, 1, "-------------------------------------------------TOAN BO SACH DANG YEU CAU-------------------------------------------------");
     if (k != 0)
     {
-        gotoXY(1, 5 + k);
-        cout << char(195);
-        gotoXY(12, 5 + k);
-        cout << char(193);
-        gotoXY(32, 5 + k);
-        cout << char(193);
-        gotoXY(47, 5 + k);
-        cout << char(193);
-        gotoXY(62, 5 + k);
-        cout << char(193);
-        gotoXY(75, 5 + k);
-        cout << char(193);
-        gotoXY(94, 5 + k);
-        cout << char(193);
-        gotoXY(103, 5 + k);
-        cout << char(193);
-        gotoXY(114, 5 + k);
-        cout << char(193);
-        gotoXY(125, 5 + k);
-        cout << char(180);
+        gotoXY(1, 5 + k); cout << char(195);
+        gotoXY(12, 5 + k); cout << char(193);
+        gotoXY(32, 5 + k); cout << char(193);
+        gotoXY(47, 5 + k); cout << char(193);
+        gotoXY(62, 5 + k); cout << char(193);
+        gotoXY(75, 5 + k); cout << char(193);
+        gotoXY(94, 5 + k); cout << char(193);
+        gotoXY(103, 5 + k); cout << char(193);
+        gotoXY(114, 5 + k); cout << char(193);
+        gotoXY(125, 5 + k); cout << char(180);
     }
     box(1, 7 + k, 11, 2, 11, 1, "MA SO SACH");
-    gotoXY(1, 7 + k);
-    cout << char(195);
+    gotoXY(1, 7 + k); cout << char(195);
     box(12, 7 + k, 25, 2, 11, 1, "        TEN SACH");
     box(37, 7 + k, 15, 2, 11, 1, "   THE LOAI");
     box(52, 7 + k, 20, 2, 11, 1, "    NHA XUAT BAN");
@@ -643,93 +544,62 @@ int User::displayRequest(LinkedList<Book> *lbook, int k)
     box(85, 7 + k, 19, 2, 11, 1, "      TAC GIA");
     box(104, 7 + k, 9, 2, 11, 1, "MA SO YC");
     box(113, 7 + k, 12, 2, 11, 1, "TRANG THAI");
-    gotoXY(12, 7 + k);
-    cout << char(194);
-    gotoXY(12, 9 + k);
-    cout << char(193);
-    gotoXY(37, 7 + k);
-    cout << char(194);
-    gotoXY(37, 9 + k);
-    cout << char(193);
-    gotoXY(52, 7 + k);
-    cout << char(194);
-    gotoXY(52, 9 + k);
-    cout << char(193);
-    gotoXY(72, 7 + k);
-    cout << char(194);
-    gotoXY(72, 9 + k);
-    cout << char(193);
-    gotoXY(85, 7 + k);
-    cout << char(194);
-    gotoXY(85, 9 + k);
-    cout << char(193);
-    gotoXY(104, 7 + k);
-    cout << char(194);
-    gotoXY(104, 9 + k);
-    cout << char(193);
-    gotoXY(113, 7 + k);
-    cout << char(194);
-    gotoXY(113, 9 + k);
-    cout << char(193);
-    gotoXY(125, 7 + k);
-    cout << char(180);
+    gotoXY(12, 7 + k); cout << char(194);
+    gotoXY(12, 9 + k); cout << char(193);
+    gotoXY(37, 7 + k); cout << char(194);
+    gotoXY(37, 9 + k); cout << char(193);
+    gotoXY(52, 7 + k); cout << char(194);
+    gotoXY(52, 9 + k); cout << char(193);
+    gotoXY(72, 7 + k); cout << char(194);
+    gotoXY(72, 9 + k); cout << char(193);
+    gotoXY(85, 7 + k); cout << char(194);
+    gotoXY(85, 9 + k); cout << char(193);
+    gotoXY(104, 7 + k); cout << char(194);
+    gotoXY(104, 9 + k); cout << char(193);
+    gotoXY(113, 7 + k); cout << char(194);
+    gotoXY(113, 9 + k); cout << char(193);
+    gotoXY(125, 7 + k); cout << char(180);
     int i = 2;
     for (int t = this->numrequest + 1; t <= 4; t++)
     {
-        string ID = this->Request[t].idRequest;
-        Node<Book> *tmp = lbook->get(ID);
+        string ID = this->Request[t].IDrequest;
+        node<Book>* tmp = lbook->get(ID);
         Book B = tmp->getData();
         box(1, 7 + i + k, 11, 2, 11, 1, B.getID());
-        gotoXY(1, 7 + i + k);
-        cout << char(195);
+        gotoXY(1, 7 + i + k); cout << char(195);
         box(12, 7 + i + k, 25, 2, 11, 1, B.getName());
         box(37, 7 + i + k, 15, 2, 11, 1, B.getCategory());
         box(52, 7 + i + k, 20, 2, 11, 1, B.getPublisher());
         box(72, 7 + i + k, 13, 2, 11, 1, B.getYear());
         box(85, 7 + i + k, 20, 2, 11, 1, B.getAuthor());
         box(104, 7 + i + k, 9, 2, 11, 1, t);
-        if (this->Request[t].accept == 0)
+        if (this->Request[t].Accept == 0)
         {
             box(113, 7 + i + k, 12, 2, 11, 1, "Dang xet");
         }
-        else if (this->Request[t].accept == 1)
+        else if (this->Request[t].Accept == 1)
         {
             box(113, 7 + i + k, 12, 2, 11, 1, "Chap nhan");
         }
-        else if (this->Request[t].accept == 2)
+        else if (this->Request[t].Accept == 2)
         {
             box(113, 7 + i + k, 12, 2, 11, 1, "Tu choi");
         }
-        gotoXY(12, 7 + i + k);
-        cout << char(197);
-        gotoXY(12, 9 + i + k);
-        cout << char(197);
-        gotoXY(37, 7 + i + k);
-        cout << char(197);
-        gotoXY(37, 9 + i + k);
-        cout << char(197);
-        gotoXY(52, 7 + i + k);
-        cout << char(197);
-        gotoXY(52, 9 + i + k);
-        cout << char(197);
-        gotoXY(72, 7 + i + k);
-        cout << char(197);
-        gotoXY(72, 9 + i + k);
-        cout << char(197);
-        gotoXY(85, 7 + i + k);
-        cout << char(197);
-        gotoXY(85, 9 + i + k);
-        cout << char(197);
-        gotoXY(104, 7 + i + k);
-        cout << char(197);
-        gotoXY(104, 9 + i + k);
-        cout << char(197);
-        gotoXY(113, 7 + i + k);
-        cout << char(197);
-        gotoXY(113, 9 + i + k);
-        cout << char(197);
-        gotoXY(125, 7 + i + k);
-        cout << char(180);
+        gotoXY(12, 7 + i + k); cout << char(197);
+        gotoXY(12, 9 + i + k); cout << char(197);
+        gotoXY(37, 7 + i + k); cout << char(197);
+        gotoXY(37, 9 + i + k); cout << char(197);
+        gotoXY(52, 7 + i + k); cout << char(197);
+        gotoXY(52, 9 + i + k); cout << char(197);
+        gotoXY(72, 7 + i + k); cout << char(197);
+        gotoXY(72, 9 + i + k); cout << char(197);
+        gotoXY(85, 7 + i + k); cout << char(197);
+        gotoXY(85, 9 + i + k); cout << char(197);
+        gotoXY(104, 7 + i + k); cout << char(197);
+        gotoXY(104, 9 + i + k); cout << char(197);
+        gotoXY(113, 7 + i + k); cout << char(197);
+        gotoXY(113, 9 + i + k); cout << char(197);
+        gotoXY(125, 7 + i + k); cout << char(180);
         i += 2;
     }
     return i;

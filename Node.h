@@ -1,46 +1,46 @@
 #pragma once
 #include "Book.h"
-#include "User.h"
-#include "Access.h"
+#include "user.h"
+#include "inkhung.h"
 template <typename T>
-class Node
+class node
 {
 private:
     T data;
-    Node<T>* next;
-    Node<T>* prev;
+    node<T>* next;
+    node<T>* prev;
 public:
-    Node();
-    Node(Node<T>* next, Node<T>* prev, T data);
+    node();
+    node(node<T>* next, node<T>* prev, T data);
     void setData(T data);
     T getData();
-    void setNext(Node<T>* next);
-    Node<T>* getNext();
-    void setPrev(Node<T>* prev);
-    Node<T>* getPrev();
-    void print(Node<User>* tmp, int i, int c);
-    void print(Node<Book>* tmp, int i, int c);
+    void setNext(node<T>* next);
+    node<T>* getNext();
+    void setPrev(node<T>* prev);
+    node<T>* getPrev();
+    void print(node<User>* tmp, int i, int c);
+    void print(node<Book>* tmp, int i, int c);
     int operator != (int N);
     int operator == (int N);
-    friend class LinkedList<T>;
+    friend class linkedlist<T>;
 };
 
 
 template <typename T>
-class LinkedList
+class linkedlist
 {
 private:
-    Node<T>* head;
-    Node<T>* tail;
+    node<T>* head;
+    node<T>* tail;
     int count;
 public:
-    LinkedList();
-    void setHead(Node<T>* head);
-    void setTail(Node<T>* tail);
-    Node<T>* getHead();
-    Node<T>* getTail();
-    Node<T>* get(string ID);
-    Node<T>* getAvailable(string ID);
+    linkedlist();
+    void setHead(node<T>* head);
+    void setTail(node<T>* tail);
+    node<T>* getHead();
+    node<T>* getTail();
+    node<T>* get(string ID);
+    node<T>* getAvailable(string ID);
     void printNext();
     void printNextavailble();
     void addTail(T data);
@@ -49,12 +49,12 @@ public:
 };
 
 template <typename T>
-Node<T>::Node() {
+node<T>::node() {
 
 }
 
 template <typename T>
-Node<T>::Node(Node<T>* next, Node<T>* prev, T data)
+node<T>::node(node<T>* next, node<T>* prev, T data)
 {
     this->data = data;
     this->next = next;
@@ -62,48 +62,48 @@ Node<T>::Node(Node<T>* next, Node<T>* prev, T data)
 }
 
 template <typename T>
-void Node<T>::setNext(Node<T>* next)
+void node<T>::setNext(node<T>* next)
 {
     this->next = next;
 }
 
 template <typename T>
-Node<T>* Node<T>::getNext()
+node<T>* node<T>::getNext()
 {
     return next;
 }
 
 template <typename T>
-void Node<T>::setPrev(Node<T>* prev)
+void node<T>::setPrev(node<T>* prev)
 {
     this->prev = prev;
 }
 
 template <typename T>
-Node<T>* Node<T>::getPrev()
+node<T>* node<T>::getPrev()
 {
     return prev;
 }
 
 template <typename T>
-void Node<T>::setData(T data)
+void node<T>::setData(T data)
 {
     this->data = data;
 }
 
 template <typename T>
-T Node<T>::getData()
+T node<T>::getData()
 {
     return data;
 }
 
 template <typename T>
-void Node<T>::print(Node<User>* tmp, int i, int c)
+void node<T>::print(node<User>* tmp, int i, int c)
 {
-    box(1, 7 + i, 20, 2, 11, 1, tmp->data.getId());
+    box(1, 7 + i, 20, 2, 11, 1, tmp->data.getID());
     gotoXY(1, 7 + i); cout << char(195);
     box(21, 7 + i, 30, 2, 11, 1, tmp->data.getName());
-    box(51, 7 + i, 20, 2, 11, 1, tmp->data.getDateOfBirth());
+    box(51, 7 + i, 20, 2, 11, 1, tmp->data.getDob());
     box(71, 7 + i, 20, 2, 11, 1, tmp->data.getPhone());
     box(91, 7 + i, 20, 2, 11, 1, 4 - tmp->data.getNumborrow());
     box(111, 7 + i, 14, 2, 11, 1, 4 - tmp->data.getNumrequest());
@@ -138,7 +138,7 @@ void Node<T>::print(Node<User>* tmp, int i, int c)
 }
 
 template <typename T>
-void Node<T>::print(Node<Book>* tmp, int i, int c)
+void node<T>::print(node<Book>* tmp, int i, int c)
 {
     box(1, 7 + i, 15, 2, 11, 1, tmp->data.getID());
     gotoXY(1, 7 + i); cout << char(195);
@@ -148,7 +148,7 @@ void Node<T>::print(Node<Book>* tmp, int i, int c)
     box(72, 7 + i, 15, 2, 11, 1, tmp->data.getYear());
     box(87, 7 + i, 20, 2, 11, 1, tmp->data.getAuthor());
     box(107, 7 + i, 9, 2, 11, 1, tmp->data.getlocation());
-    box(116, 7 + i, 9, 2, 11, 1, tmp->data.getAmount(), tmp->data.getFixedAmount());
+    box(116, 7 + i, 9, 2, 11, 1, tmp->data.getAmount(), tmp->data.getfixedAmount());
     if (c == 1)
     {
         gotoXY(12, 7 + i); cout << char(197);
@@ -188,21 +188,21 @@ void Node<T>::print(Node<Book>* tmp, int i, int c)
 }
 
 template <typename T>
-int Node<T>:: operator != (int N)
+int node<T>:: operator != (int N)
 {
     if (this != NULL) return 1;
     else return 0;
 }
 
 template <typename T>
-int Node<T>:: operator == (int N)
+int node<T>:: operator == (int N)
 {
     if (this == NULL) return 1;
     else return 0;
 }
 
 template <typename T>
-LinkedList<T>::LinkedList()
+linkedlist<T>::linkedlist()
 {
     head = NULL;
     tail = NULL;
@@ -210,34 +210,34 @@ LinkedList<T>::LinkedList()
 }
 
 template <typename T>
-void LinkedList<T>::setTail(Node<T>* tmp)
+void linkedlist<T>::setTail(node<T>* tmp)
 {
     this->tail = tmp;
 }
 
 template <typename T>
-void LinkedList<T>::setHead(Node<T>* tmp)
+void linkedlist<T>::setHead(node<T>* tmp)
 {
     this->head = tmp;
     this->head->setPrev(NULL);
 }
 
 template <typename T>
-Node<T>* LinkedList<T>::getHead()
+node<T>* linkedlist<T>::getHead()
 {
     return head;
 }
 
 template <typename T>
-Node<T>* LinkedList<T>::getTail()
+node<T>* linkedlist<T>::getTail()
 {
     return tail;
 }
 
 template <typename T>
-Node<T>* LinkedList<T>::get(string ID)
+node<T>* linkedlist<T>::get(string ID)
 {
-    Node<T>* P;
+    node<T>* P;
     for (P = head; P != NULL; P = P->getNext())
     {
         if (P->getData().getID() == ID)
@@ -249,9 +249,9 @@ Node<T>* LinkedList<T>::get(string ID)
 }
 
 template <typename T>
-Node<T>* LinkedList<T>::getAvailable(string ID)
+node<T>* linkedlist<T>::getAvailable(string ID)
 {
-    Node<T>* P;
+    node<T>* P;
     for (P = head; P != NULL; P = P->getNext())
     {
         if (P->getData().getID() == ID && P->getData().getAmount() > 0)
@@ -263,10 +263,10 @@ Node<T>* LinkedList<T>::getAvailable(string ID)
 }
 
 template <typename T>
-void LinkedList<T>::printNext()
+void linkedlist<T>::printNext()
 {
     int i = 2;
-    Node<T>* tmp = head;
+    node<T>* tmp = head;
     while (tmp != NULL)
     {
         tmp->print(tmp, i, 1);
@@ -276,10 +276,10 @@ void LinkedList<T>::printNext()
 }
 
 template <typename T>
-void LinkedList<T>::printNextavailble()
+void linkedlist<T>::printNextavailble()
 {
     int i = 2;
-    Node<T>* tmp = head;
+    node<T>* tmp = head;
     while (tmp != NULL)
     {
         if (tmp->getData().getAmount() > 0)
@@ -293,9 +293,9 @@ void LinkedList<T>::printNextavailble()
 }
 
 template <typename T>
-void LinkedList<T>::addTail(T data)
+void linkedlist<T>::addTail(T data)
 {
-    Node<T>* tmp = new Node<T>(NULL, NULL, data);
+    node<T>* tmp = new node<T>(NULL, NULL, data);
     count++;
     if (head == NULL)
     {
@@ -308,13 +308,13 @@ void LinkedList<T>::addTail(T data)
 }
 
 template <typename T>
-int LinkedList<T>::getCount()
+int linkedlist<T>::getCount()
 {
     return count;
 }
 
 template <typename T>
-void LinkedList<T>::setCount(int count)
+void linkedlist<T>::setCount(int count)
 {
     this->count = count;
 }

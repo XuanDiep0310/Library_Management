@@ -1,13 +1,13 @@
 #include "Menu.h"
-#include "Admin.h"
-#include "Access.h"
-#include "WriteFile.h"
+#include "admin.h"
+#include "truycap.h"
+#include "Writefile.h"
 #include <iostream>
 #include <cstring>
 using namespace std;
 #define TRUE 1
 
-int dynamicBookMenu(int xp, int yp, int xcu, int ycu, bool kt)
+int menudongbook(int xp, int yp, int xcu, int ycu, bool kt)
 {
     ShowCur(0);
     while (true)
@@ -15,26 +15,26 @@ int dynamicBookMenu(int xp, int yp, int xcu, int ycu, bool kt)
         if (kt == true)
         {
             gotoXY(xcu, ycu);
-            if (ycu == 12) lightBar(xcu, ycu, 45, 2, 1, "      XEM TOAN BO SACH TRONG THU VIEN");
-            if (ycu == 14) lightBar(xcu, ycu, 45, 2, 1, "    XEM TOAN BO SACH CON TRONG THU VIEN");
-            if (ycu == 16) lightBar(xcu, ycu, 45, 2, 1, "           TIM KIEM SACH THEO TEN");
-            if (ycu == 18) lightBar(xcu, ycu, 45, 2, 1, "        TIM KIEM SACH THEO THE LOAI");
-            if (ycu == 20) lightBar(xcu, ycu, 45, 2, 1, "        TIM KIEM SACH THEO TAC GIA");
-            if (ycu == 22) lightBar(xcu, ycu, 45, 2, 1, "           THEM SACH VAO THU VIEN");
-            if (ycu == 24) lightBar(xcu, ycu, 45, 2, 1, "          CHINH SUA THONG TIN SACH");
-            if (ycu == 26) lightBar(xcu, ycu, 45, 2, 1, "           XOA SACH KHOI THU VIEN");
-            if (ycu == 28) lightBar(xcu, ycu, 45, 2, 1, "                  QUAY LAI");
+            if (ycu == 12) thanhsang(xcu, ycu, 45, 2, 1, "      XEM TOAN BO SACH TRONG THU VIEN");
+            if (ycu == 14) thanhsang(xcu, ycu, 45, 2, 1, "    XEM TOAN BO SACH CON TRONG THU VIEN");
+            if (ycu == 16) thanhsang(xcu, ycu, 45, 2, 1, "           TIM KIEM SACH THEO TEN");
+            if (ycu == 18) thanhsang(xcu, ycu, 45, 2, 1, "        TIM KIEM SACH THEO THE LOAI");
+            if (ycu == 20) thanhsang(xcu, ycu, 45, 2, 1, "        TIM KIEM SACH THEO TAC GIA");
+            if (ycu == 22) thanhsang(xcu, ycu, 45, 2, 1, "           THEM SACH VAO THU VIEN");
+            if (ycu == 24) thanhsang(xcu, ycu, 45, 2, 1, "          CHINH SUA THONG TIN SACH");
+            if (ycu == 26) thanhsang(xcu, ycu, 45, 2, 1, "           XOA SACH KHOI THU VIEN");
+            if (ycu == 28) thanhsang(xcu, ycu, 45, 2, 1, "                  QUAY LAI");
             xcu = xp;
             ycu = yp;
-            if (yp == 12) lightBar(xp, yp, 45, 2, 75, "      XEM TOAN BO SACH TRONG THU VIEN");
-            if (yp == 14) lightBar(xp, yp, 45, 2, 75, "    XEM TOAN BO SACH CON TRONG THU VIEN");
-            if (yp == 16) lightBar(xp, yp, 45, 2, 75, "           TIM KIEM SACH THEO TEN");
-            if (yp == 18) lightBar(xp, yp, 45, 2, 75, "        TIM KIEM SACH THEO THE LOAI");
-            if (yp == 20) lightBar(xp, yp, 45, 2, 75, "        TIM KIEM SACH THEO TAC GIA");
-            if (yp == 22) lightBar(xp, yp, 45, 2, 75, "           THEM SACH VAO THU VIEN");
-            if (yp == 24) lightBar(xp, yp, 45, 2, 75, "          CHINH SUA THONG TIN SACH");
-            if (yp == 26) lightBar(xp, yp, 45, 2, 75, "           XOA SACH KHOI THU VIEN");
-            if (yp == 28) lightBar(xp, yp, 45, 2, 75, "                  QUAY LAI");
+            if (yp == 12) thanhsang(xp, yp, 45, 2, 75, "      XEM TOAN BO SACH TRONG THU VIEN");
+            if (yp == 14) thanhsang(xp, yp, 45, 2, 75, "    XEM TOAN BO SACH CON TRONG THU VIEN");
+            if (yp == 16) thanhsang(xp, yp, 45, 2, 75, "           TIM KIEM SACH THEO TEN");
+            if (yp == 18) thanhsang(xp, yp, 45, 2, 75, "        TIM KIEM SACH THEO THE LOAI");
+            if (yp == 20) thanhsang(xp, yp, 45, 2, 75, "        TIM KIEM SACH THEO TAC GIA");
+            if (yp == 22) thanhsang(xp, yp, 45, 2, 75, "           THEM SACH VAO THU VIEN");
+            if (yp == 24) thanhsang(xp, yp, 45, 2, 75, "          CHINH SUA THONG TIN SACH");
+            if (yp == 26) thanhsang(xp, yp, 45, 2, 75, "           XOA SACH KHOI THU VIEN");
+            if (yp == 28) thanhsang(xp, yp, 45, 2, 75, "                  QUAY LAI");
             kt = false;
         }
         if (_kbhit())
@@ -73,7 +73,7 @@ int dynamicBookMenu(int xp, int yp, int xcu, int ycu, bool kt)
     }
 }
 
-List menuBook(List l)
+list MenuBook(list l)
 {
     int option;
     Admin Ad;
@@ -109,17 +109,17 @@ List menuBook(List l)
         box(45, 28, 45, 2, 11, 1, "                  QUAY LAI");
         gotoXY(45, 28); cout << char(195);
         gotoXY(90, 28); cout << char(180);
-        option = dynamicBookMenu(45, 12, 45, 12, true);
+        option = menudongbook(45, 12, 45, 12, true);
         switch (option)
         {
         case 12:
-            Ad.displayBook(l.lbook());
+            Ad.displaybook(l.lbook());
             break;
         case 14:
             Ad.displayAvailable(l.lbook());
             break;
         case 16:
-            Ad.findBookName(l.lbook());
+            Ad.findbookname(l.lbook());
             break;
         case 18:
             Ad.findCategory(l.lbook());
@@ -128,17 +128,17 @@ List menuBook(List l)
             Ad.findAuthor(l.lbook());
             break;
         case 22:
-            l.setListBook(Ad.addBook(l.lbook()));
+            l.setlbook(Ad.addbook(l.lbook()));
             break;
         case 24:
-            l.setListBook(Ad.fixBook(l.lbook(), l.luser()));
+            l.setlbook(Ad.fixbook(l.lbook(), l.luser()));
             break;
         case 26:
-            l.setListBook(Ad.delBook(l.lbook()));
+            l.setlbook(Ad.delbook(l.lbook()));
             break;
         case 28:
-            writeFileBook(l.lbook());
-            writeFileUser(l.luser());
+            writrfilebook(l.lbook());
+            writrfileuser(l.luser());
             return l;
         default:
             break;
@@ -146,7 +146,7 @@ List menuBook(List l)
     }
 }
 
-int dynamicUserManagermentMenu(int xp, int yp, int xcu, int ycu, bool kt)
+int menudongU(int xp, int yp, int xcu, int ycu, bool kt)
 {
     ShowCur(0);
     while (true)
@@ -154,26 +154,26 @@ int dynamicUserManagermentMenu(int xp, int yp, int xcu, int ycu, bool kt)
         if (kt == true)
         {
             gotoXY(xcu, ycu);
-            if (ycu == 12) lightBar(xcu, ycu, 45, 2, 1, "           XEM TOAN BO NGUOI DUNG");
-            if (ycu == 14) lightBar(xcu, ycu, 45, 2, 1, "          XEM THONG TIN NGUOI DUNG");
-            if (ycu == 16) lightBar(xcu, ycu, 45, 2, 1, "        DANG KY TAI KHOAN NGUOI DUNG");
-            if (ycu == 18) lightBar(xcu, ycu, 45, 2, 1, "        SUA DOI THONG TIN NGUOI DUNG");
-            if (ycu == 20) lightBar(xcu, ycu, 45, 2, 1, "               XOA NGUOI DUNG");
-            if (ycu == 22) lightBar(xcu, ycu, 45, 2, 1, "                 MUON SACH");
-            if (ycu == 24) lightBar(xcu, ycu, 45, 2, 1, "                  TRA SACH");
-            if (ycu == 26) lightBar(xcu, ycu, 45, 2, 1, "        CAP LAI TAI KHOAN NGUOI DUNG");
-            if (ycu == 28) lightBar(xcu, ycu, 45, 2, 1, "                  QUAY LAI");
+            if (ycu == 12) thanhsang(xcu, ycu, 45, 2, 1, "           XEM TOAN BO NGUOI DUNG");
+            if (ycu == 14) thanhsang(xcu, ycu, 45, 2, 1, "          XEM THONG TIN NGUOI DUNG");
+            if (ycu == 16) thanhsang(xcu, ycu, 45, 2, 1, "        DANG KY TAI KHOAN NGUOI DUNG");
+            if (ycu == 18) thanhsang(xcu, ycu, 45, 2, 1, "        SUA DOI THONG TIN NGUOI DUNG");
+            if (ycu == 20) thanhsang(xcu, ycu, 45, 2, 1, "               XOA NGUOI DUNG");
+            if (ycu == 22) thanhsang(xcu, ycu, 45, 2, 1, "                 MUON SACH");
+            if (ycu == 24) thanhsang(xcu, ycu, 45, 2, 1, "                  TRA SACH");
+            if (ycu == 26) thanhsang(xcu, ycu, 45, 2, 1, "        CAP LAI TAI KHOAN NGUOI DUNG");
+            if (ycu == 28) thanhsang(xcu, ycu, 45, 2, 1, "                  QUAY LAI");
             xcu = xp;
             ycu = yp;
-            if (yp == 12) lightBar(xp, yp, 45, 2, 75, "           XEM TOAN BO NGUOI DUNG");
-            if (yp == 14) lightBar(xp, yp, 45, 2, 75, "          XEM THONG TIN NGUOI DUNG");
-            if (yp == 16) lightBar(xp, yp, 45, 2, 75, "        DANG KY TAI KHOAN NGUOI DUNG");
-            if (yp == 18) lightBar(xp, yp, 45, 2, 75, "        SUA DOI THONG TIN NGUOI DUNG");
-            if (yp == 20) lightBar(xp, yp, 45, 2, 75, "               XOA NGUOI DUNG");
-            if (yp == 22) lightBar(xp, yp, 45, 2, 75, "                 MUON SACH");
-            if (yp == 24) lightBar(xp, yp, 45, 2, 75, "                  TRA SACH");
-            if (yp == 26) lightBar(xp, yp, 45, 2, 75, "        CAP LAI TAI KHOAN NGUOI DUNG");
-            if (yp == 28) lightBar(xp, yp, 45, 2, 75, "                  QUAY LAI");
+            if (yp == 12) thanhsang(xp, yp, 45, 2, 75, "           XEM TOAN BO NGUOI DUNG");
+            if (yp == 14) thanhsang(xp, yp, 45, 2, 75, "          XEM THONG TIN NGUOI DUNG");
+            if (yp == 16) thanhsang(xp, yp, 45, 2, 75, "        DANG KY TAI KHOAN NGUOI DUNG");
+            if (yp == 18) thanhsang(xp, yp, 45, 2, 75, "        SUA DOI THONG TIN NGUOI DUNG");
+            if (yp == 20) thanhsang(xp, yp, 45, 2, 75, "               XOA NGUOI DUNG");
+            if (yp == 22) thanhsang(xp, yp, 45, 2, 75, "                 MUON SACH");
+            if (yp == 24) thanhsang(xp, yp, 45, 2, 75, "                  TRA SACH");
+            if (yp == 26) thanhsang(xp, yp, 45, 2, 75, "        CAP LAI TAI KHOAN NGUOI DUNG");
+            if (yp == 28) thanhsang(xp, yp, 45, 2, 75, "                  QUAY LAI");
             kt = false;
         }
         if (_kbhit())
@@ -212,7 +212,7 @@ int dynamicUserManagermentMenu(int xp, int yp, int xcu, int ycu, bool kt)
     }
 }
 
-List menuUserManagement(List l)
+list MenuU(list l)
 {
     int option;
     Admin Ad;
@@ -248,35 +248,35 @@ List menuUserManagement(List l)
         box(45, 28, 45, 2, 11, 1, "                  QUAY LAI");
         gotoXY(45, 28); cout << char(195);
         gotoXY(90, 28); cout << char(180);
-        option = dynamicUserManagermentMenu(45, 12, 45, 12, true);
+        option = menudongU(45, 12, 45, 12, true);
         switch (option)
         {
         case 12:
-            Ad.displayUser(l.luser());
+            Ad.displayuser(l.luser());
             break;
         case 14:
-            Ad.findUser(l.luser(), l.lbook());
+            Ad.finduser(l.luser(), l.lbook());
             break;
         case 16:
-            l = signUp(l);
+            l = dangky(l);
             break;
         case 18:
-            Ad.updateInfor(l.luser());
+            Ad.updateIF(l.luser());
             break;
         case 20:
-            l = Ad.delUser(l);
+            l = Ad.deluser(l);
             break;
         case 22:
-            Ad.borrowBook(l, l.getTime());
+            Ad.borrowbook(l, l.gettime());
             break;
         case 24:
-            Ad.giveBackBook(l, l.getMoney());
+            Ad.givebackbook(l, l.getmoney());
             break;
         case 26:
-            Ad.resetPasswork(l.luser());
+            Ad.resetpw(l.luser());
             break;
         case 28:
-            writeFileUser(l.luser());
+            writrfileuser(l.luser());
             return l;
         default:
             break;
@@ -284,17 +284,17 @@ List menuUserManagement(List l)
     }
 }
 
-List menuAccount(List l)
+list MenuTK(list l)
 {
     int option;
     Admin Ad;
     system("cls");
-    Ad.statistic(l.lbook(), l.luser());
+    Ad.thongke(l.lbook(), l.luser());
     cin.get();
     return l;
 }
 
-int dynamicSystemMenu(int xp, int yp, int xcu, int ycu, bool kt)
+int menudongsystem(int xp, int yp, int xcu, int ycu, bool kt)
 {
     ShowCur(0);
     while (true)
@@ -302,14 +302,14 @@ int dynamicSystemMenu(int xp, int yp, int xcu, int ycu, bool kt)
         if (kt == true)
         {
             gotoXY(xcu, ycu);
-            if (ycu == 12) lightBar(xcu, ycu, 45, 2, 1, "            THONG TIN TIEN PHAT");
-            if (ycu == 14) lightBar(xcu, ycu, 45, 2, 1, "        THONG TIN THOI GIAN CHO MUON");
-            if (ycu == 16) lightBar(xcu, ycu, 45, 2, 1, "                  QUAY LAI");
+            if (ycu == 12) thanhsang(xcu, ycu, 45, 2, 1, "            THONG TIN TIEN PHAT");
+            if (ycu == 14) thanhsang(xcu, ycu, 45, 2, 1, "        THONG TIN THOI GIAN CHO MUON");
+            if (ycu == 16) thanhsang(xcu, ycu, 45, 2, 1, "                  QUAY LAI");
             xcu = xp;
             ycu = yp;
-            if (yp == 12) lightBar(xp, yp, 45, 2, 75, "            THONG TIN TIEN PHAT");
-            if (yp == 14) lightBar(xp, yp, 45, 2, 75, "        THONG TIN THOI GIAN CHO MUON");
-            if (yp == 16) lightBar(xp, yp, 45, 2, 75, "                  QUAY LAI");
+            if (yp == 12) thanhsang(xp, yp, 45, 2, 75, "            THONG TIN TIEN PHAT");
+            if (yp == 14) thanhsang(xp, yp, 45, 2, 75, "        THONG TIN THOI GIAN CHO MUON");
+            if (yp == 16) thanhsang(xp, yp, 45, 2, 75, "                  QUAY LAI");
             kt = false;
         }
         if (_kbhit())
@@ -348,7 +348,7 @@ int dynamicSystemMenu(int xp, int yp, int xcu, int ycu, bool kt)
     }
 }
 
-List menuSystem(List l)
+list MenuSystem(list l)
 {
     int option;
     Admin Ad;
@@ -372,7 +372,7 @@ List menuSystem(List l)
         gotoXY(65, 14); cout << char(180);
         gotoXY(65, 16); cout << char(180);
         gotoXY(65, 18); cout << char(193);
-        option = dynamicSystemMenu(20, 12, 20, 12, true);
+        option = menudongsystem(20, 12, 20, 12, true);
         switch (option)
         {
         case 12:
@@ -380,7 +380,7 @@ List menuSystem(List l)
             int money;
             int key;
             gotoXY(67, 11);
-            cout << "So tien phat hien tai :      " << l.getMoney();
+            cout << "So tien phat hien tai :      " << l.getmoney();
             gotoXY(67, 13);
             cout << "Ban co muon thay doi thong tin ? (1/0) : ";
             cin >> key;
@@ -390,7 +390,7 @@ List menuSystem(List l)
                 cout << "Nhap so tien phat moi : ";
                 gotoXY(97, 15);
                 cin >> money;
-                l.setMoney(money);
+                l.setmoney(money);
                 gotoXY(80, 17);
                 cout << "Thay doi thanh cong !!!";
                 cin.get();
@@ -415,7 +415,7 @@ List menuSystem(List l)
             int time;
             int key;
             gotoXY(67, 11);
-            cout << "Thoi gian cho muon hien tai :     " << l.getTime();
+            cout << "Thoi gian cho muon hien tai :     " << l.gettime();
             gotoXY(67, 13);
             cout << "Ban co muon thay doi thong tin ? (1/0) : ";
             cin >> key;
@@ -425,7 +425,7 @@ List menuSystem(List l)
                 cout << "Nhap thoi gian cho muon moi : ";
                 gotoXY(102, 15);
                 cin >> time;
-                l.setTime(time);
+                l.settime(time);
                 gotoXY(80, 17);
                 cout << "Thay doi thanh cong !!!";
                 cin.get();
@@ -446,7 +446,7 @@ List menuSystem(List l)
             break;
         }
         case 16:
-            writeFileData(l.getMoney(), l.getTime());
+            writefiledata(l.getmoney(), l.gettime());
             return l;
         default:
             break;
@@ -454,7 +454,7 @@ List menuSystem(List l)
     }
 }
 
-int dynamicAdminMenu(int xp, int yp, int xcu, int ycu, bool kt)
+int menudongadmin(int xp, int yp, int xcu, int ycu, bool kt)
 {
     ShowCur(0);
     while (true)
@@ -462,18 +462,18 @@ int dynamicAdminMenu(int xp, int yp, int xcu, int ycu, bool kt)
         if (kt == true)
         {
             gotoXY(xcu, ycu);
-            if (ycu == 12) lightBar(xcu, ycu, 30, 2, 1, "         QUAN LY SACH");
-            if (ycu == 14) lightBar(xcu, ycu, 30, 2, 1, "      QUAN LY NGUOI DUNG");
-            if (ycu == 16) lightBar(xcu, ycu, 30, 2, 1, "  THONG KE SO LIEU THU VIEN");
-            if (ycu == 18) lightBar(xcu, ycu, 30, 2, 1, " THAY DOI THONG TIN THU VIEN");
-            if (ycu == 20) lightBar(xcu, ycu, 30, 2, 1, "           QUAY LAI");
+            if (ycu == 12) thanhsang(xcu, ycu, 30, 2, 1, "         QUAN LY SACH");
+            if (ycu == 14) thanhsang(xcu, ycu, 30, 2, 1, "      QUAN LY NGUOI DUNG");
+            if (ycu == 16) thanhsang(xcu, ycu, 30, 2, 1, "  THONG KE SO LIEU THU VIEN");
+            if (ycu == 18) thanhsang(xcu, ycu, 30, 2, 1, " THAY DOI THONG TIN THU VIEN");
+            if (ycu == 20) thanhsang(xcu, ycu, 30, 2, 1, "           QUAY LAI");
             xcu = xp;
             ycu = yp;
-            if (yp == 12) lightBar(xp, yp, 30, 2, 75, "         QUAN LY SACH");
-            if (yp == 14) lightBar(xp, yp, 30, 2, 75, "      QUAN LY NGUOI DUNG");
-            if (yp == 16) lightBar(xp, yp, 30, 2, 75, "  THONG KE SO LIEU THU VIEN");
-            if (yp == 18) lightBar(xp, yp, 30, 2, 75, " THAY DOI THONG TIN THU VIEN");
-            if (yp == 20) lightBar(xp, yp, 30, 2, 75, "           QUAY LAI");
+            if (yp == 12) thanhsang(xp, yp, 30, 2, 75, "         QUAN LY SACH");
+            if (yp == 14) thanhsang(xp, yp, 30, 2, 75, "      QUAN LY NGUOI DUNG");
+            if (yp == 16) thanhsang(xp, yp, 30, 2, 75, "  THONG KE SO LIEU THU VIEN");
+            if (yp == 18) thanhsang(xp, yp, 30, 2, 75, " THAY DOI THONG TIN THU VIEN");
+            if (yp == 20) thanhsang(xp, yp, 30, 2, 75, "           QUAY LAI");
             kt = false;
         }
         if (_kbhit())
@@ -512,14 +512,14 @@ int dynamicAdminMenu(int xp, int yp, int xcu, int ycu, bool kt)
     }
 }
 
-List menuAdmin(List l)
+list MenuAdmin(list l)
 {
     int option;
     Admin Ad;
     while (TRUE)
     {
         system("cls");
-        box(49, 5, 30, 2, 11, 1, "    THU VIEN DHBK DA NANG    ");
+        box(49, 5, 30, 2, 11, 1, "       THU VIEN DH GTVT      ");
         box(49, 10, 30, 2, 11, 1, "=============MENU=============");
         box(49, 12, 30, 2, 11, 1, "         QUAN LY SACH");
         gotoXY(49, 12); cout << char(195);
@@ -536,20 +536,20 @@ List menuAdmin(List l)
         box(49, 20, 30, 2, 11, 1, "           QUAY LAI");
         gotoXY(49, 20); cout << char(195);
         gotoXY(79, 20); cout << char(180);
-        option = dynamicAdminMenu(49, 12, 49, 12, true);
+        option = menudongadmin(49, 12, 49, 12, true);
         switch (option)
         {
         case 12:
-            l = menuBook(l);
+            l = MenuBook(l);
             break;
         case 14:
-            l = menuUserManagement(l);
+            l = MenuU(l);
             break;
         case 16:
-            l = menuAccount(l);
+            l = MenuTK(l);
             break;
         case 18:
-            l = menuSystem(l);
+            l = MenuSystem(l);
             break;
         case 20:
             return l;
@@ -559,7 +559,7 @@ List menuAdmin(List l)
     }
 }
 
-int dynamicUserMenu(int xp, int yp, int xcu, int ycu, bool kt)
+int menudonguser(int xp, int yp, int xcu, int ycu, bool kt)
 {
     ShowCur(0);
     while (true)
@@ -567,28 +567,28 @@ int dynamicUserMenu(int xp, int yp, int xcu, int ycu, bool kt)
         if (kt == true)
         {
             gotoXY(xcu, ycu);
-            if (ycu == 12) lightBar(xcu, ycu, 30, 2, 1, "       XEM TOAN BO SACH");
-            if (ycu == 14) lightBar(xcu, ycu, 30, 2, 1, "     XEM SACH CO THE MUON");
-            if (ycu == 16) lightBar(xcu, ycu, 30, 2, 1, "    TIM KIEM THEO TEN SACH");
-            if (ycu == 18) lightBar(xcu, ycu, 30, 2, 1, "    TIM KIEM THEO THE LOAI");
-            if (ycu == 20) lightBar(xcu, ycu, 30, 2, 1, "    TIM KIEM THEO TAC GIA");
-            if (ycu == 22) lightBar(xcu, ycu, 30, 2, 1, "      YEU CAU MUON SACH");
-            if (ycu == 24) lightBar(xcu, ycu, 30, 2, 1, "   XEM TOAN BO SACH DANG MUON");
-            if (ycu == 26) lightBar(xcu, ycu, 30, 2, 1, "      DOI TEN DANG NHAP");
-            if (ycu == 28) lightBar(xcu, ycu, 30, 2, 1, "         DOI MAT KHAU");
-            if (ycu == 30) lightBar(xcu, ycu, 30, 2, 1, "           QUAY LAI");
+            if (ycu == 12) thanhsang(xcu, ycu, 30, 2, 1, "       XEM TOAN BO SACH");
+            if (ycu == 14) thanhsang(xcu, ycu, 30, 2, 1, "     XEM SACH CO THE MUON");
+            if (ycu == 16) thanhsang(xcu, ycu, 30, 2, 1, "    TIM KIEM THEO TEN SACH");
+            if (ycu == 18) thanhsang(xcu, ycu, 30, 2, 1, "    TIM KIEM THEO THE LOAI");
+            if (ycu == 20) thanhsang(xcu, ycu, 30, 2, 1, "    TIM KIEM THEO TAC GIA");
+            if (ycu == 22) thanhsang(xcu, ycu, 30, 2, 1, "      YEU CAU MUON SACH");
+            if (ycu == 24) thanhsang(xcu, ycu, 30, 2, 1, "   XEM TOAN BO SACH DANG MUON");
+            if (ycu == 26) thanhsang(xcu, ycu, 30, 2, 1, "      DOI TEN DANG NHAP");
+            if (ycu == 28) thanhsang(xcu, ycu, 30, 2, 1, "         DOI MAT KHAU");
+            if (ycu == 30) thanhsang(xcu, ycu, 30, 2, 1, "           QUAY LAI");
             xcu = xp;
             ycu = yp;
-            if (yp == 12) lightBar(xp, yp, 30, 2, 75, "       XEM TOAN BO SACH");
-            if (yp == 14) lightBar(xp, yp, 30, 2, 75, "     XEM SACH CO THE MUON");
-            if (yp == 16) lightBar(xp, yp, 30, 2, 75, "    TIM KIEM THEO TEN SACH");
-            if (yp == 18) lightBar(xp, yp, 30, 2, 75, "    TIM KIEM THEO THE LOAI");
-            if (yp == 20) lightBar(xp, yp, 30, 2, 75, "    TIM KIEM THEO TAC GIA");
-            if (yp == 22) lightBar(xp, yp, 30, 2, 75, "      YEU CAU MUON SACH");
-            if (yp == 24) lightBar(xp, yp, 30, 2, 75, "   XEM TOAN BO SACH DANG MUON");
-            if (yp == 26) lightBar(xp, yp, 30, 2, 75, "      DOI TEN DANG NHAP");
-            if (yp == 28) lightBar(xp, yp, 30, 2, 75, "         DOI MAT KHAU");
-            if (yp == 30) lightBar(xp, yp, 30, 2, 75, "           QUAY LAI");
+            if (yp == 12) thanhsang(xp, yp, 30, 2, 75, "       XEM TOAN BO SACH");
+            if (yp == 14) thanhsang(xp, yp, 30, 2, 75, "     XEM SACH CO THE MUON");
+            if (yp == 16) thanhsang(xp, yp, 30, 2, 75, "    TIM KIEM THEO TEN SACH");
+            if (yp == 18) thanhsang(xp, yp, 30, 2, 75, "    TIM KIEM THEO THE LOAI");
+            if (yp == 20) thanhsang(xp, yp, 30, 2, 75, "    TIM KIEM THEO TAC GIA");
+            if (yp == 22) thanhsang(xp, yp, 30, 2, 75, "      YEU CAU MUON SACH");
+            if (yp == 24) thanhsang(xp, yp, 30, 2, 75, "   XEM TOAN BO SACH DANG MUON");
+            if (yp == 26) thanhsang(xp, yp, 30, 2, 75, "      DOI TEN DANG NHAP");
+            if (yp == 28) thanhsang(xp, yp, 30, 2, 75, "         DOI MAT KHAU");
+            if (yp == 30) thanhsang(xp, yp, 30, 2, 75, "           QUAY LAI");
             kt = false;
         }
         if (_kbhit())
@@ -627,14 +627,14 @@ int dynamicUserMenu(int xp, int yp, int xcu, int ycu, bool kt)
     }
 }
 
-List menuUser(List l, Node<User>* P)
+list MenuUser(list l, node<User>* P)
 {
     User Us = P->getData();
     int i;
     while (TRUE)
     {
         system("cls");
-        box(49, 5, 30, 2, 11, 1, "    THU VIEN DHBK DA NANG    ");
+        box(49, 5, 30, 2, 11, 1, "       THU VIEN DH GTVT      ");
         box(49, 10, 30, 2, 11, 1, "=============MENU=============");
         box(49, 12, 30, 2, 11, 1, "       XEM TOAN BO SACH ");
         gotoXY(49, 12); cout << char(195);
@@ -666,17 +666,17 @@ List menuUser(List l, Node<User>* P)
         box(49, 30, 30, 2, 11, 1, "           QUAY LAI");
         gotoXY(49, 30); cout << char(195);
         gotoXY(79, 30); cout << char(180);
-        int option = dynamicUserMenu(49, 12, 49, 12, true);
+        int option = menudonguser(49, 12, 49, 12, true);
         switch (option)
         {
         case 12:
-            Us.displayBook(l.lbook());
+            Us.displaybook(l.lbook());
             break;
         case 14:
             Us.displayAvailable(l.lbook());
             break;
         case 16:
-            Us.findBookName(l.lbook());
+            Us.findbookname(l.lbook());
             break;
         case 18:
             Us.findCategory(l.lbook());
@@ -685,20 +685,20 @@ List menuUser(List l, Node<User>* P)
             Us.findAuthor(l.lbook());
             break;
         case 22:
-            Us.menuRequest(l.lbook());
+            Us.menurequest(l.lbook());
             break;
         case 24:
-            i = Us.displayBorrow(l.lbook(), 0);
+            i = Us.displayborrow(l.lbook(), 0);
             break;
         case 26:
-            Us.newUsername(l.luser());
+            Us.newusername(l.luser());
             break;
         case 28:
-            Us.newPassword();
+            Us.newpassword();
             break;
         case 30:
             P->setData(Us);
-            writeFileUser(l.luser());
+            writrfileuser(l.luser());
             return l;
         default:
             break;

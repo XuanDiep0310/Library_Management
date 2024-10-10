@@ -2,7 +2,7 @@
 
 #include <stdio.h>
 #include <conio.h>
-#include<ctime> 
+#include <ctime> 
 #include "windows.h" 
 //======= lấy tọa độ x của con trỏ hiện tại =============
 int whereX();
@@ -17,3 +17,4 @@ void ShowCur(bool CursorVisibility);
 //======= trả về mã phím người dùng bấm =========
 int inputKey();
 void TextColor(int x);
+	
