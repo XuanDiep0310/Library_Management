@@ -1,29 +1,32 @@
 #pragma once
-#include "Book.h"
-#include <string>
+#include <string.h>
 #include <iostream>
+#include "General.h"
 using namespace std;
-
-using namespace std;
-template <typename T>
-class linkedlist;
 
 class Person
 {
-private:
-    string un;
-    string pw;
 public:
     Person();
-    Person(string, string);
-    void setUn(string);
-    void setPw(string);
-    string getUn();
-    string getPw();
-    void displayAvailable(linkedlist<Book>* lbook);
-    void findCategory(linkedlist<Book>* lbook);
-    void findbookname(linkedlist<Book>* lbook);
-    void findAuthor(linkedlist<Book>* lbook);
-    void displaybook(linkedlist<Book>* lbook);
-};
+    virtual ~Person();
+    void input();
+    void display();
+    void report();
+    void setId();
+    int getId();
+    char* getName();
+    void setName();
+    int getAge();
+    void setAge();
+    char* getMail();
+    void setMail();
+    void setValueDefaut();
+protected:
 
+private:
+    void format();
+    int id;
+    char name[50];
+    int age;
+    char mail[50];
+};

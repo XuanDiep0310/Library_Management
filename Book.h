@@ -1,38 +1,44 @@
 #pragma once
-#include <string>
+
 #include <iostream>
+#include <string.h>
+#include "General.h"
+#include "Dohoa.h"
+#include "User.h"
+#include "windows.h"
 using namespace std;
+
 class Book
 {
-private:
-    string ID;
-    string Name;
-    string Category;
-    string Publisher;
-    int Year;
-    string Author;
-    int Amount;
-    int fixedAmount;
-    string location;
 public:
     Book();
-    Book(string, string, string, string, int, string, int, string);
-    void setID(string);
-    void setName(string);
-    void setCategory(string);
-    void setPublisher(string);
-    void setYear(int);
-    void setAuthor(string);
-    void setAmount(int);
-    void setfixedAmount(int);
-    void setlocation(string);
-    string getID();
-    string getName();
-    string getCategory();
-    string getPublisher();
-    int getYear();
-    string getAuthor();
-    int getAmount();
-    int getfixedAmount();
-    string getlocation();
+    virtual ~Book();
+    void addBook();
+    void updateBook();
+    void deleteBook();
+    void searchBook();
+    void showBook();
+    void wirteBook();
+    void display();
+    void report();
+    int retId();
+    char* retName();
+    char* retBrand();
+    char* retAuthor();
+    char* retRentUser();
+    int retStatus();
+    void format();
+    bool updateRentBook(char s[]);
+    bool updateBookReturn(char s[]);
+    void HideCursor();
+protected:
+
+private:
+    int id;
+    char name[50];
+    char brand[50];
+    char author[50];
+    int status;
+    char rentUser[50];
 };
+

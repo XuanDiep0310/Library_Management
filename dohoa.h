@@ -1,20 +1,16 @@
 #pragma once
-
-#include <stdio.h>
+#include <iostream>
+#include <Windows.h>
+#include <Shlwapi.h>
 #include <conio.h>
-#include <ctime> 
-#include "windows.h" 
-//======= lấy tọa độ x của con trỏ hiện tại =============
-int whereX();
-//========= lấy tọa độ y của con trỏ hiện tại =======
-int whereY();
-//============== dịch con trỏ hiện tại đến điểm có tọa độ (x,y) ==========
+
+void resizeConsole(SHORT width, SHORT height);
+void clrscr(void);
 void gotoXY(SHORT x, SHORT y);
-//============= đặt màu cho chữ =========
-void SetColor(WORD color);
-//============== làm ẩn trỏ chuột ===========
-void ShowCur(bool CursorVisibility);
-//======= trả về mã phím người dùng bấm =========
-int inputKey();
-void TextColor(int x);
-	
+SHORT wherex();
+SHORT wherey();
+void setColor(WORD color);
+void setBackgroundColor(WORD color);
+void setColorBGTextXY(SHORT x, SHORT y, WORD color, WORD background, LPSTR str, ...);
+//void Cursor(BOOL bVisible = TRUE, DWORD dwSize = 25);
+void deleteRow(SHORT SStartPos, SHORT SNumberRow);

@@ -1,38 +1,68 @@
-#include "dohoa.h"
+#include "Dohoa.h"
 
-#include <stdio.h>
-#include <conio.h>
-#include<ctime> 
-#include "windows.h" 
-//======= lấy tọa độ x của con trỏ hiện tại =============
-#define KEY_NONE	-1
-int whereX()
+HANDLE hConsoleOutput;
+HANDLE hConsoleInput;
+
+// Ham thay doi kich co man hinh console.
+void resizeConsole(SHORT width, SHORT height)
 {
-	CONSOLE_SCREEN_BUFFER_INFO csbi;
-	if (GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi))
-		return csbi.dwCursorPosition.X;
-	return -1;
+	/*HWND console = GetConsoleWindow();
+	RECT r;
+	GetWindowRect(console, &r);
+	MoveWindow(console, r.left, r.top, width, height, TRUE);*/
+
+	COORD crd = { width, height };
+	SMALL_RECT rec = { 0, 0, width - 1, height - 1 };
+	hConsoleOutput = GetStdHandle(STD_OUTPUT_HANDLE);
+	SetConsoleWindowInfo(hConsoleOutput, TRUE, &rec);
+	SetConsoleScreenBufferSize(hConsoleOutput, crd);
 }
-//========= lấy tọa độ y của con trỏ hiện tại =======
-int whereY()
+
+// Ham xoa man hinh khong bi dut(lag).
+void clrscr(void)
 {
-	CONSOLE_SCREEN_BUFFER_INFO csbi;
-	if (GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi))
-		return csbi.dwCursorPosition.Y;
-	return -1;
+	CONSOLE_SCREEN_BUFFER_INFO screen_buffer_info;
+	COORD Home = { 0, 0 };
+	DWORD dummy;
+
+	hConsoleOutput = GetStdHandle(STD_INPUT_HANDLE);
+	GetConsoleScreenBufferInfo(hConsoleOutput, &screen_buffer_info);
+
+	FillConsoleOutputCharacter(hConsoleOutput, ' ', screen_buffer_info.dwSize.X * screen_buffer_info.dwSize.Y, Home, &dummy);
+	screen_buffer_info.dwCursorPosition.X = 0;
+	screen_buffer_info.dwCursorPosition.Y = 0;
+	SetConsoleCursorPosition(hConsoleOutput, screen_buffer_info.dwCursorPosition);
 }
-//============== dịch con trỏ hiện tại đến điểm có tọa độ (x,y) ==========
+
+// Ham dich chuyen con tro den toa do x, y.
 void gotoXY(SHORT x, SHORT y)
 {
-	HANDLE hConsoleOutput;
 	COORD Cursor_an_Pos = { x, y };
 	hConsoleOutput = GetStdHandle(STD_OUTPUT_HANDLE);
 	SetConsoleCursorPosition(hConsoleOutput, Cursor_an_Pos);
 }
-//============= đặt màu cho chữ =========
-void SetColor(WORD color)
+
+// Tra ve vi tri x hien tai.
+SHORT wherex()
 {
-	HANDLE hConsoleOutput;
+	CONSOLE_SCREEN_BUFFER_INFO coninfo;
+	hConsoleOutput = GetStdHandle(STD_OUTPUT_HANDLE);
+	GetConsoleScreenBufferInfo(hConsoleOutput, &coninfo);
+	return coninfo.dwCursorPosition.X;
+}
+
+// Tra ve vi tri y hien tai.
+SHORT wherey()
+{
+	CONSOLE_SCREEN_BUFFER_INFO coninfo;
+	hConsoleOutput = GetStdHandle(STD_OUTPUT_HANDLE);
+	GetConsoleScreenBufferInfo(hConsoleOutput, &coninfo);
+	return coninfo.dwCursorPosition.Y;
+}
+
+// Ham to mau.
+void setColor(WORD color)
+{
 	hConsoleOutput = GetStdHandle(STD_OUTPUT_HANDLE);
 
 	CONSOLE_SCREEN_BUFFER_INFO screen_buffer_info;
@@ -45,38 +75,72 @@ void SetColor(WORD color)
 
 	SetConsoleTextAttribute(hConsoleOutput, wAttributes);
 }
-//============== làm ẩn trỏ chuột ===========
-void ShowCur(bool CursorVisibility)
+
+// Ham thay doi mau nen hien thi.
+void setBackgroundColor(WORD color)
 {
-	HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
-	CONSOLE_CURSOR_INFO cursor = { 1, CursorVisibility };
-	SetConsoleCursorInfo(handle, &cursor);
-}
-//======= trả về mã phím người dùng bấm =========
-int inputKey()
-{
-	if (_kbhit())
-	{
-		int key = _getch();
+	hConsoleOutput = GetStdHandle(STD_OUTPUT_HANDLE);
 
-		if (key == 224)
-		{
-			key = _getch();
-			return key + 1000;
-		}
+	CONSOLE_SCREEN_BUFFER_INFO screen_buffer_info;
+	GetConsoleScreenBufferInfo(hConsoleOutput, &screen_buffer_info);
 
-		return key;
-	}
-	else
-	{
-		return KEY_NONE;
-	}
+	WORD wAttributes = screen_buffer_info.wAttributes;
+	color &= 0x000f;
+	color <<= 4; // Dich trai 3 bit de phu hop voi mau nen
+	wAttributes &= 0xff0f; // Cai 0 cho 1 bit chu nhay va 3 bit mau nen
+	wAttributes |= color;
 
-	return KEY_NONE;
+	SetConsoleTextAttribute(hConsoleOutput, wAttributes);
 }
 
-void TextColor(int x)
+WORD textattr()
 {
-	HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
-	SetConsoleTextAttribute(h, x);
+	CONSOLE_SCREEN_BUFFER_INFO ConsoleInfo;
+	GetConsoleScreenBufferInfo(hConsoleOutput, &ConsoleInfo);
+	return ConsoleInfo.wAttributes;
+}
+
+void resettextattr()
+{
+	DWORD Mau_Mac_Dinh = textattr();
+	SetConsoleTextAttribute(hConsoleOutput, Mau_Mac_Dinh);
+}
+
+// Ham in mau chu va thay doi mai nen hien thi theo vi tri x, y.
+//void setColorBGTextXY(SHORT x, SHORT y, WORD color, WORD background, LPSTR str, ...)
+//{
+//	gotoXY(x, y);
+//	setBackgroundColor(background);
+//	setColor(color);
+//
+//	/*In duoc nhieu chu hon*/
+//	va_list args;
+//	va_start(args, str);
+//	vprintf(str, args);
+//	va_end(args);
+//	/*In duoc nhieu chu hon*/
+//
+//	resettextattr();
+//	//setColor(7);
+//}
+
+// Ham an hien con tro.
+void Cursor(BOOL bVisible, DWORD dwSize)
+{
+	CONSOLE_CURSOR_INFO ConsoleCursorInfo;
+	ConsoleCursorInfo.bVisible = bVisible;
+	ConsoleCursorInfo.dwSize = dwSize; // Phan tram bao trum o cua con tro chuot
+	SetConsoleCursorInfo(hConsoleOutput, &ConsoleCursorInfo);
+}
+
+// Xoa so luong dong, SStartPos - Vi tri bat dau xoa, SNumberRow so luong dong can xoa.
+void deleteRow(SHORT SStartPos, SHORT SNumberRow)
+{
+	CONSOLE_SCREEN_BUFFER_INFO  ConsoleInfo;
+	COORD Pos = { 0, SStartPos };
+	DWORD Tmp;
+	GetConsoleScreenBufferInfo(hConsoleOutput, &ConsoleInfo);
+	FillConsoleOutputCharacter(hConsoleOutput, ' ', ConsoleInfo.dwSize.X * SNumberRow, Pos, &Tmp);
+	FillConsoleOutputAttribute(hConsoleOutput, 15, ConsoleInfo.dwSize.X * SNumberRow, Pos, &Tmp);
+	SetConsoleCursorPosition(hConsoleOutput, Pos);
 }
