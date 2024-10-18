@@ -23,7 +23,7 @@ Teacher::Teacher(int option, int id, string name, int age, string mail, float ba
 void Teacher::showInfo()
 {
     cout << "              ._____________________.\n";
-    cout << "--------------| INFORMATION TEACHER |---------------" << endl;
+    cout << "||--------------| INFORMATION TEACHER |---------------||" << endl;
     cout << "              '---------------------'\n";
     cout << " - Teacher ID: " << this->id << endl;
     cout << " - Teacher Name: " << this->name << endl;

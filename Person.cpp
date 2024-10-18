@@ -14,6 +14,17 @@ Person::Person()
 {
     //ctr
 }
+
+bool isValidEmail(const char* mail) {
+    const char* atSymbol = strchr(mail, '@');
+    if (atSymbol != nullptr) {
+        const char* domain1 = "@gmail.com";
+        const char* domain2 = "@st.utc2.edu.vn";
+        return (strcmp(atSymbol, domain1) == 0 || strcmp(atSymbol, domain2) == 0);
+    }
+    return false;
+}
+
 void Person::input()
 {
 loop:
@@ -35,7 +46,7 @@ loop:
         File.read(reinterpret_cast<char*> (&ps), sizeof(Person));
         if (ps.getId() == id)
         {
-            cout << "This ID already exists :( " << endl;
+            cout << "This ID already exists! " << endl;
             goto loop;
         }
     }
@@ -49,7 +60,7 @@ loop:
     cout << "Enter age: ";
     cin >> age;
     cin.ignore(256, '\n');
-    while (!cin.good() || age < 0)
+    while (!cin.good() || (age < 0 || age > 150))
     {
         cin.clear();
         cin.ignore(256, '\n');
@@ -61,7 +72,11 @@ loop:
     {
         cout << "Enter mail: ";
         cin.getline(mail, 50);
-    } while (strlen(mail) < 1);
+
+        if (!isValidEmail(mail)) {
+            cout << "Invalid email format. Please enter a valid ...@gmail.com email or UTC2 students email.\n";
+        }
+    } while ((strlen(mail) < 1) && isValidEmail(mail));
     format();
 }
 

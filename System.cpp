@@ -225,8 +225,7 @@ void System::menu_main()
         menu_user();
         break;
     case 3:
-        cout << "Thank you for using it!!";
-        cout << "||---------------------------------------||\n";
+        cout << "\n||---------------------------------------||\n";
         cout << "||       Thank you for using it!!        ||" << endl;
         cout << "||---------------------------------------||\n";
         exit(0);
@@ -237,9 +236,9 @@ void System::menu_admin_manager() // menu of admin
 {
     int choice;
 
-    cout << "||-----------------------------------------||\n";
+    /*cout << "||-----------------------------------------||\n";
     cout << "||       Admin Login is Successful!        ||" << endl;
-    cout << "||-----------------------------------------||\n";
+    cout << "||-----------------------------------------||\n";*/
     color = GetStdHandle(STD_OUTPUT_HANDLE);
     SetConsoleTextAttribute(color, 14);
     system("pause");
@@ -364,7 +363,7 @@ void System::menu_user_manager() // menu manager user
         menu_admin_manager();
         break;
     case 7:
-        cout << "||=-----------------------------------=||\n";
+        cout << "\n||=-----------------------------------=||\n";
         cout << "||       Thank you for using it !!     ||\n";
         cout << "||=-----------------------------------=||\n";
         exit(0);
@@ -425,7 +424,7 @@ void System::menu_user() // menu to rent book
     case 4:
         menu_main();
     case 5:
-        cout << "||=-----------------------------------=||\n";
+        cout << "\n||=-----------------------------------=||\n";
         cout << "||       Thank you for using it !!     ||\n";
         cout << "||=-----------------------------------=||\n";
         system("pause");
@@ -510,7 +509,7 @@ void System::menu_book_manager()
         menu_admin_manager();
         break;
     case 7:
-        cout << "||=-----------------------------------=||\n";
+        cout << "\n||=-----------------------------------=||\n";
         cout << "||       Thank you for using it !!     ||\n";
         cout << "||=-----------------------------------=||\n";
         exit(0);
@@ -577,7 +576,7 @@ void System::menu_employee_manager()
         menu_admin_manager();
         break;
     case 7:
-        cout << "||=-----------------------------------=||\n";
+        cout << "\n||=-----------------------------------=||\n";
         cout << "||       Thank you for using it !!     ||\n";
         cout << "||=-----------------------------------=||\n";
         exit(0);
