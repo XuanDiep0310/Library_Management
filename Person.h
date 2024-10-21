@@ -13,7 +13,7 @@ public:
     void display();
     void report();
     void setId();
-    int getId();
+    int getId() const;
     char* getName();
     void setName();
     int getAge();

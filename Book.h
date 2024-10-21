@@ -26,11 +26,14 @@ public:
     char* retBrand();
     char* retAuthor();
     char* retRentUser();
-    int retStatus();
+    int retQuantity();
     void format();
     bool updateRentBook(char s[]);
     bool updateBookReturn(char s[]);
     void HideCursor();
+    static bool compareById(const Book& b1, const Book& b2) {
+        return b1.id < b2.id;
+    }
 protected:
 
 private:
@@ -38,7 +41,7 @@ private:
     char name[50];
     char brand[50];
     char author[50];
-    int status;
+    int quantity;
     char rentUser[50];
 };
 

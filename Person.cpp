@@ -109,7 +109,7 @@ void Person::setId()
     this->id = id;
 }
 
-int Person::getId()
+int Person::getId() const
 {
     return id;
 }

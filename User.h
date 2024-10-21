@@ -19,12 +19,15 @@ public:
     void write_user();
     void display();
     void report();
-    int retId();
+    int retId() const;
     char* retUsername();
     char* retPassword();
     char* retClass();
     bool updateUserRent(char s[]);
     bool updateUserReturn(char s[]);
+    static bool compareById(const User& u1, const User& u2) {
+        return u1.retId() < u2.retId();
+    };  // Hàm so sánh
 protected:
 private:
     char username[15];

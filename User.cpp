@@ -6,8 +6,10 @@
 #include <fstream>
 #include <iomanip>
 #include <conio.h>
-#include<stdio.h>
+#include <stdio.h>
 #include <cstdio>
+#include <vector>
+#include <algorithm>
 
 using namespace std;
 HANDLE color2;
@@ -17,6 +19,11 @@ fstream fp3;
 User::User()
 {
 
+}
+
+int User::retId()const
+{
+    return Person::getId();
 }
 
 void User::show_user() //show user
@@ -47,7 +54,7 @@ loop:
         File.read(reinterpret_cast<char*> (&us1), sizeof(User));
         if (strcmp(us1.retUsername(), username) == 0)
         {
-            cout << "This ID already exists :( " << endl;
+            cout << "This ID already exists!" << endl;
             system("pause");
             system("cls");
             goto loop;
@@ -219,11 +226,37 @@ void User::search_user() // search user in file
 // save file
 void User::write_user()
 {
-    ofstream outFile;
-    outFile.open("user.dat", ios::binary | ios::app);
-    us.add_user();
-    outFile.write(reinterpret_cast<char*> (&us), sizeof(User));
-    cout << "Add User Successfully !" << endl;
+    vector<User> users;  // Tạo một vector để lưu tất cả sách
+    User newUser;
+
+    // Đọc tất cả các cuốn sách hiện có từ file vào vector
+    ifstream inFile("user.dat", ios::binary);
+    if (inFile.is_open()) {
+        User temp;
+        while (inFile.read(reinterpret_cast<char*>(&temp), sizeof(User))) {
+            users.push_back(temp);
+        }
+        inFile.close();
+    }
+
+    // Thêm sách mới vào
+    newUser.add_user();
+    users.push_back(newUser);
+
+    // Sắp xếp sách theo ID
+    std::sort(users.begin(), users.end(), compareById);
+
+    // Ghi đè lại file với danh sách sách đã sắp xếp
+    ofstream outFile("book.dat", ios::binary | ios::trunc);  // Sử dụng ios::trunc để xóa nội dung file cũ
+    for (const auto& book : users) {
+        outFile.write(reinterpret_cast<const char*>(&book), sizeof(users));
+    }
+    outFile.close();
+
+    // Thông báo thêm sách thành công
+    cout << ".---------------------------------------.\n";
+    cout << "|        Add User Successfully !        |\n";
+    cout << "'---------------------------------------'\n";
     system("pause");
     system("cls");
     outFile.close();
@@ -377,11 +410,6 @@ char* User::retPassword()
     return password;
 }
 
-
-int User::retId()
-{
-    return Person::getId();
-}
 char* User::retClass()
 {
     return clas;
