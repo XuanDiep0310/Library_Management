@@ -78,9 +78,9 @@ bool System::login()
 bool System::login_user()
 {
     User us;
-    fstream File;
+    ifstream File;  // Use ifstream for reading text files
     char user[15];
-    char passwd[20];
+    char str[20];  // Increased size to match your password expectations
     int n;
     color = GetStdHandle(STD_OUTPUT_HANDLE);
     SetConsoleTextAttribute(color, 3);
@@ -88,21 +88,22 @@ bool System::login_user()
     cout << "||=-----------|   User Login  |-----------=||" << endl;
     cout << "              '---------------'            \n";
     cout << "Enter Username: ";
-    cin.getline(user,15);
+    cin.getline(user, 15);
     cout << "Enter Password: ";
-    char str[10] = { 0 };
+    char tempPassword[20] = { 0 };
     int num, index = 0;
     bool showPassword = false;
+
     do {
         num = _getch();
-        if (((num >= '0' && num <= '9') || (num >= 'A' && num <= 'Z') || (num >= 'a' && num <= 'z') || num == ' ' || num == '.' || num == '@') && index < 28) {
-            str[index++] = num;
+        if (((num >= '0' && num <= '9') || (num >= 'A' && num <= 'Z') || (num >= 'a' && num <= 'z') || num == ' ' || num == '.' || num == '@') && index < 20) {
+            tempPassword[index++] = num;
             if (!showPassword) cout << "*";
             else cout << (char)num;
         }
         else if (num == '\b' && index > 0) {
             cout << "\b \b";
-            str[--index] = 0;
+            tempPassword[--index] = 0;
         }
         else if (num == '\t') {
             showPassword = !showPassword;
@@ -112,25 +113,37 @@ bool System::login_user()
                     cout << "*";
                 }
                 else {
-                    cout << str[i];
+                    cout << tempPassword[i];
                 }
             }
         }
     } while (num != 13);
-    //cin.getline(passwd,20);
-    File.open("user.dat",ios::binary|ios::in|ios::out);
-	while(!File.eof())
-	{
-		File.read(reinterpret_cast<char *> (&us), sizeof(User));
-		//us.show_user();
-		if(strcmp(us.retUsername(),user)==0 && strcmp(us.retPassword(),str) == 0)
-		{
-		    return true;
-        }
-	}
-	return false;
-	File.close();
 
+    File.open("user.txt");  // Open the text file for reading
+    if (!File) {
+        cout << "Could not open user.txt!" << endl;
+        return false;
+    }
+
+    // Read each line from the file
+    string line;
+    while (getline(File, line)) {
+        // Assuming the line format is "username,password"
+        size_t commaPos = line.find(',');
+        if (commaPos != string::npos) {
+            string fileUsername = line.substr(0, commaPos);
+            string filePassword = line.substr(commaPos + 1);
+
+            // Compare the entered username and password
+            if (fileUsername == user && filePassword == tempPassword) {
+                File.close();  // Close the file before returning
+                return true;   // Login successful
+            }
+        }
+    }
+
+    File.close();  // Close the file after reading all lines
+    return false;  // Login failed
 }
 
 void System::menu_main()
@@ -481,7 +494,7 @@ void System::menu_book_manager()
         do
         {
             system("cls");
-            bk.wirteBook();
+            bk.writeBook();
             cout << "||=-------------------------------------------=||\n";
             cout << "||    Do you want to add more book..(Y/N?):    ||\n";
             cout << "||=-------------------------------------------=||\n";;

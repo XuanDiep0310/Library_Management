@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <string>
 #include <fstream>
+#include <sstream>
 #include <iomanip>
 #include <conio.h>
 #include <stdio.h>
@@ -27,20 +28,33 @@ int User::retId()const
     return Person::getId();
 }
 
-void User::show_user() //show user
+void User::show_user() // show user
 {
     cout << "Username: " << username << endl;
     cout << "Password: " << password << endl;
     Person::display();
     cout << "Class: " << clas << endl;
-    cout << "Book renting: " << rentBook << endl;
-    cout << "Number of books rented: " << rentedBookCount << endl; // Display rentedBookCount
+
+    // Hiển thị danh sách sách đã thuê
+    cout << "Books rented: ";
+    if (rentedBooks.empty()) {
+        cout << "None" << endl; // Nếu không có sách nào
+    }
+    else {
+        for (const auto& bookId : rentedBooks) {
+            cout << bookId << " "; // Hiển thị từng sách
+        }
+        cout << endl; // Xuống dòng sau khi in danh sách
+    }
+
+    cout << "Number of books rented: " << rentedBooks.size() << endl; // Hiển thị số lượng sách đã thuê
 }
 
-void User::add_user() //menu add user
+void User::add_user() // menu add user
 {
     User us1;
-    char null[1] = { '\x00' };
+    string line;
+
 loop:
     cout << "----------------New user-----------------" << endl;
     cin.ignore();
@@ -50,24 +64,27 @@ loop:
         cin.getline(username, sizeof(username));
     } while (strlen(username) < 1);
 
-    fstream File;
-    // Mở file với chế độ đọc và ghi, tạo file mới nếu không tồn tại
-    File.open("user.dat", ios::binary | ios::in | ios::out);
+    // Mở file với chế độ đọc
+    fstream File("user.txt", ios::in | ios::out | ios::app);
     if (!File) {
-        cout << "Could not open user.dat!" << endl;
+        cout << "Could not open user.txt!" << endl;
         return; // Nếu không mở được file, thoát hàm
     }
 
     // Kiểm tra trùng username
-    while (File.read(reinterpret_cast<char*>(&us1), sizeof(User)))
+    while (getline(File, line))
     {
-        if (strcmp(us1.retUsername(), username) == 0)
+        istringstream iss(line);
+        string existingUsername;
+        // Giả định username là trường đầu tiên trong dòng
+        iss >> existingUsername;
+        if (existingUsername == username)
         {
             cout << "This username already exists!" << endl;
             system("pause");
             system("cls");
             File.clear(); // Reset trạng thái của file
-            File.seekg(0); // Quay lại đầu file để kiểm tra lại 
+            File.close(); // Đóng file trước khi tiếp tục
             goto loop;
         }
     }
@@ -85,30 +102,35 @@ loop:
     Person::input(); // Giả sử hàm này nhập các thông tin cho Person
     do {
         cout << "Enter class: ";
-        getline(cin, clas);  // Read the input line into the string
-    } while (clas.empty());  // Check if clas is empty
+        getline(cin, clas);  // Đọc dữ liệu vào biến clas
+    } while (clas.empty());  // Kiểm tra nếu clas trống
 
     rentedBookCount = 0;
-    strcpy_s(rentBook, sizeof(rentBook), null);
-    format(); // Giả sử hàm này thực hiện định dạng cho User
+    rentedBooks.clear(); // Đảm bảo vector sách đã mượn được khởi tạo trống
 
     // Ghi thông tin người dùng vào file
-    File.write(reinterpret_cast<const char*>(this), sizeof(User));
+    File << username << " " << password << " " << clas << " "
+        << rentedBookCount << " "; // Ghi số lượng sách đã mượn
+
+    // Ghi danh sách sách đã mượn
+    for (const auto& book : rentedBooks) {
+        File << book << " "; // Ghi từng sách trong vector
+    }
+    File << endl; // Kết thúc dòng
 
     File.close(); // Đừng quên đóng file
 }
 
-
-void User::update_user() //update user in file
+void User::update_user() // update user in file
 {
     system("cls");
     fstream File;
     bool found = false;
     int n;
-    string s;
+    string s, line;
 
     cout << "---------------UPDATE USER----------------" << endl;
-    cout << "Enter id of user update: ";
+    cout << "Enter id of user to update: ";
     cin >> n;
     while (n < 1 || n > 9999999)
     {
@@ -120,36 +142,69 @@ void User::update_user() //update user in file
         cout << "Enter id of user: ";
         cin >> n;
     }
-    cout << "Enter username of user update: ";
+    cout << "Enter username of user to update: ";
     cin >> s;
 
-    File.open("user.dat", ios::binary | ios::in | ios::out);
+    // Mở file với chế độ đọc và ghi
+    File.open("user.txt", ios::in | ios::out);
     if (!File)
     {
-        cout << "File could not be open !! Press any Key...";
+        cout << "File could not be opened!! Press any key...";
         return;
     }
-    while (!File.eof() && found == false)
+
+    // Tạo một tệp tạm để lưu thông tin người dùng đã cập nhật
+    fstream tempFile("temp.txt", ios::out);
+
+    while (getline(File, line)
+        && !found) // Đọc từng dòng từ file
     {
-        File.read(reinterpret_cast<char*> (&us), sizeof(User));
-        if (us.retId() == n && us.retUsername() == s)
+        istringstream iss(line);
+        string existingUsername;
+        int existingId;
+        iss >> existingUsername >> existingId; // Giả định ID là trường thứ hai trong dòng
+
+        // Kiểm tra xem ID và username có khớp không
+        if (existingId == n && existingUsername == s)
         {
             cout << "\n\n[CURRENT DATA]" << endl;
-            us.show_user();
+            // Chuyển đổi dòng thành đối tượng User (nếu cần)
+            // Bạn có thể viết một hàm để phân tích dòng và cập nhật thuộc tính cho đối tượng User
+            us.show_user(); // Hiển thị thông tin hiện tại
             system("pause");
             cout << endl << endl;
             cout << "---Enter The New Details of User---" << endl;
-            us.add_user();
-            int pos = (-1) * static_cast<int>(sizeof(User));
-            File.seekp(pos, ios::cur);
-            File.write(reinterpret_cast<char*> (&us), sizeof(User));
+            us.add_user(); // Nhập thông tin mới
+
+            // Ghi thông tin người dùng đã cập nhật vào tệp tạm
+            tempFile << us.retUsername() << " " << us.retId() << " "
+                << us.retClass() << " " << us.rentedBookCount << " ";
+
+            // Ghi sách đã mượn từ vector
+            for (const auto& book : us.rentedBooks) {
+                tempFile << book << " "; // Ghi từng sách trong vector
+            }
+            tempFile << endl; // Kết thúc dòng
+
             cout << "Update Successfully !!";
             system("pause");
             found = true;
         }
+        else
+        {
+            // Nếu không khớp, ghi lại dòng gốc vào tệp tạm
+            tempFile << line << endl;
+        }
     }
+
     File.close();
-    if (found == false)
+    tempFile.close();
+
+    // Xóa file cũ và đổi tên file tạm thành file gốc
+    remove("user.txt");
+    rename("temp.txt", "user.txt");
+
+    if (!found)
     {
         cout << "Record Not Found ";
         system("pause");
@@ -162,7 +217,7 @@ void User::delete_user() // delete user in file
     int n;
     string s;
     cout << "----------------DELETE USER----------------" << endl;
-    cout << "Enter id of user delete: ";
+    cout << "Enter id of user to delete: ";
     cin >> n;
     while (n < 1 || n > 9999999)
     {
@@ -174,30 +229,57 @@ void User::delete_user() // delete user in file
         cout << "Enter id of user: ";
         cin >> n;
     }
-    cout << "Enter username of user detele: ";
+    cout << "Enter username of user to delete: ";
     cin >> s;
-    ifstream inFile;
-    ofstream outFile;
-    inFile.open("user.dat", ios::binary);
+
+    ifstream inFile("user.txt");
     if (!inFile)
     {
-        cout << "File could not be open !! Press any Key...";
+        cout << "File could not be opened!! Press any key...";
         return;
     }
-    outFile.open("Temp.dat", ios::binary);
-    inFile.seekg(0, ios::beg);
-    while (inFile.read(reinterpret_cast<char*> (&us), sizeof(User)))
+
+    // Tạo tệp tạm để lưu thông tin không bị xóa
+    ofstream outFile("temp.txt");
+    bool deleted = false; // Cờ kiểm tra xem có xóa được người dùng hay không
+
+    string line;
+    while (getline(inFile, line))
     {
-        if (us.retUsername() != s && us.retId() != n)
+        istringstream iss(line);
+        string existingUsername;
+        int existingId;
+
+        // Giả định ID là trường thứ hai trong dòng
+        iss >> existingUsername >> existingId;
+
+        // Nếu không khớp, ghi lại vào tệp tạm
+        if (existingUsername != s || existingId != n)
         {
-            outFile.write(reinterpret_cast<char*> (&us), sizeof(User));
+            outFile << line << endl; // Ghi lại dòng vào tệp tạm
+        }
+        else
+        {
+            deleted = true; // Đánh dấu là đã xóa người dùng
         }
     }
+
     inFile.close();
     outFile.close();
-    remove("user.dat");
-    rename("Temp.dat", "user.dat");
-    cout << "Delete Successfully" << endl;
+
+    // Xóa file cũ và đổi tên file tạm thành file gốc
+    remove("user.txt");
+    rename("temp.txt", "user.txt");
+
+    if (deleted)
+    {
+        cout << "Delete Successfully" << endl;
+    }
+    else
+    {
+        cout << "User not found." << endl;
+    }
+
     system("pause");
 }
 
@@ -205,11 +287,10 @@ void User::search_user() // search user by name (case-insensitive)
 {
     string s;
     bool found = false;
-    fstream File;
+    ifstream File("user.txt"); // Mở file txt để đọc
     char ch;
     vector<string> suggestions;
 
-    File.open("user.dat", ios::binary | ios::in);
     if (!File)
     {
         cout << ".----------------------------------------------------------.\n";
@@ -219,33 +300,40 @@ void User::search_user() // search user by name (case-insensitive)
     }
 
     while (true) {
-        system("cls");  // Clear screen on each character input
-        Sleep(100);     // Add a 100ms delay to reduce screen flicker and lag
+        system("cls");  // Xóa màn hình trên mỗi lần nhập ký tự
+        Sleep(100);     // Thêm độ trễ 100ms để giảm độ nhấp nháy màn hình
 
         cout << "              ._____________________.\n";
         cout << "--------------| Search User By Name |------------" << endl;
         cout << "              '---------------------'\n";
         cout << "Enter username of user: " << s << endl;
 
-        // Step 1: Collect suggestions
+        // Bước 1: Thu thập gợi ý
         suggestions.clear();
-        File.clear();  // Reset file state
-        File.seekg(0); // Move back to the beginning of the file
-        while (File.read(reinterpret_cast<char*>(&us), sizeof(User)))
+        File.clear();  // Reset trạng thái file
+        File.seekg(0); // Quay lại đầu file
+
+        string line;
+        while (getline(File, line))
         {
-            string username = us.retUsername();
+            istringstream iss(line);
+            string existingUsername;
+            int existingId; // Giả định rằng ID là trường thứ hai
 
-            // Convert the username to lowercase for case-insensitive comparison
-            std::transform(username.begin(), username.end(), username.begin(), ::tolower);
+            // Đọc username và ID từ dòng
+            iss >> existingUsername >> existingId;
 
-            // Check if the current username contains the input string anywhere
-            if (username.find(s) != string::npos)
+            // Chuyển username thành chữ thường để so sánh không phân biệt chữ hoa chữ thường
+            std::transform(existingUsername.begin(), existingUsername.end(), existingUsername.begin(), ::tolower);
+
+            // Kiểm tra xem username hiện tại có chứa chuỗi nhập vào không
+            if (existingUsername.find(s) != string::npos)
             {
-                suggestions.push_back(us.retUsername());
+                suggestions.push_back(existingUsername);
             }
         }
 
-        // Step 2: Show suggestions if any are found
+        // Bước 2: Hiển thị gợi ý nếu tìm thấy
         if (!suggestions.empty()) {
             cout << "\nSuggestions:\n";
             for (const string& suggestion : suggestions) {
@@ -258,30 +346,39 @@ void User::search_user() // search user by name (case-insensitive)
             cout << "'--------------------------------------------'\n";
         }
 
-        // Step 3: Get next character from user
-        ch = _getch(); // Get character input without pressing enter
-        if (ch == '\r') // If Enter is pressed, stop
+        // Bước 3: Lấy ký tự tiếp theo từ người dùng
+        ch = _getch(); // Lấy ký tự nhập vào mà không cần nhấn Enter
+        if (ch == '\r') // Nếu nhấn Enter, dừng lại
             break;
-        else if (ch == '\b' && !s.empty()) // Handle backspace
+        else if (ch == '\b' && !s.empty()) // Xử lý phím backspace
             s.pop_back();
-        else if (isalnum(ch) || isspace(ch)) // Add character to search string
+        else if (isalnum(ch) || isspace(ch)) // Thêm ký tự vào chuỗi tìm kiếm
             s += ch;
     }
 
-    // Step 4: Search for the exact match
+    // Bước 4: Tìm kiếm bản ghi khớp chính xác
+    string line;
     std::transform(s.begin(), s.end(), s.begin(), ::tolower);
     found = false;
-    File.clear();  // Reset file state
-    File.seekg(0); // Move back to the beginning of the file
-    while (File.read(reinterpret_cast<char*>(&us), sizeof(User)) && !found)
+    File.clear();  // Reset trạng thái file
+    File.seekg(0); // Quay lại đầu file
+    while (getline(File, line) && !found)
     {
-        string username = us.retUsername();
-        std::transform(username.begin(), username.end(), username.begin(), ::tolower);
+        istringstream iss(line);
+        string existingUsername;
+        int existingId;
 
-        if (username == s)
+        // Đọc username và ID từ dòng
+        iss >> existingUsername >> existingId;
+        std::transform(existingUsername.begin(), existingUsername.end(), existingUsername.begin(), ::tolower);
+
+        if (existingUsername == s)
         {
             system("cls");
-            us.show_user();  // Display user details
+            // Hiển thị thông tin người dùng
+            cout << "User ID: " << existingId << endl;
+            cout << "Username: " << existingUsername << endl;
+            // Có thể gọi us.show_user() nếu muốn hiển thị thêm thông tin từ đối tượng User
             system("pause");
             found = true;
         }
@@ -299,144 +396,268 @@ void User::search_user() // search user by name (case-insensitive)
     system("pause");
 }
 
+string User::getRentedBooksAsString() const {
+    stringstream ss;
+    for (const auto& book : rentedBooks) {
+        ss << book << ","; // Concatenate each book followed by a comma
+    }
+    string result = ss.str();
+    if (!result.empty()) {
+        result.pop_back(); // Remove the last comma
+    }
+    return result;
+}
+
 // save file
-void User::write_user()
-{
-    vector<User> users;  // Tạo một vector để lưu tất cả sách
+void User::write_user() {
+    vector<User> users;  // Vector to store all users
     User newUser;
 
-    // Đọc tất cả các cuốn sách hiện có từ file vào vector
-    ifstream inFile("user.dat", ios::binary);
+    // Read all existing users from the text file into the vector
+    ifstream inFile("user.txt");
     if (inFile.is_open()) {
-        User temp;
-        while (inFile.read(reinterpret_cast<char*>(&temp), sizeof(User))) {
-            users.push_back(temp);
+        string line;
+        while (getline(inFile, line)) {
+            istringstream iss(line);
+            string username, password, clas;
+            int rentedBookCount;
+            string rentedBooks;
+
+            // Read data from the line
+            iss >> username >> password >> clas >> rentedBookCount;
+            getline(iss, rentedBooks); // Read the remaining rented books
+
+            // Initialize User from the read data
+            User user;
+            user.setUsername(username);
+            user.setPassword(password);
+            user.setClass(clas);
+            user.setRentedBookCount(rentedBookCount);
+
+            // Assuming rentedBooks is a comma-separated string
+            stringstream rentedBooksStream(rentedBooks);
+            string book;
+            while (getline(rentedBooksStream, book, ',')) {
+                user.rentedBooks.push_back(book); // Add each rented book to the user's vector
+            }
+
+            users.push_back(user);
         }
         inFile.close();
     }
 
-    // Thêm sách mới vào
-    newUser.add_user();
+    // Add a new user
+    newUser.add_user(); // This should populate newUser's details
     users.push_back(newUser);
 
-    // Sắp xếp sách theo ID
+    // Sort users by ID
     std::sort(users.begin(), users.end(), compareById);
 
-    // Ghi đè lại file với danh sách sách đã sắp xếp
-    ofstream outFile("book.dat", ios::binary | ios::trunc);  // Sử dụng ios::trunc để xóa nội dung file cũ
-    for (const auto& book : users) {
-        outFile.write(reinterpret_cast<const char*>(&book), sizeof(User));
+    // Write back to the text file with the updated user list
+    ofstream outFile("user.txt", ios::trunc); // Use ios::trunc to clear the old content
+    for (const auto& user : users) {
+        outFile << user.retUsername() << " "
+            << user.retPassword() << " "
+            << user.retClass() << " "
+            << user.retRentedBookCount() << " "
+            << user.getRentedBooksAsString() << endl; // Convert rentedBooks vector to string
     }
     outFile.close();
 
-    // Thông báo thêm sách thành công
+    // Notify successful addition of the user
     cout << ".---------------------------------------.\n";
     cout << "|        Add User Successfully !        |\n";
     cout << "'---------------------------------------'\n";
     system("pause");
     system("cls");
-    outFile.close();
 }
 
-bool User::updateUserRent(char s[]) //rent book
+bool User::updateUserRent(char s[]) // rent book
 {
     fstream File;
     char tempName[50];
     char tempPass[50];
     bool found = false;
-    cout << "Enter username of you (username as registered): ";
+
+    cout << "Enter your username (username as registered): ";
     cin.getline(tempName, sizeof(tempName));
-    cout << "Enter password of you: ";
+    cout << "Enter your password: ";
     cin.getline(tempPass, sizeof(tempPass));
 
-    File.open("user.dat", ios::binary | ios::in | ios::out);
-
-    File.open("user.dat", ios::binary | ios::in | ios::out);
+    // Open the text file for reading and writing
+    File.open("user.txt", ios::in | ios::out);
     if (!File) {
-        cout << "Could not open user.dat!" << endl;
-        return false; // Kiểm tra nếu file không mở được
+        cout << "Could not open user.txt!" << endl;
+        return false; // Check if the file opened successfully
     }
 
-    while (!File.eof() && found == false)
-    {
-        File.read(reinterpret_cast<char*> (this), sizeof(User));
-        if (File.gcount() == sizeof(User)) { //Đảm bảo đọc đủ dữ liệu
-            if (strcmp(tempName, retUsername()) == 0 && strcmp(tempPass, retPassword()) == 0)
-            {
-                if (rentedBookCount <= 0)
-                {
-                    return false;
-                }
-                else
-                {
-                    strcpy_s(username, sizeof(username), retUsername());
-                    strcpy_s(password, sizeof(password), retPassword());
-                    Person::setValueDefaut();
-                    for (int i = 0; i < strlen(s); i++)
-                    {
-                        rentBook[i] = s[i];
-                    }
-                    clas = retClass();
-                    rentedBookCount += 1;
-                    int pos = (-1) * static_cast<int>(sizeof(User));
-                    File.seekp(pos, ios::cur);
-                    File.write(reinterpret_cast<char*> (this), sizeof(User));
-                    found = true;
-                    return true;
-                }
+    vector<User> users;
+    string line;
+
+    // Read all users from the file into a vector
+    while (getline(File, line)) {
+        istringstream iss(line);
+        User user;
+        string username, password, clas, rentedBooks;
+        int rentedBookCount;
+
+        // Read data from the line
+        if (iss >> username >> password >> clas >> rentedBookCount) {
+            // Read rented books as a single string
+            getline(iss, rentedBooks);
+            user.setUsername(username);
+            user.setPassword(password);
+            user.setClass(clas);
+            user.setRentedBookCount(rentedBookCount);
+
+            // Convert rentedBooks string into a vector
+            istringstream rentedBooksStream(rentedBooks);
+            string book;
+            while (getline(rentedBooksStream, book, ',')) {
+                user.rentedBooks.push_back(book);
+            }
+
+            users.push_back(user);
+        }
+    }
+
+    // Search for the user and update rented books
+    for (auto& user : users) {
+        if (strcmp(tempName, user.retUsername().c_str()) == 0 && strcmp(tempPass, user.retPassword().c_str()) == 0) {
+            if (user.retRentedBookCount() <= 0) {
+                cout << "No books available to rent." << endl;
+                return false; // No books to rent
+            }
+            else {
+                // Add the rented book to the user's list
+                user.rentedBooks.push_back(s);
+                user.setRentedBookCount(user.retRentedBookCount() + 1); // Increment the rented book count
+                found = true;
+                break; // User found and updated
             }
         }
     }
+
+    // If user was found, overwrite the file
+    if (found) {
+        File.close(); // Close the current file before writing
+
+        // Reopen the file to write updated data
+        File.open("user.txt", ios::out | ios::trunc);
+        for (const auto& user : users) {
+            File << user.retUsername() << " "
+                << user.retPassword() << " "
+                << user.retClass() << " "
+                << user.retRentedBookCount() << " "
+                << user.getRentedBooksAsString() << endl; // Convert rentedBooks vector to string
+        }
+        File.close();
+
+        cout << "Book rented successfully!" << endl;
+        return true;
+    }
+
     File.close();
-    return false;
+    cout << "User not found." << endl;
+    return false; // User not found
 }
+
 bool User::updateUserReturn(char s[]) // return book
 {
     fstream File;
     char tempName[50];
     char tempPass[50];
-    char null[1] = { '\x00' };
     bool found = false;
 
-    cout << "Enter username of you (username as registered): ";
-    cin.getline(tempName, 50);
-    cout << "Enter password of you: ";
-    cin.getline(tempPass, 50);
+    cout << "Enter your username (username as registered): ";
+    cin.getline(tempName, sizeof(tempName));
+    cout << "Enter your password: ";
+    cin.getline(tempPass, sizeof(tempPass));
 
-    File.open("user.dat", ios::binary | ios::in | ios::out);
-    while (!File.eof() && found == false)
-    {
-        File.read(reinterpret_cast<char*> (this), sizeof(User));
-        if (strcmp(tempName, retUsername()) == 0 && strcmp(tempPass, retPassword()) == 0)
-        {
-            if (rentedBookCount <= 0) { // Check if there are books to return
-                cout << "No books to return." << endl;
-                return false;
+    // Open the text file for reading and writing
+    File.open("user.txt", ios::in | ios::out);
+    if (!File) {
+        cout << "Could not open user.txt!" << endl;
+        return false; // Check if the file opened successfully
+    }
+
+    vector<User> users;
+    string line;
+
+    // Read all users from the file into a vector
+    while (getline(File, line)) {
+        istringstream iss(line);
+        User user;
+        string username, password, clas, rentedBooks;
+        int rentedBookCount;
+
+        // Read data from the line
+        if (iss >> username >> password >> clas >> rentedBookCount) {
+            // Read rented books as a single string
+            getline(iss, rentedBooks);
+            user.setUsername(username);
+            user.setPassword(password);
+            user.setClass(clas);
+            user.setRentedBookCount(rentedBookCount);
+
+            // Convert rentedBooks string into a vector
+            istringstream rentedBooksStream(rentedBooks);
+            string book;
+            while (getline(rentedBooksStream, book, ',')) {
+                user.rentedBooks.push_back(book);
             }
-            else
-            {
-                *username = *retUsername();
-                *password = *retPassword();
-                Person::setValueDefaut();
-                strcpy_s(rentBook, sizeof(rentBook), null);
-                clas = retClass();
 
-                rentedBookCount--; // Decrement rented book count
-                if (rentedBookCount == 0) {
-                    rentBook[0] = '\0'; // Clear the rented book information
+            users.push_back(user);
+        }
+    }
+
+    // Search for the user and update rented books
+    for (auto& user : users) {
+        if (strcmp(tempName, user.retUsername().c_str()) == 0 && strcmp(tempPass, user.retPassword().c_str()) == 0) {
+            if (user.retRentedBookCount() <= 0) {
+                cout << "No books to return." << endl;
+                return false; // No books to return
+            }
+            else {
+                // Remove the book from the user's rented books
+                auto it = find(user.rentedBooks.begin(), user.rentedBooks.end(), s);
+                if (it != user.rentedBooks.end()) {
+                    user.rentedBooks.erase(it); // Remove the book from the vector
+                    user.setRentedBookCount(user.retRentedBookCount() - 1); // Decrement the rented book count
                 }
-
-                int pos = (-1) * static_cast<int>(sizeof(User));
-                File.seekp(pos, ios::cur);
-                File.write(reinterpret_cast<char*> (this), sizeof(User));
-                return true;
+                else {
+                    cout << "This book is not rented by you." << endl;
+                    return false; // The book was not found in the rented books
+                }
+                found = true;
+                break; // User found and updated
             }
         }
     }
-    File.close();
-    return false;
-}
 
+    // If user was found, overwrite the file
+    if (found) {
+        File.close(); // Close the current file before writing
+
+        // Reopen the file to write updated data
+        File.open("user.txt", ios::out | ios::trunc);
+        for (const auto& user : users) {
+            File << user.retUsername() << " "
+                << user.retPassword() << " "
+                << user.retClass() << " "
+                << user.retRentedBookCount() << " "
+                << user.getRentedBooksAsString() << endl; // Convert rentedBooks vector to string
+        }
+        File.close();
+
+        cout << "Book returned successfully!" << endl;
+        return true;
+    }
+
+    File.close();
+    cout << "User not found." << endl;
+    return false; // User not found
+}
 
 void User::report()
 {
@@ -455,16 +676,16 @@ void User::report()
 
 void User::display()
 {
-    system("cls");  // Xóa màn hình
-    fp3.open("user.dat", ios::in);  // Mở file để đọc
-    color2 = GetStdHandle(STD_OUTPUT_HANDLE);
+    system("cls");  // Clear the screen
+    ifstream fp3("user.txt");  // Open file for reading
+    HANDLE color2 = GetStdHandle(STD_OUTPUT_HANDLE);
 
-    // Đặt màu đỏ cho tiêu đề
+    // Set red color for the title
     SetConsoleTextAttribute(color2, 12);
     cout << "\t\t\t\t\t\t\t\t\tUser LIST" << endl;
     cout << "============================================================================================================================================================\n";
 
-    // In tiêu đề cột
+    // Print column headers
     cout << left << setw(20) << "Username"
         << left << setw(20) << "Password"
         << left << setw(10) << "ID"
@@ -476,30 +697,56 @@ void User::display()
 
     cout << "============================================================================================================================================================\n";
 
-    // Đặt màu vàng cho dữ liệu
+    // Set yellow color for data
     SetConsoleTextAttribute(color2, 14);
 
-    // Đọc và hiển thị từng bản ghi từ file
-    while (fp3.read(reinterpret_cast<char*>(&us), sizeof(User)))
-    {
-        us.report();  // Hàm report() hiển thị thông tin của đối tượng User
+    // Read and display each record from the file
+    string line;
+    while (getline(fp3, line)) {
+        istringstream iss(line);
+        User us;
+        string username, password, clas, name, mail, rentedBooks;
+        int age, id, rentedBookCount;
+
+        // Read data from the line
+        if (iss >> username >> password >> id >> name >> age >> mail >> clas >> rentedBookCount) {
+            // Read the rented books as a single string
+            getline(iss, rentedBooks);
+
+            // Set user data (assuming the setter methods are defined)
+            us.setUsername(username);
+            us.setPassword(password);
+            us.setClass(clas);
+            us.setRentedBookCount(rentedBookCount);
+            // Here you can set name, age, mail, and rentedBooks similarly if needed
+
+            // Display user information (customize as needed)
+            cout << left << setw(20) << us.retUsername()
+                << left << setw(20) << us.retPassword()
+                << left << setw(10) << us.retId()
+                << left << setw(20) << name  // Assuming you have a method to get the name
+                << left << setw(5) << age    // Assuming you have a method to get the age
+                << left << setw(35) << mail   // Assuming you have a method to get the mail
+                << left << setw(10) << us.retClass()
+                << left << setw(20) << rentedBooks << endl;  // Print rented books
+        }
     }
 
-    fp3.close();  // Đóng file sau khi đọc xong
-    _getch();  // Đợi người dùng nhấn phím để tiếp tục
+    fp3.close();  // Close the file after reading
+    system("pause");  // Wait for user to press a key
 }
 
-char* User::retUsername()
+string User::retUsername() const
 {
     return username;
 }
 
-char* User::retPassword()
+string User::retPassword() const
 {
     return password;
 }
 
-string User::retClass()
+string User::retClass() const
 {
     return clas;
 }
@@ -507,6 +754,34 @@ string User::retClass()
 void User::format() {
     clas = General::format(clas);  // Call to General's format method
 }
+
+void User::setUsername(const string& username) {
+    strncpy_s(this->username, username.c_str(), sizeof(this->username) - 1);
+    this->username[sizeof(this->username) - 1] = '\0'; // Ensure null termination
+}
+
+void User::setPassword(const string& password) {
+    strncpy_s(this->password, password.c_str(), sizeof(this->password) - 1);
+    this->password[sizeof(this->password) - 1] = '\0'; // Ensure null termination
+}
+
+void User::setClass(const string& clas) {
+    this->clas = clas;
+}
+
+void User::setRentedBookCount(int count) {
+    this->rentedBookCount = count;
+}
+
+// Optional: If you want to allow setting rentedBooks directly
+void User::setRentedBooks(const vector<string>& rentedBooks) {
+    this->rentedBooks = rentedBooks;
+}
+
+int User::retRentedBookCount() const {
+    return rentedBookCount; // Or whatever logic you want
+}
+
 
 User::~User()
 {
