@@ -1,4 +1,5 @@
 #include "User.h"
+#include "General.h"
 #include "Person.h"
 #include <iostream>
 #include <stdlib.h>
@@ -16,7 +17,7 @@ HANDLE color2;
 User us;
 fstream fp3;
 
-User::User()
+User::User() : rentedBookCount(0)
 {
 
 }
@@ -33,6 +34,7 @@ void User::show_user() //show user
     Person::display();
     cout << "Class: " << clas << endl;
     cout << "Book renting: " << rentBook << endl;
+    cout << "Number of books rented: " << rentedBookCount << endl; // Display rentedBookCount
 }
 
 void User::add_user() //menu add user
@@ -45,37 +47,57 @@ loop:
     do
     {
         cout << "Enter username: ";
-        cin.getline(username, 15);
+        cin.getline(username, sizeof(username));
     } while (strlen(username) < 1);
+
     fstream File;
+    // Mở file với chế độ đọc và ghi, tạo file mới nếu không tồn tại
     File.open("user.dat", ios::binary | ios::in | ios::out);
-    while (!File.eof())
+    if (!File) {
+        cout << "Could not open user.dat!" << endl;
+        return; // Nếu không mở được file, thoát hàm
+    }
+
+    // Kiểm tra trùng username
+    while (File.read(reinterpret_cast<char*>(&us1), sizeof(User)))
     {
-        File.read(reinterpret_cast<char*> (&us1), sizeof(User));
         if (strcmp(us1.retUsername(), username) == 0)
         {
-            cout << "This ID already exists!" << endl;
+            cout << "This username already exists!" << endl;
             system("pause");
             system("cls");
+            File.clear(); // Reset trạng thái của file
+            File.seekg(0); // Quay lại đầu file để kiểm tra lại 
             goto loop;
         }
     }
-    File.close();
+
+    // Đến đây, username chưa tồn tại
+    File.clear(); // Reset trạng thái của file
+    File.seekp(0, ios::end); // Đặt con trỏ ghi ở cuối file
+
     do
     {
         cout << "Enter password: ";
-        cin.getline(password, 20);
+        cin.getline(password, sizeof(password));
     } while (strlen(password) < 1);
-    Person::input();
-    do
-    {
+
+    Person::input(); // Giả sử hàm này nhập các thông tin cho Person
+    do {
         cout << "Enter class: ";
-        cin.getline(clas, 15);
-    } while (strlen(clas) < 1);
-    status = 0;
+        getline(cin, clas);  // Read the input line into the string
+    } while (clas.empty());  // Check if clas is empty
+
+    rentedBookCount = 0;
     strcpy_s(rentBook, sizeof(rentBook), null);
-    format();
+    format(); // Giả sử hàm này thực hiện định dạng cho User
+
+    // Ghi thông tin người dùng vào file
+    File.write(reinterpret_cast<const char*>(this), sizeof(User));
+
+    File.close(); // Đừng quên đóng file
 }
+
 
 void User::update_user() //update user in file
 {
@@ -179,50 +201,104 @@ void User::delete_user() // delete user in file
     system("pause");
 }
 
-void User::search_user() // search user in file
+void User::search_user() // search user by name (case-insensitive)
 {
-    int n;
     string s;
     bool found = false;
     fstream File;
-    system("cls");
-    cout << "---------------Search User With ID-------------" << endl;
-    cout << "Enter id of user: ";
-    cin >> n;
-    while (n < 1 || n > 9999999)
-    {
-        cin.clear();
-        fflush(stdin);
-        cout << "Error: Invalid Choice. Please try again!" << endl;
-        system("pause");
-        system("cls");
-        cout << "Enter id of user: ";
-        cin >> n;
-    }
-    cout << "Enter username of user: ";
-    cin >> s;
-    File.open("user.dat", ios::binary | ios::in | ios::out);
+    char ch;
+    vector<string> suggestions;
+
+    File.open("user.dat", ios::binary | ios::in);
     if (!File)
     {
-        cout << "File could not be open !! Press any Key...";
+        cout << ".----------------------------------------------------------.\n";
+        cout << "|       File could not be open !! Press any Key...         |\n";
+        cout << "'----------------------------------------------------------'\n";
         return;
     }
-    while (!File.eof() && found == false)
+
+    while (true) {
+        system("cls");  // Clear screen on each character input
+        Sleep(100);     // Add a 100ms delay to reduce screen flicker and lag
+
+        cout << "              ._____________________.\n";
+        cout << "--------------| Search User By Name |------------" << endl;
+        cout << "              '---------------------'\n";
+        cout << "Enter username of user: " << s << endl;
+
+        // Step 1: Collect suggestions
+        suggestions.clear();
+        File.clear();  // Reset file state
+        File.seekg(0); // Move back to the beginning of the file
+        while (File.read(reinterpret_cast<char*>(&us), sizeof(User)))
+        {
+            string username = us.retUsername();
+
+            // Convert the username to lowercase for case-insensitive comparison
+            std::transform(username.begin(), username.end(), username.begin(), ::tolower);
+
+            // Check if the current username contains the input string anywhere
+            if (username.find(s) != string::npos)
+            {
+                suggestions.push_back(us.retUsername());
+            }
+        }
+
+        // Step 2: Show suggestions if any are found
+        if (!suggestions.empty()) {
+            cout << "\nSuggestions:\n";
+            for (const string& suggestion : suggestions) {
+                cout << " - " << suggestion << endl;
+            }
+        }
+        else {
+            cout << ".____________________________________________.\n";
+            cout << "| No suggestions found for entered characters |\n";
+            cout << "'--------------------------------------------'\n";
+        }
+
+        // Step 3: Get next character from user
+        ch = _getch(); // Get character input without pressing enter
+        if (ch == '\r') // If Enter is pressed, stop
+            break;
+        else if (ch == '\b' && !s.empty()) // Handle backspace
+            s.pop_back();
+        else if (isalnum(ch) || isspace(ch)) // Add character to search string
+            s += ch;
+    }
+
+    // Step 4: Search for the exact match
+    std::transform(s.begin(), s.end(), s.begin(), ::tolower);
+    found = false;
+    File.clear();  // Reset file state
+    File.seekg(0); // Move back to the beginning of the file
+    while (File.read(reinterpret_cast<char*>(&us), sizeof(User)) && !found)
     {
-        File.read(reinterpret_cast<char*> (&us), sizeof(User));
-        if (us.retUsername() == s && us.retId() == n)
+        string username = us.retUsername();
+        std::transform(username.begin(), username.end(), username.begin(), ::tolower);
+
+        if (username == s)
         {
             system("cls");
-            us.show_user();
+            us.show_user();  // Display user details
             system("pause");
             found = true;
         }
     }
+
     File.close();
-    if (found == false)
-        cout << "Record Not Found " << endl;
+
+    if (!found)
+    {
+        cout << ".__________________.\n";
+        cout << "| Record Not Found |\n";
+        cout << "'------------------'\n";
+    }
+
     system("pause");
 }
+
 // save file
 void User::write_user()
 {
@@ -249,7 +325,7 @@ void User::write_user()
     // Ghi đè lại file với danh sách sách đã sắp xếp
     ofstream outFile("book.dat", ios::binary | ios::trunc);  // Sử dụng ios::trunc để xóa nội dung file cũ
     for (const auto& book : users) {
-        outFile.write(reinterpret_cast<const char*>(&book), sizeof(users));
+        outFile.write(reinterpret_cast<const char*>(&book), sizeof(User));
     }
     outFile.close();
 
@@ -269,35 +345,45 @@ bool User::updateUserRent(char s[]) //rent book
     char tempPass[50];
     bool found = false;
     cout << "Enter username of you (username as registered): ";
-    cin.getline(tempName, 50);
+    cin.getline(tempName, sizeof(tempName));
     cout << "Enter password of you: ";
-    cin.getline(tempPass, 50);
+    cin.getline(tempPass, sizeof(tempPass));
 
     File.open("user.dat", ios::binary | ios::in | ios::out);
+
+    File.open("user.dat", ios::binary | ios::in | ios::out);
+    if (!File) {
+        cout << "Could not open user.dat!" << endl;
+        return false; // Kiểm tra nếu file không mở được
+    }
+
     while (!File.eof() && found == false)
     {
         File.read(reinterpret_cast<char*> (this), sizeof(User));
-        if (strcmp(tempName, retUsername()) == 0 && strcmp(tempPass, retPassword()) == 0)
-        {
-            if (status == 1)
+        if (File.gcount() == sizeof(User)) { //Đảm bảo đọc đủ dữ liệu
+            if (strcmp(tempName, retUsername()) == 0 && strcmp(tempPass, retPassword()) == 0)
             {
-                return false;
-            }
-            else
-            {
-                *username = *retUsername();
-                *password = *retPassword();
-                Person::setValueDefaut();
-                for (int i = 0; i < strlen(s); i++)
+                if (rentedBookCount <= 0)
                 {
-                    rentBook[i] = s[i];
+                    return false;
                 }
-                *clas = *retClass();
-                status = 1;
-                int pos = (-1) * static_cast<int>(sizeof(User));
-                File.seekp(pos, ios::cur);
-                File.write(reinterpret_cast<char*> (this), sizeof(User));
-                return true;
+                else
+                {
+                    strcpy_s(username, sizeof(username), retUsername());
+                    strcpy_s(password, sizeof(password), retPassword());
+                    Person::setValueDefaut();
+                    for (int i = 0; i < strlen(s); i++)
+                    {
+                        rentBook[i] = s[i];
+                    }
+                    clas = retClass();
+                    rentedBookCount += 1;
+                    int pos = (-1) * static_cast<int>(sizeof(User));
+                    File.seekp(pos, ios::cur);
+                    File.write(reinterpret_cast<char*> (this), sizeof(User));
+                    found = true;
+                    return true;
+                }
             }
         }
     }
@@ -323,8 +409,8 @@ bool User::updateUserReturn(char s[]) // return book
         File.read(reinterpret_cast<char*> (this), sizeof(User));
         if (strcmp(tempName, retUsername()) == 0 && strcmp(tempPass, retPassword()) == 0)
         {
-            if (status == 0)
-            {
+            if (rentedBookCount <= 0) { // Check if there are books to return
+                cout << "No books to return." << endl;
                 return false;
             }
             else
@@ -333,8 +419,13 @@ bool User::updateUserReturn(char s[]) // return book
                 *password = *retPassword();
                 Person::setValueDefaut();
                 strcpy_s(rentBook, sizeof(rentBook), null);
-                *clas = *retClass();
-                status = 0;
+                clas = retClass();
+
+                rentedBookCount--; // Decrement rented book count
+                if (rentedBookCount == 0) {
+                    rentBook[0] = '\0'; // Clear the rented book information
+                }
+
                 int pos = (-1) * static_cast<int>(sizeof(User));
                 File.seekp(pos, ios::cur);
                 File.write(reinterpret_cast<char*> (this), sizeof(User));
@@ -358,8 +449,7 @@ void User::report()
 
     // In các thông tin khác của User
     cout << left << setw(12) << clas       // Class có độ rộng 10
-        << left << setw(15) << status      // Status có độ rộng 5
-        << left << setw(20) << rentBook   // Rent Book có độ rộng 20
+        << left << setw(20) << rentedBookCount   // Rent Book có độ rộng 20
         << endl;  // Xuống dòng sau khi in hết các cột của bản ghi
 }
 
@@ -382,7 +472,6 @@ void User::display()
         << left << setw(5) << "Age"
         << left << setw(35) << "Mail"
         << left << setw(10) << "Class"
-        << left << setw(10) << "Status"
         << left << setw(20) << "Rent Book" << endl;
 
     cout << "============================================================================================================================================================\n";
@@ -410,15 +499,13 @@ char* User::retPassword()
     return password;
 }
 
-char* User::retClass()
+string User::retClass()
 {
     return clas;
 }
 
-void User::format()
-{
-    char* s;
-    s = General::format(clas);
+void User::format() {
+    clas = General::format(clas);  // Call to General's format method
 }
 
 User::~User()

@@ -11,6 +11,6 @@ People::~People()
 }
 void People::format()
 {
-    name = General::format_string(name);
-    mail = General::format_string(mail);
+    name = General::format(name);
+    mail = General::format(mail);
 }

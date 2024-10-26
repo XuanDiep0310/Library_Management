@@ -52,11 +52,10 @@ loop:
     }
     File.close();
     fflush(stdin);
-    do
-    {
+    do {
         cout << "Enter name: ";
-        cin.getline(name, 50);
-    } while (strlen(name) < 1);
+        getline(cin, name);  // Read the input line into the string
+    } while (name.empty());  // Check if name is empty
     cout << "Enter age: ";
     cin >> age;
     cin.ignore(256, '\n');
@@ -76,7 +75,7 @@ loop:
         if (!isValidEmail(mail)) {
             cout << "Invalid email format. Please enter a valid ...@gmail.com email or UTC2 students email.\n";
         }
-    } while ((strlen(mail) < 1) && isValidEmail(mail));
+    } while ((strlen(mail) < 1) || !isValidEmail(mail));
     format();
 }
 
@@ -99,7 +98,7 @@ void Person::report()
 void Person::setValueDefaut()
 {
     id = getId();
-    *name = *getName();
+    name = getName();
     age = getAge();
     *mail = *getMail();
 }
@@ -114,7 +113,7 @@ int Person::getId() const
     return id;
 }
 
-char* Person::getName()
+string Person::getName()
 {
     return name;
 }
@@ -137,8 +136,7 @@ char* Person::getMail()
 
 void Person::format()
 {
-    char* s;
-    s = General::format(this->name);
+    name = General::format(this->name);
 }
 
 Person::~Person()
