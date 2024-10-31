@@ -10,7 +10,8 @@ class User : public Person {
 private:
 	string username;
 	string password;
-	vector<int> rentedBooks;
+	string email;
+	std::vector<int> rentedBooks;
 	Date birthday;
 
 public:
@@ -45,6 +46,19 @@ public:
 		}
 	}
 
+	// Show borrowed books
+    void showRentedBooks() const {
+        if (rentedBooks.empty()) {
+            cout << "No books rented." << endl;
+            return;
+        }
+        cout << "Rented Books IDs: ";
+        for (const auto& id : rentedBooks) {
+            cout << id << " ";
+        }
+        cout << endl;
+    }
+	
 	// Static method for creating a new account
 	static User* createAccount() {
 		string name, email, username, password;

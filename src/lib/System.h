@@ -59,6 +59,14 @@ bool login(UserTree& userTree) {
     }
 }
 
+void displayUserActionMenu() {
+    clearScreen();
+    std::cout << "1. Borrow Book" << std::endl;
+    std::cout << "2. Return Book" << std::endl;
+    std::cout << "3. Show Book" << std::endl;
+    std::cout << "4. Log out" << std::endl;
+}
+
 bool adminLogin() {
     clearScreen();
     std::string username, password;

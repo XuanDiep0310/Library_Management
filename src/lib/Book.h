@@ -39,6 +39,30 @@ public:
     void setQuantity(int q) { quantity = q; }
     void setStatus(const string& stt) { status = stt; }
 
+    bool isAvailable() const { return quantity > 0 && status == "Available"; }
+    
+    void addAdvanceRequest(const std::string& username) {
+        // Add username to a list of advance requests
+    }
+
+    void updateStatus(const std::string& newStatus) { status = newStatus; }
+
+    void markAsBorrowed() {
+        if (quantity > 0) {
+            quantity--;
+            if (quantity == 0) {
+                status = "Rented";
+            }
+        }
+    }
+
+    void markAsReturned() {
+        quantity++;
+        if (status == "Rented" && quantity > 0) {
+            status = "Available";
+        }
+    }
+
     //save book details to a file
     void saveToFile(ofstream& outfile) const {
         outfile << bookId << " ," << title << ", " << author << ", " << genre << ", "
@@ -93,24 +117,24 @@ private:
         }
     }
 
-    vector<Book*> searchBookByTitle(TreeNode* node, const string& title) const {
-        vector<Book*> foundBooks;
-        if (!node) return foundBooks;
-
-        // Check current node's title
-        if (node->book->getTitle() == title) {
-            foundBooks.push_back(node->book);
+    Book* searchBookByTitle(TreeNode* node, const string& title) const {
+        if (node == nullptr) {
+            return nullptr; // Không tìm thấy
         }
 
-        // Search left and right subtrees
-        vector<Book*> leftResults = searchBookByTitle(node->left, title);
-        vector<Book*> rightResults = searchBookByTitle(node->right, title);
+        // So sánh tiêu đề của sách với tiêu đề tìm kiếm
+        if (node->book->getTitle() == title) {
+            return node->book; // Trả về con trỏ đến sách nếu tìm thấy
+        }
 
-        // Combine results
-        foundBooks.insert(foundBooks.end(), leftResults.begin(), leftResults.end());
-        foundBooks.insert(foundBooks.end(), rightResults.begin(), rightResults.end());
+        // Tìm kiếm trong cây bên trái
+        Book* leftResult = searchBookByTitle(node->left, title);
+        if (leftResult != nullptr) {
+            return leftResult;
+        }
 
-        return foundBooks;
+        // Tìm kiếm trong cây bên phải
+        return searchBookByTitle(node->right, title);
     }
 
     TreeNode* findMin(TreeNode* node) const {
@@ -168,6 +192,25 @@ public:
         root = addBook(root, newBook);
     }
 
+    Book* getBookById(int bookId) const {
+        return getBookById(root, bookId);
+    }
+
+    Book* getBookById(TreeNode* node, int bookId) const {
+        if (!node) return nullptr; // Book not found
+
+        if (node->book->getBookId() == bookId)
+            return node->book;
+        else if (bookId < node->book->getBookId())
+            return getBookById(node->left, bookId);
+        else
+            return getBookById(node->right, bookId);
+    }
+
+    Book* searchBookByTitle(const string& title) const {
+        return searchBookByTitle(root, title);
+    }
+
     void saveToFile(const string& filename) const {
         ofstream outFile(filename);
         if (outFile.is_open()) {
@@ -199,7 +242,7 @@ public:
         }
     }
 
-    vector<Book*> searchBook(const string& title) const {
+    Book* searchBook(const string& title) const {
         return searchBookByTitle(root, title);
     }
 

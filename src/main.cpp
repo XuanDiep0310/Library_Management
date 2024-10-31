@@ -1,9 +1,13 @@
 #include <iostream>
 #include "./lib/Book.h"
 #include "./lib/UserTree.h"
+#include "./lib/User.h"
 #include "./lib/System.h"
 
 using namespace std;
+
+void borrowBook(const string& username, const string& bookTitle, BSTree& bookTree); 
+void returnBook(const string& username, const string& bookTitle, BSTree& bookTree);
 
 int main() {
     BSTree library;
@@ -65,13 +69,11 @@ int main() {
                             cin.ignore();  // Clear input buffer before getting string
                             getline(cin, bookTitle);
 
-                            vector<Book*> foundBooks = library.searchBook(bookTitle);
-                            if (!foundBooks.empty()) {
+                            Book* foundBook = library.searchBook(bookTitle);
+                            if (foundBook != nullptr) {
                                 cout << "Found Books:" << endl;
-                                for (const auto& book : foundBooks) {
-                                    cout << "ID: " << book->getBookId() << ", Title: " << book->getTitle()
-                                        << ", Author: " << book->getAuthor() << endl;
-                                }
+                                cout << "ID: " << foundBook->getBookId() << ", Title: " << foundBook->getTitle()
+                                     << ", Author: " << foundBook->getAuthor() << endl;
                             }
                             else {
                                 cout << "No book found with title \"" << bookTitle << "\"" << endl;
@@ -173,6 +175,69 @@ int main() {
                     system("pause");
                 }
             } while (mainChoice != 0);
+        }
+        else if (overalChoice == 2) {
+            // User login
+            if (!login(userTree)) {
+                cout << "Login failed. Please try again." << endl;
+                continue;
+            } // Attempt to login, if failed, continue to overall menu
+
+            do {
+                displayUserActionMenu();
+                cin >> mainChoice; // Changed to mainChoice to match the menu structure
+
+                switch (mainChoice) {
+                    case 1: { // Borrow Book
+                        string bookTitle;
+                        cout << "Enter the title of the book you want to borrow: ";
+                        cin.ignore(); // Clear input buffer
+                        getline(cin, bookTitle);
+
+                        // Kiểm tra xem có người dùng nào đang đăng nhập không
+                        if (userTree.getCurrentUserName().empty()) {
+                            cout << "No user is currently logged in." << endl;
+                        } else {
+                            userTree.borrowBook(userTree.getCurrentUserName(), bookTitle, library); // Gọi hàm borrowBook với tên sách
+                        }
+                        system("pause");
+                        break;
+                    }
+                    case 2: { // Return Book
+                        string bookTitle;
+                        cout << "Enter the title of the book you want to return: ";
+                        cin.ignore();
+                        getline(cin, bookTitle);
+
+                        // Kiểm tra xem có người dùng nào đang đăng nhập không
+                        if (userTree.getCurrentUserName().empty()) {
+                            cout << "No user is currently logged in." << endl;
+                        } else {
+                            userTree.returnBook(userTree.getCurrentUserName(), bookTitle, library); // Gọi hàm returnBook với tên sách
+                        }
+                        system("pause");
+                        break;
+                    }
+                    case 3: { // Show Borrowed Books
+                        if (userTree.getCurrentUserName().empty()) {
+                            cout << "No user is currently logged in." << endl;
+                        } else {
+                            cout << "Books currently borrowed by you:" << endl;
+                            userTree.showRentedBooks(); // This method should list borrowed books for the current user
+                        }
+                        system("pause");
+                        break;
+                    }
+                    case 4: { // Log out
+                        cout << "Logging out..." << endl;
+                        system("pause");
+                        break; // Exit to overall menu
+                    }
+                    default:
+                        cout << "Invalid choice. Please try again." << endl;
+                        system("pause");
+                }
+            } while (mainChoice != 4); // Repeat until user chooses to log out
         }
         else if (overalChoice == 0) {
             // Save books to file before exiting

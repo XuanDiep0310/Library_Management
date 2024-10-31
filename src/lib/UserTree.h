@@ -7,6 +7,8 @@
 class UserTree {
 private:
     UserNode* root;
+    User* currentUser;
+    std::string currentUserName; 
 
     UserNode* insert(UserNode* node, User* user) {
         if (node == nullptr) {
@@ -103,6 +105,10 @@ public:
         destroyTree(root);
     }
 
+    string getCurrentUserName() {
+        return currentUserName; // Return the current user's username
+    }
+
     // Function to insert a user
     void addUser(User* user) {
         root = insert(root, user);
@@ -124,10 +130,11 @@ public:
     }
 
     // Function to handle user login
-    bool login(const string& username, const string& password) const {
+    bool login(const string& username, const string& password) {
         User* user = searchUser(username); // Corrected to use searchUser
         if (user) {
             if (user->getPassword() == password) {
+                currentUserName = username; // This will now work
                 return true; // Login successful
             }
             else {
@@ -146,6 +153,107 @@ public:
             addUser(newUser);
             std::cout << "User account created successfully!" << std::endl;
         }
+    }
+
+    // Function to show rented books for the currently logged-in user
+    void showRentedBooks() {
+        std::string currentUser = getCurrentUserName();
+        User* user = searchUser(currentUser);
+        if (user) {
+            const vector<int>& rentedBooks = user->getRentedBooks(); // Assuming this method exists
+            if (rentedBooks.empty()) {
+                cout << "No books rented." << endl;
+            } else {
+                cout << "Rented Books for user " << currentUser << ":" << endl;
+                for (int bookId : rentedBooks) {
+                    cout << "Book ID: " << bookId << endl; // Modify to display book details if needed
+                }
+            }
+        } else {
+            cout << "User not found." << endl;
+        }
+    }
+
+    void borrowBook(const string& username, const string& bookTitle, BSTree& bookTree) {
+        User* user = searchUser(username);
+        if (!user) {
+            cout << "User not found." << endl;
+            return;
+        }
+
+        Book* book = bookTree.searchBookByTitle(bookTitle); // Assuming this retrieves a Book by ID
+        if (!book) {
+            cout << "Book not found." << endl;
+            return;
+        }
+
+        // Check if the book is available
+        if (book->getStatus() == "Available") {
+            book->markAsBorrowed();  // Updates the book status and quantity
+            user->rentBook(book->getBookId());  // Records the book in the user's borrowed books list
+
+            Date borrowDate; // Assume this defaults to the current date
+            Date predictReturnDate = borrowDate.addDays(7);  // Predict return date = borrow date + 7 days
+
+            // Save to file
+            ofstream borrowFile("borrows.txt", ios::app);
+            if (borrowFile.is_open()) {
+                borrowFile << "User: " << username << ", Book Title: " << bookTitle 
+                          << ", Borrow Date: " << borrowDate.toString() 
+                          << ", Predicted Return Date: " << predictReturnDate.toString() 
+                          << endl;
+                borrowFile.close();
+            }
+
+            cout << "Book borrowed successfully!" << endl;
+        } else {
+            registerBorrowInAdvance(username, book->getBookId(), bookTree);
+        }
+    }
+
+    void registerBorrowInAdvance(const string& username, int bookId, BSTree& bookTree) {
+        ofstream advanceFile("advance_borrows.txt", ios::app);
+        if (advanceFile.is_open()) {
+            advanceFile << "User: " << username << ", Book ID: " << bookId << endl;
+            advanceFile.close();
+        }
+        cout << "Book is currently unavailable. You have registered to borrow it when it's returned." << endl;
+    }
+
+    void returnBook(const string& username, const string& bookTitle, BSTree& bookTree) {
+        User* user = searchUser(username);
+        if (!user) {
+            cout << "User not found." << endl;
+            return;
+        }
+
+        Book* book = bookTree.searchBookByTitle(bookTitle);
+        if (!book) {
+            cout << "Book not found." << endl;
+            return;
+        }
+
+        Date returnDate;  // Assume this defaults to the current date
+        Date predictedReturnDate; // Retrieve from borrow record
+
+        int fine = 0;
+        if (returnDate > predictedReturnDate) {
+            fine = (returnDate.daysBetween(predictedReturnDate)) * 10000; // Calculate fine
+        }
+
+        book->markAsReturned();
+        user->returnBook(book->getBookId());
+
+        // Save return info to file
+        ofstream returnFile("returns.txt", ios::app);
+        if (returnFile.is_open()) {
+            returnFile << "User: " << username << ", Book ID: " << book->getBookId() 
+                    << ", Return Date: " << returnDate.toString() 
+                    << ", Fine: " << fine << " VND" << endl;
+            returnFile.close();
+        }
+
+        cout << "Book returned successfully! Fine: " << fine << " VND" << endl;
     }
 
     // Function to save users to a file
