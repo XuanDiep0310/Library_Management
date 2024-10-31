@@ -1,11 +1,16 @@
 #pragma once
 
 #include <iostream>
+#include <chrono>
+#include <ctime>
+#include <iomanip>
+#include <sstream>
+
 using namespace std;
 
 class Date {
 public:
-    Date(int day = 1, int month = 1, int year = 1900);
+    Date(int day = 1, int month = 1, int year = 1900, int hour = 0, int minute = 0, int second = 0);
     virtual ~Date();
 
     int currentDaysInYear();
@@ -13,6 +18,9 @@ public:
     static int daysInMonth(int month, int year);
     static int daysInYear(int year);
     static bool isValidDate(int day, int month, int year);
+    static bool isValidHour(int hour);
+    static bool isValidMinute(int minute);
+    static bool isValidSecond(int second);
     static Date defaultDate;
 
 
@@ -25,24 +33,47 @@ public:
     int daysBetween(const Date &other) const;
     int toDays() const;
     
-    bool operator<(const Date& dt);
-    bool operator>(const Date& dt);
-    bool operator==(const Date& dt);
-    bool operator!=(const Date& dt);
-    int operator-(const Date& dt);
+    bool operator<(const Date& dt) const;
+    bool operator>(const Date& dt) const;
+    bool operator==(const Date& dt) const;
+    bool operator!=(const Date& dt) const;
+    int operator-(const Date& dt) const;
     friend ostream& operator<<(ostream& os, const Date& dt);
     friend istream& operator>>(istream& is, Date& dt);
 
     int getDay() const { return day; }
     int getMonth() const { return month; }
     int getYear() const { return year; }
+    int getHour() const { return hour; }
+    int getMinute() const { return minute; }
+    int getSecond() const { return second; }
+
+    // Method to get the current date
+    static Date currentDate() {
+        // Get current time as time_t
+        std::time_t t = std::time(nullptr);
+        std::tm* currentTime = std::localtime(&t);
+
+        if (currentTime == nullptr) {
+            // Handle error, e.g., throw an exception or return a default Date
+            throw std::runtime_error("Failed to get current time");
+        }
+        
+        return Date(currentTime->tm_mday, 
+                     currentTime->tm_mon + 1, 
+                     currentTime->tm_year + 1900, 
+                     currentTime->tm_hour, 
+                     currentTime->tm_min, 
+                     currentTime->tm_sec);
+    }
 
 private:
     int day, month, year;
+    int hour, minute, second;
 };
 
 // Constructor and Destructor
-Date::Date(int day, int month, int year) : day(day), month(month), year(year) {}
+Date::Date(int day, int month, int year, int second, int minute, int hour) : day(day), month(month), year(year), second(second), minute(minute), hour(hour) {}
 Date::~Date() {}
 
 // Utility functions
@@ -77,6 +108,17 @@ Date Date::addDays(int days) {
     return newDate; // Return the modified Date
 }
 
+std::string Date::toString() const {
+    std::ostringstream oss;
+    oss << std::setw(2) << std::setfill('0') << day << "-"
+        << std::setw(2) << std::setfill('0') << month << "-"
+        << year << " "
+        << std::setw(2) << std::setfill('0') << hour << ":"
+        << std::setw(2) << std::setfill('0') << minute << ":"
+        << std::setw(2) << std::setfill('0') << second;
+    return oss.str();
+}
+
 bool Date::isLeap(int year) {
     return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
 }
@@ -100,24 +142,44 @@ bool Date::isValidDate(int day, int month, int year) {
     return year >= 1 && month >= 1 && month <= 12 && day >= 1 && day <= daysInMonth(month, year);
 }
 
+// Hour and Minute Validation
+bool Date::isValidHour(int hour) {
+    return hour >= 0 && hour < 24;
+}
+
+bool Date::isValidMinute(int minute) {
+    return minute >= 0 && minute < 60;
+}
+
+bool Date::isValidSecond(int second) {
+    return second >= 0 && second < 60;
+}
+
 // Comparison Operators
-bool Date::operator<(const Date& dt) {
-    return (year < dt.year) || (year == dt.year && (month < dt.month || (month == dt.month && day < dt.day)));
+bool Date::operator<(const Date& dt) const {
+    return (year < dt.year) || (year == dt.year && (month < dt.month || (month == dt.month && day < dt.day))) ||
+           (year == dt.year && month == dt.month && hour < dt.hour) ||
+           (year == dt.year && month == dt.month && hour == dt.hour && minute < dt.minute) ||
+           (year == dt.year && month == dt.month && hour == dt.hour && minute == dt.minute && second < dt.second);
 }
 
-bool Date::operator>(const Date& dt) {
-    return (year > dt.year) || (year == dt.year && (month > dt.month || (month == dt.month && day > dt.day)));
+bool Date::operator>(const Date& dt) const {
+    return (year > dt.year) || (year == dt.year && (month > dt.month || (month == dt.month && day > dt.day))) ||
+           (year == dt.year && month == dt.month && hour > dt.hour) ||
+           (year == dt.year && month == dt.month && hour == dt.hour && minute > dt.minute) ||
+           (year == dt.year && month == dt.month && hour == dt.hour && minute == dt.minute && second > dt.second);
 }
 
-bool Date::operator==(const Date& dt) {
-    return year == dt.year && month == dt.month && day == dt.day;
+bool Date::operator==(const Date& dt) const {
+    return year == dt.year && month == dt.month && day == dt.day && 
+           hour == dt.hour && minute == dt.minute && second == dt.second;
 }
 
-bool Date::operator!=(const Date& dt) {
+bool Date::operator!=(const Date& dt) const {
     return !(*this == dt);
 }
 
-int Date::operator-(const Date& dt) {
+int Date::operator-(const Date& dt) const {
     Date dt1 = *this;
     Date dt2 = dt;
     bool isNegative = false;
@@ -136,21 +198,16 @@ int Date::operator-(const Date& dt) {
 
 // Stream Operators
 ostream& operator<<(ostream& os, const Date& dt) {
-    os << dt.day << "-" << dt.month << "-" << dt.year;
+    os << dt.day << "-" << dt.month << "-" << dt.year << " "
+       << std::setw(2) << std::setfill('0') << dt.hour << ":"
+       << std::setw(2) << std::setfill('0') << dt.minute << ":"
+       << std::setw(2) << std::setfill('0') << dt.second;
     return os;
 }
 
 istream& operator>>(istream& is, Date& dt) {
-    is >> dt.day >> dt.month >> dt.year;
+    is >> dt.day >> dt.month >> dt.year >> dt.hour >> dt.minute >> dt.second;
     return is;
-}
-
-std::string Date::toString() const {
-    std::ostringstream oss;
-    oss << year << "-" 
-        << (month < 10 ? "0" : "") << month << "-"
-        << (day < 10 ? "0" : "") << day;
-    return oss.str();
 }
 
 int Date::daysBetween(const Date& other) const {

@@ -52,7 +52,9 @@ public:
             quantity--;
             if (quantity == 0) {
                 status = "Rented";
-            }
+            } else status = "Available";
+        } else {
+            cout << "No copies available to borrow." << endl;  // Optional: Handle case when there are no available copies
         }
     }
 

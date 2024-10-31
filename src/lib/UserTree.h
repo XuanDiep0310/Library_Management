@@ -91,6 +91,10 @@ private:
         }
     }
 
+    Date getBorrowDateForBook(User* user, int bookId) {
+        return Date::currentDate(); 
+    }
+
 public:
     UserTree() : root(nullptr) {
         loadUsersFromFile("users.txt"); // Load users from file on initialization
@@ -192,7 +196,7 @@ public:
             book->markAsBorrowed();  // Updates the book status and quantity
             user->rentBook(book->getBookId());  // Records the book in the user's borrowed books list
 
-            Date borrowDate; // Assume this defaults to the current date
+            Date borrowDate = Date::currentDate(); // Assume this defaults to the current date
             Date predictReturnDate = borrowDate.addDays(7);  // Predict return date = borrow date + 7 days
 
             // Save to file
@@ -220,6 +224,29 @@ public:
         cout << "Book is currently unavailable. You have registered to borrow it when it's returned." << endl;
     }
 
+    Date getPredictedReturnDate(int bookId) {
+        // Find the current user
+        User* user = search(root, currentUserName); // Assuming currentUserName is set correctly
+        if (!user) {
+            std::cout << "User not found." << std::endl;
+            return Date(); // Return a default date or handle error appropriately
+        }
+
+        // Retrieve the borrowed books of the current user
+        const vector<int>& rentedBooks = user->getRentedBooks(); // Assuming this method exists
+        if (std::find(rentedBooks.begin(), rentedBooks.end(), bookId) == rentedBooks.end()) {
+            std::cout << "Book ID not found in user's rented books." << std::endl;
+            return Date(); // Return a default date or handle error appropriately
+        }
+
+        // Assuming you have a way to track the borrow date; if it's not available,
+        // you might want to modify your User or Book classes to store it.
+        Date borrowDate = getBorrowDateForBook(user, bookId); // This method needs to be implemented
+
+        // Predict return date as borrow date + 7 days
+        return borrowDate.addDays(7);
+    }
+
     void returnBook(const string& username, const string& bookTitle, BSTree& bookTree) {
         User* user = searchUser(username);
         if (!user) {
@@ -233,7 +260,7 @@ public:
             return;
         }
 
-        Date returnDate;  // Assume this defaults to the current date
+        Date returnDate = Date::currentDate();  // Assume this defaults to the current date
         Date predictedReturnDate; // Retrieve from borrow record
 
         int fine = 0;
