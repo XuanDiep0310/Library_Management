@@ -1,6 +1,4 @@
-User: hoangdb1910, Book ID: 107, Return Date: 1900-01-01, Fine: 0 VND
-User: hoangdb1910, Book ID: 107, Return Date: 1900-01-01, Fine: 0 VND
-User: hoangdb1910, Book ID: 109, Return Date: 01-01-1900 00:00:00, Fine: 0 VND
-User: hoangdb1910, Book ID: 109, Return Date: 01-01-1900 00:00:00, Fine: 0 VND
-User: hoangdb1910, Book ID: 109, Return Date: 01-01-1900 00:00:00, Fine: 0 VND
-User: hoangdb1910, Book ID: 109, Return Date: 31-10-2024 10:23:17, Fine: 475870000 VND
+User: hoangdb1910, Book ID: 102, Return Date: 01-11-2024 19:47:16, Fine: 0 VND
+User: hoangdb1910, Book ID: 102, Return Date: 01-11-2024 24:47:16, Fine: 0 VND
+User: hoangdb1910, Book ID: 102, Return Date: 01-11-2024 29:47:16, Fine: 475880000 VND
+User: hoangdb1910, Book ID: 102, Return Date: 01-11-2024 49:35:21, Fine: 475880000 VND

@@ -4,6 +4,8 @@
 #include <vector>
 #include <string>
 #include <algorithm>
+#include <unordered_map>
+
 using namespace std;
 
 class User : public Person {
@@ -11,8 +13,9 @@ private:
 	string username;
 	string password;
 	string email;
-	std::vector<int> rentedBooks;
+	vector<int> rentedBooks;
 	Date birthday;
+	unordered_map<int, Date> bookReturnDates;
 
 public:
 	//Constructor
@@ -59,12 +62,29 @@ public:
         cout << endl;
     }
 	
+	// Method to set the predicted return date for a specific book
+    void setPredictedReturnDate(int bookId, const Date& date) {
+        bookReturnDates[bookId] = date;
+    }
+
+    // Method to get the predicted return date for a specific book
+    Date getPredictedReturnDate(int bookId) const {
+        auto it = bookReturnDates.find(bookId);
+        if (it != bookReturnDates.end()) {
+            return it->second;
+        }
+        return Date(); // Return a default Date if book ID not found
+    }
+
 	// Static method for creating a new account
 	static User* createAccount() {
 		string name, email, username, password;
 		int day, month, year;
 
-		cout << "Creating a new account..." << endl;
+		setColor(CYAN);
+		cout << ".-----------------------------.\n";
+		cout << "| Creating a new account...   |\n";
+		cout << "'-----------------------------'\n";
 		cout << "Enter User Name: ";
 		cin.ignore();
 		getline(cin, name);
@@ -76,6 +96,7 @@ public:
 		getline(cin, password);
 		cout << "Enter Birthday (Day Month Year): ";
 		cin >> day >> month >> year;
+		setColor(RESET);
 
 		Date birthday(day, month, year); // Assume Date has a suitable constructor
 		return new User(name, birthday, email, username, password);

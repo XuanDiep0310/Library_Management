@@ -1,2 +1,2 @@
-107 ,Dragon Ball,      Akira Toriyama,      Action, 2024, 11,      Available
-109 ,Naruto,   Kishimoto,   Shounen, 2000, 14,   Available
+102 ,Tay Du Ky,            Nguoi Trung Quoc,            Action, 1980, 4,            Available
+103 ,Sword Art Online,   Reki,   Action, 2024, 2,   Available

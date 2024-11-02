@@ -58,7 +58,7 @@ public:
             // Handle error, e.g., throw an exception or return a default Date
             throw std::runtime_error("Failed to get current time");
         }
-        
+
         return Date(currentTime->tm_mday, 
                      currentTime->tm_mon + 1, 
                      currentTime->tm_year + 1900, 
@@ -67,13 +67,20 @@ public:
                      currentTime->tm_sec);
     }
 
+    bool isValid() const {
+        return isValidDate(day, month, year) &&
+            isValidHour(hour) &&
+            isValidMinute(minute) &&
+            isValidSecond(second);
+    }
+
 private:
     int day, month, year;
     int hour, minute, second;
 };
 
 // Constructor and Destructor
-Date::Date(int day, int month, int year, int second, int minute, int hour) : day(day), month(month), year(year), second(second), minute(minute), hour(hour) {}
+Date::Date(int day, int month, int year, int second, int minute, int hour) : day(day), month(month), year(year), hour(hour), minute(minute), second(second) {}
 Date::~Date() {}
 
 // Utility functions
@@ -198,7 +205,9 @@ int Date::operator-(const Date& dt) const {
 
 // Stream Operators
 ostream& operator<<(ostream& os, const Date& dt) {
-    os << dt.day << "-" << dt.month << "-" << dt.year << " "
+    os << std::setw(2) << std::setfill('0') << dt.day << "-"
+       << std::setw(2) << std::setfill('0') << dt.month << "-"
+       << dt.year << " "
        << std::setw(2) << std::setfill('0') << dt.hour << ":"
        << std::setw(2) << std::setfill('0') << dt.minute << ":"
        << std::setw(2) << std::setfill('0') << dt.second;

@@ -1,2 +1,3 @@
 admin,admin123,Admin Name,1,1,1900
 hoangdb1910,19102005,hoangdb,1,1,1900
+dipxun,03102005,DiepXuan,3,10,2005

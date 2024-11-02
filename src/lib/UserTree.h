@@ -3,6 +3,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include "Graphic.h"
 
 class UserTree {
 private:
@@ -95,6 +96,8 @@ private:
         return Date::currentDate(); 
     }
 
+    
+
 public:
     UserTree() : root(nullptr) {
         loadUsersFromFile("users.txt"); // Load users from file on initialization
@@ -142,11 +145,19 @@ public:
                 return true; // Login successful
             }
             else {
-                std::cout << "Incorrect password." << std::endl;
+                setColor(RED);
+                std::cout << ".---------------------.\n";
+                std::cout << "| Incorrect password. |\n";
+                std::cout << "'---------------------'\n";
+                setColor(RESET);
             }
         }
         else {
-            std::cout << "User not found." << std::endl;
+            setColor(RED);
+            std::cout << ".------------------.\n";
+            std::cout << "| User not found.  |\n";
+            std::cout << "'------------------'\n";
+            setColor(RESET);
         }
         return false; // Login failed
     }
@@ -155,8 +166,66 @@ public:
         User* newUser = User::createAccount();
         if (newUser) {
             addUser(newUser);
-            std::cout << "User account created successfully!" << std::endl;
+            setColor(GREEN);
+            std::cout << ".------------------------------------.\n";
+            std::cout << "| User account created successfully! |\n";
+            std::cout << "'------------------------------------'\n";
+            setColor(RESET);
         }
+    }
+
+    void updateUserInformation(const string& username) {
+        // Search for the user to update
+        User* user = searchUser(username);
+        if (!user) {
+            setColor(RED);
+            std::cout << ".------------------.\n"; 
+            std::cout << "| User not found.  |\n";
+            std::cout << "'------------------'\n";
+            setColor(RESET);
+            return;
+        }
+
+        std::cout << "Updating information for user: " << username << std::endl;
+        std::cout << "Current Name: " << user->getName() << std::endl;
+        std::cout << "Enter new name (or leave empty to keep current): ";
+        string newName;
+        getline(cin, newName);
+        if (!newName.empty()) {
+            user->setName(newName);
+        }
+
+        std::cout << "Enter new password (or leave empty to keep current): ";
+        string newPassword;
+        getline(cin, newPassword);
+        if (!newPassword.empty()) {
+            user->setPassword(newPassword);
+        }
+
+        std::cout << "Current Birthday: " << user->getBirthday().toString() << std::endl;
+        std::cout << "Enter new birthday (dd mm yyyy, or leave empty to keep current): ";
+        int newDay, newMonth, newYear;
+        if (cin >> newDay >> newMonth >> newYear) {
+            Date newBirthday(newDay, newMonth, newYear);
+            if (newBirthday.isValid()) {
+                user->setBirthday(newBirthday);
+            } else {
+                setColor(RED);
+                std::cout << ".-------------------------------------------------.\n";
+                std::cout << "| Invalid date entered. Keeping current birthday. |\n";
+                std::cout << "'-------------------------------------------------'\n";
+                setColor(RESET);
+            }
+        }
+        cin.clear(); // Clear the input stream
+
+        // Save updated user information to file
+        saveUsersToFile("users.txt");
+        setColor(RED);
+        std::cout << ".----------------------------------------.\n";
+        std::cout << "| User information updated successfully! |\n";
+        std::cout << "'----------------------------------------'\n";
+        setColor(RESET);
     }
 
     // Function to show rented books for the currently logged-in user
@@ -166,33 +235,49 @@ public:
         if (user) {
             const vector<int>& rentedBooks = user->getRentedBooks(); // Assuming this method exists
             if (rentedBooks.empty()) {
-                cout << "No books rented." << endl;
+                setColor(YELLOW);
+                std::cout << ".------------------.\n";
+                std::cout << "| No books rented. |\n";
+                std::cout << "'------------------'\n";
+                setColor(RESET);
             } else {
-                cout << "Rented Books for user " << currentUser << ":" << endl;
+                std::cout << "Rented Books for user " << currentUser << ":" << endl;
                 for (int bookId : rentedBooks) {
-                    cout << "Book ID: " << bookId << endl; // Modify to display book details if needed
+                    std::cout << "Book ID: " << bookId << endl; // Modify to display book details if needed
                 }
             }
         } else {
-            cout << "User not found." << endl;
+            setColor(RED);
+            std::cout << ".-----------------.\n";
+            std::cout << "| User not found. |\n";
+            std::cout << "'-----------------'\n";
+            setColor(RESET);
         }
     }
 
     void borrowBook(const string& username, const string& bookTitle, BSTree& bookTree) {
         User* user = searchUser(username);
         if (!user) {
-            cout << "User not found." << endl;
+            setColor(RED);
+            std::cout << ".------------------.\n";
+            std::cout << "| User not found.  |\n";
+            std::cout << "'------------------'\n";
+            setColor(RESET);
             return;
         }
 
         Book* book = bookTree.searchBookByTitle(bookTitle); // Assuming this retrieves a Book by ID
         if (!book) {
-            cout << "Book not found." << endl;
+            setColor(RED);
+            std::cout << ".------------------.\n";
+            std::cout << "| Book not found.  |\n";
+            std::cout << "'------------------'\n";
+            setColor(RESET);
             return;
         }
 
         // Check if the book is available
-        if (book->getStatus() == "Available") {
+        if (book->isAvailable()) {
             book->markAsBorrowed();  // Updates the book status and quantity
             user->rentBook(book->getBookId());  // Records the book in the user's borrowed books list
 
@@ -209,7 +294,11 @@ public:
                 borrowFile.close();
             }
 
-            cout << "Book borrowed successfully!" << endl;
+            setColor(GREEN);
+            std::cout << ".--------------------------------.\n";
+            std::cout << "|  Book borrowed successfully!   |\n";
+            std::cout << "'--------------------------------'\n";
+            setColor(RESET);
         } else {
             registerBorrowInAdvance(username, book->getBookId(), bookTree);
         }
@@ -221,21 +310,33 @@ public:
             advanceFile << "User: " << username << ", Book ID: " << bookId << endl;
             advanceFile.close();
         }
-        cout << "Book is currently unavailable. You have registered to borrow it when it's returned." << endl;
+        setColor(BRIGHT_YELLOW);
+        std::cout << ".-------------------------------------------------------------------------------------.\n";
+        std::cout << "| Book is currently unavailable. You have registered to borrow it when it's returned. |\n";
+        std::cout << "'-------------------------------------------------------------------------------------'\n";
+        setColor(RESET);
     }
 
     Date getPredictedReturnDate(int bookId) {
         // Find the current user
         User* user = search(root, currentUserName); // Assuming currentUserName is set correctly
         if (!user) {
-            std::cout << "User not found." << std::endl;
+            setColor(RED);
+            std::cout << ".-------------------.\n";
+            std::cout << "|  User not found.  |\n";
+            std::cout << "'-------------------'\n";
+            setColor(RESET);
             return Date(); // Return a default date or handle error appropriately
         }
 
         // Retrieve the borrowed books of the current user
         const vector<int>& rentedBooks = user->getRentedBooks(); // Assuming this method exists
         if (std::find(rentedBooks.begin(), rentedBooks.end(), bookId) == rentedBooks.end()) {
-            std::cout << "Book ID not found in user's rented books." << std::endl;
+            setColor(RED);
+            std::cout << ".--------------------------------------------.\n";
+            std::cout << "|  Book ID not found in user's rented books. |\n";
+            std::cout << "'--------------------------------------------'\n";
+            setColor(RESET);
             return Date(); // Return a default date or handle error appropriately
         }
 
@@ -250,18 +351,26 @@ public:
     void returnBook(const string& username, const string& bookTitle, BSTree& bookTree) {
         User* user = searchUser(username);
         if (!user) {
-            cout << "User not found." << endl;
+            setColor(RED);
+            std::cout << ".-------------------.\n";
+            std::cout << "|  User not found.  |\n";
+            std::cout << "'-------------------'\n";
+            setColor(RESET);
             return;
         }
 
         Book* book = bookTree.searchBookByTitle(bookTitle);
         if (!book) {
-            cout << "Book not found." << endl;
+            setColor(RED);
+            std::cout << ".-----------------.\n";
+            std::cout << "| Book not found. |\n";
+            std::cout << "'-----------------'\n";
+            setColor(RESET);
             return;
         }
 
         Date returnDate = Date::currentDate();  // Assume this defaults to the current date
-        Date predictedReturnDate; // Retrieve from borrow record
+        Date predictedReturnDate = getPredictedReturnDate(book->getBookId()); // Retrieve from borrow record
 
         int fine = 0;
         if (returnDate > predictedReturnDate) {
@@ -280,7 +389,9 @@ public:
             returnFile.close();
         }
 
-        cout << "Book returned successfully! Fine: " << fine << " VND" << endl;
+        setColor(GREEN);
+        std::cout << "Book returned successfully! Fine: " << fine << " VND" << std::endl;
+        setColor(RESET);
     }
 
     // Function to save users to a file
@@ -291,7 +402,11 @@ public:
             outFile.close();
         }
         else {
-            std::cerr << "Error opening file for writing." << std::endl;
+            setColor(RED);
+            std::cerr << ".---------------------------------.\n";
+            std::cerr << "| Error opening file for writing. |\n";
+            std::cerr << "'---------------------------------'\n";
+            setColor(RESET);
         }
     }
 
@@ -333,7 +448,11 @@ public:
             inFile.close();
         }
         else {
-            std::cerr << "Error opening file for reading." << std::endl;
+            setColor(RED);
+            std::cerr << ".-----------------------------------.\n";
+            std::cerr << "|  Error opening file for reading.  |\n";
+            std::cerr << "'-----------------------------------'\n";
+            setColor(RESET);
         }
     }
 };

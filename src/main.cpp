@@ -3,6 +3,8 @@
 #include "./lib/UserTree.h"
 #include "./lib/User.h"
 #include "./lib/System.h"
+#include "./lib/Graphic.h"
+#include <cstdlib>
 
 using namespace std;
 
@@ -44,28 +46,72 @@ int main() {
                         case 1: { //Add book
                             int id, year, quantity;
                             string title, author, genre, status;
-                            cout << "Enter Book ID: "; cin >> id;
+                            do{
+                                setColor(BRIGHT_YELLOW);
+                                cout << "Enter Book ID: "; cin >> id;
+
+                                // Check if the Book ID already exists
+                                if (library.getBookById(id) != nullptr) {  // Using getBookById to check for duplicates
+                                    setColor(RED);
+                                    cout << "Error: Book ID already exists. Please enter a unique Book ID.\n";
+                                    setColor(RESET);
+                                } else {
+                                    break;  // Unique ID found, exit the loop
+                                }
+                            }while(library.getBookById(id) != nullptr);
+
+                            setColor(YELLOW);
                             cout << "Enter Title: "; cin.ignore(); getline(cin, title);
+                            setColor(BRIGHT_GREEN);
                             cout << "Enter Author: "; getline(cin, author);
+                            setColor(GREEN);
                             cout << "Enter Genre: "; getline(cin, genre);
+                            setColor(BRIGHT_CYAN);
                             cout << "Enter Year: "; cin >> year;
+                            setColor(CYAN);
                             cout << "Enter Quantity: "; cin >> quantity;
+                            setColor(BRIGHT_BLUE);
                             cout << "Enter Status: "; cin.ignore(); getline(cin, status);
+                            setColor(BLUE);
                             library.addBook(id, title, author, genre, year, quantity, status);
-                            cout << "Book added successfully!" << endl;
+                            clearScreen();
+                            setColor(GREEN);
+                            cout << ".---------------------------.\n";
+                            cout << "| Book added successfully!  |\n";
+                            cout << "'---------------------------'\n";
+                            setColor(RESET);
                             library.saveToFile(filename);
                             system("pause");
                             break;
                         }
-                        case 2: {//List book
-                            cout << "\nList of Books in the Library:" << endl;
+                        case 2: { // Update book information
+                            string bookTitle;
+                            setColor(MAGENTA);
+                            cout << "Enter the Title of the Book to Update: ";
+                            setColor(RESET);
+                            cin.ignore();
+                            getline(cin, bookTitle);
+
+                            library.updateBookInformation(bookTitle);
+                            system("pause");
+                            break;
+                        }
+                        case 3: {//List book
+                            setColor(BRIGHT_WHITE);
+                            cout << ".----------------------------------------------------.\n";
+                            setColor(WHITE);
+                            cout << "|=========== List of Books in the Library ===========|\n";
+                            setColor(BRIGHT_RED);
+                            cout << "'----------------------------------------------------'\n";
                             library.displayBooks();
                             system("pause");
                             break;
                         }
-                        case 3: {  // Search Book by Title
+                        case 4: {  // Search Book by Title
                             string bookTitle;
+                            setColor(BRIGHT_MAGENTA);
                             cout << "Enter Book Title to Search: ";
+                            setColor(RESET);
                             cin.ignore();  // Clear input buffer before getting string
                             getline(cin, bookTitle);
 
@@ -76,19 +122,25 @@ int main() {
                                      << ", Author: " << foundBook->getAuthor() << endl;
                             }
                             else {
+                                setColor(RED);
                                 cout << "No book found with title \"" << bookTitle << "\"" << endl;
+                                setColor(RESET);
                             }
                             system("pause");
                             break;
                         }
 
-                        case 4: { // Delete book
+                        case 5: { // Delete book
                             string title;
+                            setColor(BRIGHT_RED);
                             cout << "Enter Book Title to Delete: ";
+                            setColor(RESET);
                             cin.ignore(); // To ignore any leftover newline character in the input buffer
                             getline(cin, title); // Read the entire line to get the title
                             library.deleteBookByTitle(title); // Call the deleteBookByTitle method
+                            setColor(GREEN);
                             cout << "Book deleted successfully!" << endl;
+                            setColor(RESET);
                             library.saveToFile(filename);
                             system("pause");
                             break;
@@ -97,7 +149,9 @@ int main() {
                         case 0:
                             break; // Go back to the main menu
                         default:
-                            cout << "Invalid choice. Please try again." << endl;
+                            cout << ".-----------------------------------.\n";
+                            cout << "| Invalid choice. Please try again. |\n";
+                            cout << "'-----------------------------------'\n";
                             system("pause");
                         }
                     } while (subChoice != 0);
@@ -127,12 +181,22 @@ int main() {
                             system("pause");
                             break;
                         }
-                        case 2:
+                        case 2: { // Update User Information
+                            string username;
+                            cout << "Enter Username to Update: ";
+                            cin.ignore();
+                            getline(cin, username);
+
+                            userTree.updateUserInformation(username);
+                            system("pause");
+                            break;
+                        }
+                        case 3:
                             cout << "\nList of Users in the System:" << endl;
                             userTree.displayUsers();
                             system("pause");
                             break;
-                        case 3: {
+                        case 4: {
                             string username;
                             cout << "Enter Username to Search: ";
                             cin.ignore();
@@ -147,7 +211,7 @@ int main() {
                             system("pause");
                             break;
                         }
-                        case 4: {
+                        case 5: {
                             string username;
                             cout << "Enter Username to Delete: ";
                             cin.ignore();

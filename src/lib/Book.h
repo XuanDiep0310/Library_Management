@@ -6,6 +6,7 @@
 #include <sstream>
 #include <unordered_map>
 #include <algorithm>
+#include "Graphic.h"
 using namespace std;
 
 class Book {
@@ -49,12 +50,10 @@ public:
 
     void markAsBorrowed() {
         if (quantity > 0) {
-            quantity--;
-            if (quantity == 0) {
-                status = "Rented";
-            } else status = "Available";
-        } else {
-            cout << "No copies available to borrow." << endl;  // Optional: Handle case when there are no available copies
+            --quantity;
+        }
+        if (quantity == 0) {
+            status = "Rented";
         }
     }
 
@@ -213,15 +212,72 @@ public:
         return searchBookByTitle(root, title);
     }
 
+    void updateBookInformation(const string& title) {
+        Book* bookToUpdate = searchBookByTitle(title);
+        if (bookToUpdate != nullptr) {
+            setColor(GREEN);
+            cout << ".----------------------------------------------------------------------------.\n";
+            cout << "|  Book found. Enter new information (leave blank to keep current values):   |\n";
+            cout << "'----------------------------------------------------------------------------'\n";
+            setColor(RESET);
+
+            string newTitle, newAuthor, newGenre, newStatus;
+            int newPubYear, newQuantity;
+
+            setColor(CYAN);
+            cout << "Enter new Title (current: " << bookToUpdate->getTitle() << "): ";
+            getline(cin, newTitle);
+            if (!newTitle.empty()) bookToUpdate->setTitle(newTitle);
+
+            cout << "Enter new Author (current: " << bookToUpdate->getAuthor() << "): ";
+            getline(cin, newAuthor);
+            if (!newAuthor.empty()) bookToUpdate->setAuthor(newAuthor);
+
+            cout << "Enter new Genre (current: " << bookToUpdate->getGenre() << "): ";
+            getline(cin, newGenre);
+            if (!newGenre.empty()) bookToUpdate->setGenre(newGenre);
+
+            cout << "Enter new Publication Year (current: " << bookToUpdate->getPublicationYear() << "): ";
+            cin >> newPubYear;
+            if (newPubYear > 0) bookToUpdate->setPublicationYear(newPubYear);
+            cin.ignore(); // Clear newline character
+
+            cout << "Enter new Quantity (current: " << bookToUpdate->getQuantity() << "): ";
+            cin >> newQuantity;
+            if (newQuantity >= 0) bookToUpdate->setQuantity(newQuantity);
+            cin.ignore(); // Clear newline character
+
+            cout << "Enter new Status (current: " << bookToUpdate->getStatus() << "): ";
+            getline(cin, newStatus);
+            if (!newStatus.empty()) bookToUpdate->setStatus(newStatus);
+            setColor(RESET);
+            clearScreen();
+            
+            setColor(GREEN);
+            cout << ".----------------------------------------.\n";
+            cout << "| Book information updated successfully! |\n";
+            cout << "'----------------------------------------'\n";
+            setColor(RESET);
+        } else {
+            setColor(RED);
+            cout << "<- No book found with title \"" << title << "\". ->" << endl;
+            setColor(RESET);
+        }
+    }
+
     void saveToFile(const string& filename) const {
         ofstream outFile(filename);
         if (outFile.is_open()) {
             saveBooksToFile(root, outFile);
             outFile.close();
+            setColor(GREEN);
             cout << "Library data saved successfully to " << filename << endl;
+            setColor(RESET);
         }
         else {
+            setColor(RED);
             cout << "Error: Could not open file " << filename << " for writing." << endl;
+            setColor(RESET);
         }
     }
 
@@ -237,10 +293,14 @@ public:
                     book->getQuantity(), book->getStatus());
             }
             inFile.close();
+            setColor(GREEN);
             cout << "Library data loaded successfully from " << filename << endl;
+            setColor(RESET);
         }
         else {
+            setColor(RED);
             cout << "Error: Could not open file " << filename << " for reading." << endl;
+            setColor(RESET);
         }
     }
 
