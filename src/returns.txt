@@ -1,4 +1,0 @@
-User: hoangdb1910, Book ID: 102, Return Date: 01-11-2024 19:47:16, Fine: 0 VND
-User: hoangdb1910, Book ID: 102, Return Date: 01-11-2024 24:47:16, Fine: 0 VND
-User: hoangdb1910, Book ID: 102, Return Date: 01-11-2024 29:47:16, Fine: 475880000 VND
-User: hoangdb1910, Book ID: 102, Return Date: 01-11-2024 49:35:21, Fine: 475880000 VND

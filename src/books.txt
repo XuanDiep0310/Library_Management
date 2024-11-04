@@ -1,2 +1,3 @@
-102 ,Tay Du Ky,            Nguoi Trung Quoc,            Action, 1980, 4,            Available
-103 ,Sword Art Online,   Reki,   Action, 2024, 2,   Available
+101 ,NextJs,      Bill,      Tech, 2024, 10,      Available
+102 ,ReactJs,      Fer,      Tech, 2024, 10,      Available
+103 ,DotNet,      Noah,      2024, 2024, 9,      Available

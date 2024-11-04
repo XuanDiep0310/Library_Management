@@ -49,19 +49,11 @@ public:
 		}
 	}
 
-	// Show borrowed books
-    void showRentedBooks() const {
-        if (rentedBooks.empty()) {
-            cout << "No books rented." << endl;
-            return;
-        }
-        cout << "Rented Books IDs: ";
-        for (const auto& id : rentedBooks) {
-            cout << id << " ";
-        }
-        cout << endl;
+	// Method to check if the user has borrowed a specific book
+    bool hasBorrowed(int bookId) const {
+        return std::find(rentedBooks.begin(), rentedBooks.end(), bookId) != rentedBooks.end();
     }
-	
+
 	// Method to set the predicted return date for a specific book
     void setPredictedReturnDate(int bookId, const Date& date) {
         bookReturnDates[bookId] = date;

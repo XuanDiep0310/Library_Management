@@ -3,6 +3,8 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <vector>
+#include <iomanip>
 #include "Graphic.h"
 
 class UserTree {
@@ -34,12 +36,33 @@ private:
         return search(node->right, username);
     }
 
+    void printHeader() const {
+        // Print table header
+        std::cout << std::left << std::setw(20) << "Username" 
+                  << std::setw(20) << "Password" 
+                  << std::setw(30) << "Email" 
+                  << std::setw(15) << "Birthday" << std::endl;
+        std::cout << std::string(85, '-') << std::endl; // Print a separator line
+    }
+
     // Helper function for in-order traversal to display users
     void displayInOrder(UserNode* node) const {
         if (node != nullptr) {
-            displayInOrder(node->left);
-            std::cout << "Username: " << node->user->getUsername() << std::endl;
-            displayInOrder(node->right);
+            displayInOrder(node->left); // Traverse left
+
+            // Print header only once before the first user is printed
+            static bool headerPrinted = false;
+            if (!headerPrinted) {
+                headerPrinted = true; // Ensure header is printed only once
+            }
+
+            // Print user information in a formatted manner
+            std::cout << std::left << std::setw(20) << node->user->getUsername() 
+                      << std::setw(20) << node->user->getPassword() 
+                      << std::setw(30) << node->user->getMail() 
+                      << std::setw(15) << node->user->getBirthday().toString() << std::endl;
+
+            displayInOrder(node->right); // Traverse right
         }
     }
 
@@ -96,7 +119,14 @@ private:
         return Date::currentDate(); 
     }
 
-    
+    // Helper method to collect all users
+    void collectUsers(UserNode* node, std::vector<User*>& users) {
+        if (node != nullptr) {
+            collectUsers(node->left, users);
+            users.push_back(node->user);
+            collectUsers(node->right, users);
+        }
+    }
 
 public:
     UserTree() : root(nullptr) {
@@ -121,6 +151,45 @@ public:
         root = insert(root, user);
     }
 
+    // Function to perform a case-insensitive substring search
+    bool caseInsensitiveContains(const std::string& str, const std::string& substr) {
+        std::string strLower = str;
+        std::string substrLower = substr;
+        std::transform(strLower.begin(), strLower.end(), strLower.begin(), ::tolower);
+        std::transform(substrLower.begin(), substrLower.end(), substrLower.begin(), ::tolower);
+        return strLower.find(substrLower) != std::string::npos;
+    }
+
+    void suggestUsersByUsername(UserNode* node, const std::string& partialUsername, std::vector<User*>& suggestions) {
+        if (node == nullptr) {
+            return;
+        }
+
+        // Perform in-order traversal to maintain sorted order of suggestions
+        suggestUsersByUsername(node->left, partialUsername, suggestions);
+
+        // Check if the username contains the partial input (case-insensitive)
+        if (caseInsensitiveContains(node->user->getUsername(), partialUsername)) {
+            suggestions.push_back(node->user);
+        }
+
+        suggestUsersByUsername(node->right, partialUsername, suggestions);
+    }
+
+    // Public method to get user suggestions by partial username
+    std::vector<User*> suggestUsersByUsername(const std::string& partialUsername) {
+        std::vector<User*> suggestions;
+        suggestUsersByUsername(root, partialUsername, suggestions);
+        return suggestions;
+    }
+
+    // Method to get all users
+    std::vector<User*> getAllUsers() {
+        std::vector<User*> users;
+        collectUsers(root, users);
+        return users;
+    }
+
     // Function to search for a user by username
     User* searchUser(const string& username) const {
         return search(root, username);
@@ -128,6 +197,7 @@ public:
 
     // Function to display all users
     void displayUsers() const {
+        printHeader();
         displayInOrder(root);
     }
 
@@ -186,7 +256,12 @@ public:
             return;
         }
 
+        setColor(YELLOW);
         std::cout << "Updating information for user: " << username << std::endl;
+        setColor(BRIGHT_YELLOW);
+
+        // Get new name
+        setColor(BRIGHT_BLUE);
         std::cout << "Current Name: " << user->getName() << std::endl;
         std::cout << "Enter new name (or leave empty to keep current): ";
         string newName;
@@ -194,68 +269,177 @@ public:
         if (!newName.empty()) {
             user->setName(newName);
         }
+        setColor(RESET);
 
+        // Get new email with duplicate check
+        string newEmail;
+        bool validEmail = false;
+        vector<User*> existingUsers = getAllUsers(); // Get existing users for duplicate check
+        do {
+            setColor(BRIGHT_MAGENTA);
+            std::cout << "Enter new Email (or leave empty to keep current): ";
+            getline(cin, newEmail);
+            setColor(RESET);
+
+            // Check for existing email only if the user is changing the email
+            if (!newEmail.empty()) {
+                auto emailIt = find_if(existingUsers.begin(), existingUsers.end(), [&](User* u) {
+                    return u->getMail() == newEmail;
+                });
+
+                // Email format validation
+                bool emailFormatValid = (newEmail.find("@gmail.com") != string::npos) || (newEmail.find(".st.utc2.edu.vn") != string::npos);
+
+                if (!emailFormatValid) {
+                    setColor(RED);
+                    std::cout << ".---------------------------------------------------------------------------.\n";
+                    std::cout << "| Invalid email format. Please enter a valid '@gmail.com' or '.edu' email.  |\n";
+                    std::cout << "'---------------------------------------------------------------------------'\n";
+                    setColor(RESET);
+                    system("pause");
+                } else if (emailIt != existingUsers.end()) {
+                    setColor(RED);
+                    std::cout << ".-----------------------------------------------------.\n";
+                    std::cout << "| Email already exists. Please use a different email. |\n";
+                    std::cout << "'-----------------------------------------------------'\n";
+                    setColor(RESET);
+                    system("pause");
+                } else {
+                    validEmail = true; // Email is valid, exit the loop
+                }
+            } else {
+                validEmail = true; // No new email provided, keep the current one
+            }
+        } while (!validEmail);
+
+        if (!newEmail.empty()) {
+            user->setMail(newEmail);
+        }
+        
+        setColor(BLUE);
+        // Get new password
         std::cout << "Enter new password (or leave empty to keep current): ";
         string newPassword;
         getline(cin, newPassword);
         if (!newPassword.empty()) {
             user->setPassword(newPassword);
         }
+        setColor(RESET);
 
+        // Get new birthday
+        setColor(CYAN);
         std::cout << "Current Birthday: " << user->getBirthday().toString() << std::endl;
-        std::cout << "Enter new birthday (dd mm yyyy, or leave empty to keep current): ";
+        bool validDate = false;
         int newDay, newMonth, newYear;
-        if (cin >> newDay >> newMonth >> newYear) {
-            Date newBirthday(newDay, newMonth, newYear);
-            if (newBirthday.isValid()) {
-                user->setBirthday(newBirthday);
+        do {
+            std::cout << "Enter new birthday (dd mm yyyy, or leave empty to keep current): ";
+            string dateInput;
+            getline(cin, dateInput);
+
+            if (!dateInput.empty()) {
+                std::istringstream dateStream(dateInput);
+                dateStream >> newDay >> newMonth >> newYear;
+
+                if (!dateStream.fail() && Date::isValidDate(newDay, newMonth, newYear)) {
+                    user->setBirthday(Date(newDay, newMonth, newYear));
+                    validDate = true; // Date is valid, exit the loop
+                } else {
+                    setColor(RED);
+                    std::cout << ".--------------------------------------------------.\n";
+                    std::cout << "| Invalid date entered. Please enter a valid date. |\n";
+                    std::cout << "'--------------------------------------------------'\n";
+                    setColor(RESET);
+                    system("pause");
+                }
             } else {
-                setColor(RED);
-                std::cout << ".-------------------------------------------------.\n";
-                std::cout << "| Invalid date entered. Keeping current birthday. |\n";
-                std::cout << "'-------------------------------------------------'\n";
-                setColor(RESET);
+                validDate = true; // No new date provided, keep the current one
             }
-        }
+        } while (!validDate);
+        setColor(RESET);
         cin.clear(); // Clear the input stream
+        cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Ignore the rest of the line to avoid issues
 
         // Save updated user information to file
         saveUsersToFile("users.txt");
-        setColor(RED);
+        setColor(GREEN);
         std::cout << ".----------------------------------------.\n";
         std::cout << "| User information updated successfully! |\n";
         std::cout << "'----------------------------------------'\n";
         setColor(RESET);
     }
 
-    // Function to show rented books for the currently logged-in user
     void showRentedBooks() {
         std::string currentUser = getCurrentUserName();
-        User* user = searchUser(currentUser);
-        if (user) {
-            const vector<int>& rentedBooks = user->getRentedBooks(); // Assuming this method exists
-            if (rentedBooks.empty()) {
-                setColor(YELLOW);
-                std::cout << ".------------------.\n";
-                std::cout << "| No books rented. |\n";
-                std::cout << "'------------------'\n";
-                setColor(RESET);
-            } else {
-                std::cout << "Rented Books for user " << currentUser << ":" << endl;
-                for (int bookId : rentedBooks) {
-                    std::cout << "Book ID: " << bookId << endl; // Modify to display book details if needed
+        std::ifstream borrowedFile("borrows.txt");
+        bool hasRentedBooks = false;
+
+        if (!borrowedFile.is_open()) {
+            setColor(RED);
+            std::cout << ".-------------------------------.\n";
+            std::cout << "| Failed to open borrows.txt.   |\n";
+            std::cout << "'-------------------------------'\n";
+            setColor(RESET);
+            return;
+        }
+
+        // Table headers
+        setColor(BRIGHT_MAGENTA);
+        std::cout << "Rented Books for user "; 
+        setColor(BLUE); 
+        std::cout << currentUser; 
+        setColor(RESET); 
+        setColor(BRIGHT_MAGENTA); 
+        cout << ":\n\n"; 
+        setColor(RESET);
+
+        setColor(CYAN);
+        std::cout << std::string(83, '-') << "\n";  // Table border
+        std::cout << std::left << std::setw(30) << "| Book Title" 
+                << std::setw(30) << "Borrow Date" 
+                << std::setw(25) << "Predicted Return Date |" << "\n";
+        std::cout << std::string(83, '-') << "\n";  // Table border
+        setColor(RESET);
+
+        // Read file and populate table rows
+        std::string line;
+        while (getline(borrowedFile, line)) {
+            size_t userPos = line.find("User: ");
+            size_t titlePos = line.find(", Book Title: ");
+            size_t borrowDatePos = line.find(", Borrow Date: ");
+            size_t returnDatePos = line.find(", Predicted Return Date: ");
+
+            if (userPos != std::string::npos && titlePos != std::string::npos &&
+                borrowDatePos != std::string::npos && returnDatePos != std::string::npos) {
+                std::string username = line.substr(userPos + 6, titlePos - (userPos + 6));
+                if (username == currentUser) {
+                    std::string bookTitle = line.substr(titlePos + 13, borrowDatePos - (titlePos + 13));
+                    std::string borrowDate = line.substr(borrowDatePos + 14, returnDatePos - (borrowDatePos + 14));
+                    std::string returnDate = line.substr(returnDatePos + 23);
+
+                    hasRentedBooks = true;
+
+                    // Print each row with formatted columns
+                    std::cout << std::left << std::setw(30) << bookTitle
+                            << std::setw(30) << borrowDate
+                            << std::setw(25) << returnDate << "\n";
                 }
             }
-        } else {
+        }
+
+        if (!hasRentedBooks) {
             setColor(RED);
-            std::cout << ".-----------------.\n";
-            std::cout << "| User not found. |\n";
-            std::cout << "'-----------------'\n";
+            std::cout << ".------------------.\n";
+            std::cout << "| No books rented. |\n";
+            std::cout << "'------------------'\n";
             setColor(RESET);
         }
+
+        borrowedFile.close();
     }
 
+
     void borrowBook(const string& username, const string& bookTitle, BSTree& bookTree) {
+        string filename = "books.txt";
         User* user = searchUser(username);
         if (!user) {
             setColor(RED);
@@ -285,7 +469,7 @@ public:
             Date predictReturnDate = borrowDate.addDays(7);  // Predict return date = borrow date + 7 days
 
             // Save to file
-            ofstream borrowFile("borrows.txt", ios::app);
+            ofstream borrowFile("borrows.txt", std::ios::app);
             if (borrowFile.is_open()) {
                 borrowFile << "User: " << username << ", Book Title: " << bookTitle 
                           << ", Borrow Date: " << borrowDate.toString() 
@@ -348,7 +532,52 @@ public:
         return borrowDate.addDays(7);
     }
 
-    void returnBook(const string& username, const string& bookTitle, BSTree& bookTree) {
+    // Function to get borrowed books for the currently logged-in user
+    std::vector<Book*> getBorrowedBooks(const std::string& username) {
+        User* user = searchUser(username); // Find the user by username
+        BSTree* bookTree;
+        std::vector<Book*> borrowedBooks; // Vector to store pointers to borrowed books
+
+        if (user) {
+            const std::vector<int>& rentedBooks = user->getRentedBooks(); // Assuming this method returns a vector of book IDs
+
+            if (rentedBooks.empty()) {
+                setColor(YELLOW);
+                std::cout << ".------------------.\n";
+                std::cout << "| No books rented. |\n";
+                std::cout << "'------------------'\n";
+                setColor(RESET);
+                return borrowedBooks; // Return empty vector if no books are rented
+            } else {
+                setColor(GREEN);
+                std::cout << "Borrowed Books for user " << username << ":\n";
+                setColor(RESET);
+                
+                for (int bookId : rentedBooks) {
+                    Book* book = bookTree->getBookById(bookId); // Assuming bookTree can search by book ID
+                    if (book) {
+                        borrowedBooks.push_back(book); // Store pointer to the book in the vector
+                        std::cout << book->getTitle() << std::endl; // Display each borrowed book
+                    } else {
+                        // Handle the case where the book ID is invalid
+                        setColor(RED);
+                        std::cout << "Book with ID " << bookId << " not found.\n";
+                        setColor(RESET);
+                    }
+                }
+            }
+        } else {
+            setColor(RED);
+            std::cout << ".-----------------.\n";
+            std::cout << "| User not found. |\n";
+            std::cout << "'-----------------'\n";
+            setColor(RESET);
+        }
+        
+        return borrowedBooks; // Return the list of borrowed books
+    }
+
+    void returnBook(const std::string& username, const std::string& bookTitle, BSTree& bookTree) {
         User* user = searchUser(username);
         if (!user) {
             setColor(RED);
@@ -369,30 +598,118 @@ public:
             return;
         }
 
-        Date returnDate = Date::currentDate();  // Assume this defaults to the current date
-        Date predictedReturnDate = getPredictedReturnDate(book->getBookId()); // Retrieve from borrow record
+        std::ifstream borrowFile("borrows.txt");
+        std::ofstream tempFile("temp.txt");
+        std::string line;
+        bool bookFound = false;
 
-        int fine = 0;
-        if (returnDate > predictedReturnDate) {
-            fine = (returnDate.daysBetween(predictedReturnDate)) * 10000; // Calculate fine
+        while (getline(borrowFile, line)) {
+            std::istringstream record(line);
+            std::string userToken, bookTitleToken, borrowDateToken, predictedReturnToken;
+
+            if (getline(record, userToken, ',') && getline(record, bookTitleToken, ',') &&
+                getline(record, borrowDateToken, ',') && getline(record, predictedReturnToken)) {
+                
+                // Extract the information by tokenizing strings
+                std::string fileUser = userToken.substr(userToken.find(":") + 2);
+                std::string fileBookTitle = bookTitleToken.substr(bookTitleToken.find(":") + 2);
+                std::string fileBorrowDate = borrowDateToken.substr(borrowDateToken.find(":") + 2);
+                std::string filePredictedReturnDate = predictedReturnToken.substr(predictedReturnToken.find(":") + 2);
+
+                if (fileUser == username && fileBookTitle == bookTitle) {
+                    bookFound = true;
+
+                    // Here you can implement any logic for returning the book
+                    // For example, updating the book's quantity
+                    book->markAsReturned();  // Assuming you have this method
+
+                    // Log the return details
+                    std::cout << "Book returned successfully!" << std::endl;
+                    std::cout << "User: " << fileUser << ", Book: " << fileBookTitle << std::endl;
+                    std::cout << "Borrowed on: " << fileBorrowDate << ", Expected return: " << filePredictedReturnDate << std::endl;
+
+                    continue; // Skip this line as we are returning this book
+                }
+            }
+
+            // Write back to the temporary file if it's not the returned book
+            tempFile << line << std::endl;
         }
 
-        book->markAsReturned();
-        user->returnBook(book->getBookId());
+        borrowFile.close();
+        tempFile.close();
 
-        // Save return info to file
-        ofstream returnFile("returns.txt", ios::app);
-        if (returnFile.is_open()) {
-            returnFile << "User: " << username << ", Book ID: " << book->getBookId() 
-                    << ", Return Date: " << returnDate.toString() 
-                    << ", Fine: " << fine << " VND" << endl;
-            returnFile.close();
+        // Replace the original file with the temporary file
+        std::remove("borrows.txt");
+        std::rename("temp.txt", "borrows.txt");
+
+        if (!bookFound) {
+            setColor(RED);
+            std::cout << ".-------------------------.\n";
+            std::cout << "|  No record found for the |\n";
+            std::cout << "|  specified book return.   |\n";
+            std::cout << "'-------------------------'\n";
+            setColor(RESET);
         }
-
-        setColor(GREEN);
-        std::cout << "Book returned successfully! Fine: " << fine << " VND" << std::endl;
-        setColor(RESET);
     }
+
+    void loadBorrowedBooks(const string& filename) {
+        ifstream borrowFile(filename);
+        if (!borrowFile.is_open()) {
+            std::cerr << "Failed to open " << filename << std::endl;
+            return;
+        }
+
+        string line;
+        while (getline(borrowFile, line)) {
+            // Assuming file format: "User: username, Book Title: bookTitle, Borrow Date: date, Predicted Return Date: date"
+            string username, bookTitle, borrowDateStr, returnDateStr;
+            // Parse each field from the line (you may need to adjust parsing based on file format)
+            
+            // Store the borrowed book in the user data (e.g., map of users and borrowed books)
+        }
+
+        borrowFile.close();
+    }
+
+    void loadReturnedBooks(const string& filename) {
+        ifstream returnFile(filename);
+        if (!returnFile.is_open()) {
+            std::cerr << "Failed to open " << filename << std::endl;
+            return;
+        }
+
+        string line;
+        while (getline(returnFile, line)) {
+            // Assuming file format: "User: username, Book ID: id, Return Date: date, Fine: fineAmount"
+            string username, bookId, returnDateStr, fineStr;
+            // Parse each field from the line
+            
+            // Store the return history for the user
+        }
+
+        returnFile.close();
+    }
+
+    void loadAdvanceBorrows(const string& filename) {
+        ifstream advanceFile(filename);
+        if (!advanceFile.is_open()) {
+            std::cerr << "Failed to open " << filename << std::endl;
+            return;
+        }
+
+        string line;
+        while (getline(advanceFile, line)) {
+            // Assuming file format: "User: username, Book ID: bookId"
+            string username, bookId;
+            // Parse each field
+            
+            // Store advance reservation details for the user
+        }
+
+        advanceFile.close();
+    }
+
 
     // Function to save users to a file
     void saveUsersToFile(const string& filename) const {

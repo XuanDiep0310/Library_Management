@@ -8,4 +8,8 @@ public:
     UserNode* right;
 
     UserNode(User* user) : user(user), left(nullptr), right(nullptr) {}
+
+    string getUsername() const {
+        return user->getUsername();
+    }
 };

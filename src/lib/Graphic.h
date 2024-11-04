@@ -29,3 +29,17 @@ void clearScreen() {
     system("clear");  // Lệnh cho Linux/macOS
 #endif
 }
+
+void clearLine() {
+    std::cout << "\r" << std::string(80, ' ') << "\r"; // Clear the current line
+}
+
+// Function to move the cursor up by a specific number of lines
+void moveCursorUp(int lines) {
+    std::cout << "\33[" << lines << "A";
+}
+
+// Function to move the cursor down by a specific number of lines
+void moveCursorDown(int lines) {
+    std::cout << "\33[" << lines << "B";
+}

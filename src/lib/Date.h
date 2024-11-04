@@ -28,7 +28,8 @@ public:
     Date addDays(int days);
 
     // Define a toString function
-    std::string toString() const;
+    string toString() const;
+    static Date fromString(const string& dateString);
 
     int daysBetween(const Date &other) const;
     int toDays() const;
@@ -51,12 +52,12 @@ public:
     // Method to get the current date
     static Date currentDate() {
         // Get current time as time_t
-        std::time_t t = std::time(nullptr);
-        std::tm* currentTime = std::localtime(&t);
+        time_t t = time(nullptr);
+        tm* currentTime = localtime(&t);
 
         if (currentTime == nullptr) {
             // Handle error, e.g., throw an exception or return a default Date
-            throw std::runtime_error("Failed to get current time");
+            throw runtime_error("Failed to get current time");
         }
 
         return Date(currentTime->tm_mday, 
@@ -115,15 +116,36 @@ Date Date::addDays(int days) {
     return newDate; // Return the modified Date
 }
 
-std::string Date::toString() const {
-    std::ostringstream oss;
-    oss << std::setw(2) << std::setfill('0') << day << "-"
-        << std::setw(2) << std::setfill('0') << month << "-"
+string Date::toString() const {
+    ostringstream oss;
+    oss << setw(2) << setfill('0') << day << "-"
+        << setw(2) << setfill('0') << month << "-"
         << year << " "
-        << std::setw(2) << std::setfill('0') << hour << ":"
-        << std::setw(2) << std::setfill('0') << minute << ":"
-        << std::setw(2) << std::setfill('0') << second;
+        << setw(2) << setfill('0') << hour << ":"
+        << setw(2) << setfill('0') << minute << ":"
+        << setw(2) << setfill('0') << second;
     return oss.str();
+}
+
+// Add this function to the Date class
+Date Date::fromString(const string& dateString) {
+    istringstream iss(dateString);
+    int day, month, year, hour, minute, second;
+    char delimiter;
+
+    // Attempt to parse the format "dd-MM-yyyy HH:mm:ss"
+    if (iss >> day >> delimiter >> month >> delimiter >> year >> hour >> delimiter >> minute >> delimiter >> second) {
+        if (isValidDate(day, month, year) && isValidHour(hour) && isValidMinute(minute) && isValidSecond(second)) {
+            return Date(day, month, year, hour, minute, second);
+        } else {
+            cerr << "Error: Invalid date or time components in string: " << dateString << "\n";
+        }
+    } else {
+        cerr << "Error: Unable to parse date string: " << dateString << "\n";
+    }
+
+    // Return an invalid Date object if parsing fails
+    return Date(0, 0, 0, 0, 0, 0); // Or use a specific invalid date representation
 }
 
 bool Date::isLeap(int year) {
@@ -191,7 +213,7 @@ int Date::operator-(const Date& dt) const {
     Date dt2 = dt;
     bool isNegative = false;
     if (dt1 < dt2) {
-        std::swap(dt1, dt2);
+        swap(dt1, dt2);
         isNegative = true;
     }
 
@@ -205,12 +227,12 @@ int Date::operator-(const Date& dt) const {
 
 // Stream Operators
 ostream& operator<<(ostream& os, const Date& dt) {
-    os << std::setw(2) << std::setfill('0') << dt.day << "-"
-       << std::setw(2) << std::setfill('0') << dt.month << "-"
+    os << setw(2) << setfill('0') << dt.day << "-"
+       << setw(2) << setfill('0') << dt.month << "-"
        << dt.year << " "
-       << std::setw(2) << std::setfill('0') << dt.hour << ":"
-       << std::setw(2) << std::setfill('0') << dt.minute << ":"
-       << std::setw(2) << std::setfill('0') << dt.second;
+       << setw(2) << setfill('0') << dt.hour << ":"
+       << setw(2) << setfill('0') << dt.minute << ":"
+       << setw(2) << setfill('0') << dt.second;
     return os;
 }
 

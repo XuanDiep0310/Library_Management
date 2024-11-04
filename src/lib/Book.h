@@ -7,6 +7,11 @@
 #include <unordered_map>
 #include <algorithm>
 #include "Graphic.h"
+#include <cstdlib>
+#include <regex>
+#include <algorithm>
+#include <iomanip>
+
 using namespace std;
 
 class Book {
@@ -40,7 +45,7 @@ public:
     void setQuantity(int q) { quantity = q; }
     void setStatus(const string& stt) { status = stt; }
 
-    bool isAvailable() const { return quantity > 0 && status == "Available"; }
+    bool isAvailable() const { return quantity > 0; }
     
     void addAdvanceRequest(const std::string& username) {
         // Add username to a list of advance requests
@@ -83,8 +88,26 @@ public:
         getline(ss, qty, ',');
         getline(ss, status, ',');
 
-        return new Book(stoi(id), title, author, genre, stoi(pubYear), stoi(qty), status);
+        // Check for empty strings and handle them
+        if (id.empty() || pubYear.empty() || qty.empty()) {
+            cerr << "Error: Missing data in line: " << line << endl;
+            return nullptr; // Return nullptr if data is missing
+        }
+
+        try {
+            int bookId = stoi(id);
+            int publicationYear = stoi(pubYear);
+            int quantity = stoi(qty);
+            return new Book(bookId, title, author, genre, publicationYear, quantity, status);
+        } catch (const std::invalid_argument& e) {
+            cerr << "Error: Invalid number format in line: " << line << endl;
+            return nullptr; // Return nullptr if stoi fails
+        } catch (const std::out_of_range& e) {
+            cerr << "Error: Number out of range in line: " << line << endl;
+            return nullptr; // Handle out of range errors
+        }
     }
+
 };
 
 struct TreeNode {
@@ -175,17 +198,55 @@ private:
         return node;
     }
 
-    void inorder(TreeNode* node) const {
-        if (node) {
-            inorder(node->left);
-            cout << "Book ID: " << node->book->getBookId() << ", Title: " << node->book->getTitle()
-                << ", Author: " << node->book->getAuthor() << ", Quantity: " << node->book->getQuantity() << endl;
-            inorder(node->right);
-        }
+    void printHeader() const {
+    cout << left 
+         << setw(12) << "Book ID"
+         << setw(35) << "Title"
+         << setw(25) << "Author"
+         << setw(10) << "Quantity"
+         << setw(15) << "Status" 
+         << endl;
+    cout << string(97, '-') << endl;  // Adjust separator to match column width
+}
+
+void inorder(TreeNode* node) const {
+    if (node) {
+        inorder(node->left);
+
+        setColor(GREEN);
+        cout << left 
+             << setw(12) << node->book->getBookId()
+             << setw(35) << node->book->getTitle()
+             << setw(25) << node->book->getAuthor()
+             << setw(10) << node->book->getQuantity()
+             << setw(15) << node->book->getStatus() 
+             << endl;
+        setColor(RESET);
+
+        inorder(node->right);
     }
+}
 
 public:
     BSTree() : root(nullptr) {}
+
+    string matchStatus(const string& input) {
+        // Convert the input to lowercase for case-insensitive matching
+        string loweredInput = input;
+        transform(loweredInput.begin(), loweredInput.end(), loweredInput.begin(), ::tolower);
+
+        // Define regular expressions for each status
+        regex availablePattern(R"(.*\b(avail|avai|av|a|available)\b.*)");
+        regex rentedPattern(R"(.*\b(rent|rented|r)\b.*)");
+        regex updatingPattern(R"(.*\b(upd|update|updating|u)\b.*)");
+
+        // Match against each status pattern
+        if (regex_search(loweredInput, availablePattern)) return "Available";
+        if (regex_search(loweredInput, rentedPattern)) return "Rented";
+        if (regex_search(loweredInput, updatingPattern)) return "Updating";
+
+        return ""; // No valid status found
+    }
 
     void addBook(int id, const string& title, const string& author, const string& genre,
         int publicationYear, int quantity, const string& status) {
@@ -222,7 +283,7 @@ public:
             setColor(RESET);
 
             string newTitle, newAuthor, newGenre, newStatus;
-            int newPubYear, newQuantity;
+            int newPubYear = -1, newQuantity = -1;
 
             setColor(CYAN);
             cout << "Enter new Title (current: " << bookToUpdate->getTitle() << "): ";
@@ -238,21 +299,41 @@ public:
             if (!newGenre.empty()) bookToUpdate->setGenre(newGenre);
 
             cout << "Enter new Publication Year (current: " << bookToUpdate->getPublicationYear() << "): ";
-            cin >> newPubYear;
-            if (newPubYear > 0) bookToUpdate->setPublicationYear(newPubYear);
+            if (cin >> newPubYear && newPubYear > 0) {
+                bookToUpdate->setPublicationYear(newPubYear);
+            } else {
+                setColor(RED);
+                cout << "Invalid Publication Year. Keeping current value.\n";
+                setColor(RESET);
+                cin.clear(); // Clear error flag
+            }
             cin.ignore(); // Clear newline character
 
             cout << "Enter new Quantity (current: " << bookToUpdate->getQuantity() << "): ";
-            cin >> newQuantity;
-            if (newQuantity >= 0) bookToUpdate->setQuantity(newQuantity);
+            if (cin >> newQuantity && newQuantity >= 0) {
+                bookToUpdate->setQuantity(newQuantity);
+            } else {
+                setColor(RED);
+                cout << "Invalid Quantity. Keeping current value.\n";
+                setColor(RESET);
+                cin.clear();
+            }
             cin.ignore(); // Clear newline character
 
-            cout << "Enter new Status (current: " << bookToUpdate->getStatus() << "): ";
-            getline(cin, newStatus);
-            if (!newStatus.empty()) bookToUpdate->setStatus(newStatus);
-            setColor(RESET);
+            do {
+                cout << "Enter new Status (current: " << bookToUpdate->getStatus() << "): ";
+                getline(cin, newStatus);
+                newStatus = matchStatus(newStatus);
+                if (!newStatus.empty()) {
+                    bookToUpdate->setStatus(newStatus);
+                } else if (!newStatus.empty()) {
+                    setColor(RED);
+                    cout << "Invalid Status. Keeping current value.\n";
+                    setColor(RESET);
+                }
+            } while (!newStatus.empty() && newStatus.empty()); // Repeat until valid
+
             clearScreen();
-            
             setColor(GREEN);
             cout << ".----------------------------------------.\n";
             cout << "| Book information updated successfully! |\n";
@@ -313,7 +394,33 @@ public:
     }
 
     void displayBooks() const {
+        BSTree::printHeader();
         inorder(root);
     }
+
+    vector<Book*> getSuggestionsByTitle(const string& partialTitle) const {
+        vector<Book*> matches;
+        getSuggestionsByTitle(root, partialTitle, matches);
+        return matches;
+    }
+
+    void getSuggestionsByTitle(TreeNode* node, const string& partialTitle, vector<Book*>& matches) const {
+        if (!node) return;
+
+        // Convert both strings to lowercase for case-insensitive comparison
+        string bookTitleLower = node->book->getTitle();
+        string partialTitleLower = partialTitle;
+        transform(bookTitleLower.begin(), bookTitleLower.end(), bookTitleLower.begin(), ::tolower);
+        transform(partialTitleLower.begin(), partialTitleLower.end(), partialTitleLower.begin(), ::tolower);
+
+        // If the title contains the partial title, add to suggestions
+        if (bookTitleLower.find(partialTitleLower) != string::npos) {
+            matches.push_back(node->book);
+        }
+
+        getSuggestionsByTitle(node->left, partialTitle, matches);
+        getSuggestionsByTitle(node->right, partialTitle, matches);
+    }
+
 };
 

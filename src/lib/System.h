@@ -1,5 +1,7 @@
 #pragma once
 #include <iostream>
+#include <conio.h>
+#include <string>
 #include "UserTree.h"
 #include "Graphic.h"
 
@@ -144,10 +146,96 @@ void displayOveralMenu() {
     setColor(RESET);
 }
 
+// Function to get username with Esc key handling
+std::string getUsername() {
+    std::string username;
+    char ch;
+
+    std::cout << "Enter Username: ";
+    while (true) {
+        ch = _getch();
+
+        if (ch == 27) { // Esc key pressed
+            return ""; // Return an empty string to indicate cancellation
+        }
+        else if (ch == '\r') { // Enter key pressed
+            std::cout << std::endl;
+            break;
+        }
+        else if (ch == '\b' && !username.empty()) { // Backspace pressed
+            username.pop_back();
+            std::cout << "\b \b"; // Erase the last character
+        }
+        else if (isprint(ch)) { // Printable character
+            username += ch;
+            std::cout << ch;
+        }
+    }
+    return username;
+}
+
+// Function to get password with masking and Tab for toggle visibility
+std::string getPassword() {
+    std::string password;
+    bool showPassword = false;
+    char ch;
+
+    while (true) {
+        ch = _getch(); // Get a character without displaying it
+        
+        if (ch == 27) { // Esc key pressed
+            return ""; // Return an empty string to indicate cancellation
+        }
+
+        if (ch == '\r') { // Enter key pressed
+            std::cout << std::endl;
+            break;
+        }
+        else if (ch == '\b' && !password.empty()) { // Backspace pressed
+            password.pop_back();
+            std::cout << "\b \b"; // Move back, erase character, move back again
+        }
+        else if (ch == '\t') { // Tab key pressed to toggle visibility
+            showPassword = !showPassword;
+            // Clear the line and reprint the prompt with updated visibility
+            std::cout << "\rEnter Password: ";
+            for (size_t i = 0; i < password.size() + 20; ++i) std::cout << ' '; // Clear extra characters
+            std::cout << "\rEnter Password: "; // Reset cursor position
+            for (char c : password) {
+                std::cout << (showPassword ? c : '*');
+            }
+        }
+        else if (isprint(ch)) { // Printable characters
+            password += ch;
+            std::cout << (showPassword ? ch : '*');
+        }
+    }
+    return password;
+}
+
 bool login(UserTree& userTree) {
-    std::string username, password;
-    std::cout << "Enter Username: "; std::cin >> username;
-    std::cout << "Enter Password: "; std::cin >> password;
+    std::cout << "Press [Esc] to cancel!\n";
+    std::string username = getUsername();
+    if (username.empty()) { // Check if Esc was pressed during username entry
+        setColor(YELLOW);
+        std::cout << "\n.------------------------------------------.\n";
+        std::cout << "|  Login canceled. Returning to main menu  |.\n";
+        std::cout << "'------------------------------------------'\n";
+        setColor(RESET);
+        system("pause");
+        return false; // Exit immediately without asking for password
+    }
+
+    std::cout << "---Press [tab] to show password---\n";
+    std::string password = getPassword();
+    if (password.empty()) { // Check if Esc was pressed during password entry
+        setColor(YELLOW);
+        std::cout << "\nLogin canceled.\n";
+        setColor(RESET);
+        system("pause");
+        return false;
+    }
+
     clearScreen();
     if (userTree.login(username, password)) {
         setColor(GREEN);
@@ -199,8 +287,21 @@ void displayUserActionMenu() {
 bool adminLogin() {
     clearScreen();
     std::string username, password;
-    std::cout << "Enter Admin Username: "; std::cin >> username;
-    std::cout << "Enter Admin Password: "; std::cin >> password;
+    std::cout << "Press [Esc] to cancel!\n"; 
+    username = getUsername();
+    if (username.empty()) { // Check if Esc was pressed during username entry
+        setColor(YELLOW);
+        std::cout << "\n.-------------------------------------------.\n";
+        std::cout << "|  Login canceled. Returning to main menu.  |\n";
+        std::cout << "'-------------------------------------------'\n";
+        setColor(RESET);
+        system("pause");
+        return false; // Exit immediately without asking for password
+    }
+
+    std::cout << "---Press [tab] to show password---\n";
+    std::cout << "Enter Password: "; 
+    password = getPassword();
     clearScreen();
     if (username == "admin" && password == "admin123") {
         setColor(GREEN);
