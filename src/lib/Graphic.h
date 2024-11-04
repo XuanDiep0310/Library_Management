@@ -1,6 +1,9 @@
 #pragma once
 #include <string>
+#include <cstdlib>
 #include <iostream>
+#include <stdexcept>
+#include <iomanip>
 // Mã ANSI để đổi màu
 const std::string RED = "\033[31m";
 const std::string GREEN = "\033[32m";
@@ -35,8 +38,8 @@ void clearLine() {
 }
 
 // Function to move the cursor up by a specific number of lines
-void moveCursorUp(int lines) {
-    std::cout << "\33[" << lines << "A";
+void moveCursor(int x, int y) {
+    std::cout << "\033[" << y << ";" << x << "H"; // ANSI escape code for cursor movement
 }
 
 // Function to move the cursor down by a specific number of lines

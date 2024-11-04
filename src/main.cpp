@@ -251,6 +251,7 @@ int main() {
 
                             // Proceed with updating the book information
                             library.updateBookInformation(bookTitle);
+                            library.saveToFile(filename);
                             system("pause");
                             break;
                         }
@@ -465,9 +466,11 @@ int main() {
                         case 0:
                             break; // Go back to the main menu
                         default:
+                            setColor(RED);
                             cout << ".-----------------------------------.\n";
                             cout << "| Invalid choice. Please try again. |\n";
                             cout << "'-----------------------------------'\n";
+                            setColor(RESET);
                             system("pause");
                         }
                     } while (subChoice != 0);
@@ -836,9 +839,11 @@ int main() {
                     system("pause");
                     break;  // Log out to overall menu
                 } else {
+                    setColor(RED);
                     cout << ".------------------------------------.\n";
                     cout << "| Invalid choice. Please try again.  |\n";
                     cout << "'------------------------------------'\n";
+                    setColor(RESET);
                     system("pause");
                 }
             } while (mainChoice != 0);

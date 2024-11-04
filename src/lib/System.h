@@ -151,7 +151,7 @@ std::string getUsername() {
     std::string username;
     char ch;
 
-    std::cout << "Enter Username: ";
+    std::cout << "\nEnter Username: ";
     while (true) {
         ch = _getch();
 
@@ -214,7 +214,11 @@ std::string getPassword() {
 }
 
 bool login(UserTree& userTree) {
-    std::cout << "Press [Esc] to cancel!\n";
+    std::cout << "Press ";
+    setColor(RED);
+    std::cout << "[Esc]";
+    setColor(RESET); 
+    std::cout << " to cancel!\n"; 
     std::string username = getUsername();
     if (username.empty()) { // Check if Esc was pressed during username entry
         setColor(YELLOW);
@@ -226,7 +230,11 @@ bool login(UserTree& userTree) {
         return false; // Exit immediately without asking for password
     }
 
-    std::cout << "---Press [tab] to show password---\n";
+    std::cout << "---Press ";
+    setColor(BLUE); 
+    std::cout << "[tab]";
+    setColor(RESET); 
+    std::cout << " to show password---\n";
     std::cout << "Enter Password: ";
     std::string password = getPassword();
     if (password.empty()) { // Check if Esc was pressed during password entry
@@ -288,7 +296,11 @@ void displayUserActionMenu() {
 bool adminLogin() {
     clearScreen();
     std::string username, password;
-    std::cout << "Press [Esc] to cancel!\n"; 
+    std::cout << "Press ";
+    setColor(RED);
+    std::cout << "[Esc]";
+    setColor(RESET); 
+    std::cout << " to cancel!\n"; 
     username = getUsername();
     if (username.empty()) { // Check if Esc was pressed during username entry
         setColor(YELLOW);
@@ -300,7 +312,11 @@ bool adminLogin() {
         return false; // Exit immediately without asking for password
     }
 
-    std::cout << "---Press [tab] to show password---\n";
+    std::cout << "---Press ";
+    setColor(BLUE); 
+    std::cout << "[tab]";
+    setColor(RESET); 
+    std::cout << " to show password---\n";
     std::cout << "Enter Password: "; 
     password = getPassword();
     clearScreen();
