@@ -227,6 +227,7 @@ bool login(UserTree& userTree) {
     }
 
     std::cout << "---Press [tab] to show password---\n";
+    std::cout << "Enter Password: ";
     std::string password = getPassword();
     if (password.empty()) { // Check if Esc was pressed during password entry
         setColor(YELLOW);
@@ -278,7 +279,7 @@ void displayUserActionMenu() {
     setColor(BRIGHT_RED);
     std::cout << "|---------------------------------|\n";
     setColor(RED);
-    std::cout << "|   4. Log out                    |\n";
+    std::cout << "|   0. Log out                    |\n";
     setColor(BRIGHT_YELLOW);
     std::cout << "'---------------------------------'\n";
     setColor(RESET);

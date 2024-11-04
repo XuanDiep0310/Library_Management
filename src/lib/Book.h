@@ -198,7 +198,8 @@ private:
         return node;
     }
 
-    void printHeader() const {
+void printHeader() const {
+    cout << string(97, '-') << endl;
     cout << left 
          << setw(12) << "Book ID"
          << setw(35) << "Title"
@@ -238,12 +239,10 @@ public:
         // Define regular expressions for each status
         regex availablePattern(R"(.*\b(avail|avai|av|a|available)\b.*)");
         regex rentedPattern(R"(.*\b(rent|rented|r)\b.*)");
-        regex updatingPattern(R"(.*\b(upd|update|updating|u)\b.*)");
 
         // Match against each status pattern
         if (regex_search(loweredInput, availablePattern)) return "Available";
         if (regex_search(loweredInput, rentedPattern)) return "Rented";
-        if (regex_search(loweredInput, updatingPattern)) return "Updating";
 
         return ""; // No valid status found
     }

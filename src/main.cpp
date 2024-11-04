@@ -16,6 +16,11 @@ using namespace std;
 void borrowBook(const string& username, const string& bookTitle, BSTree& bookTree); 
 void returnBook(const string& username, const string& bookTitle, BSTree& bookTree);
 
+// Function to check if the input string is "exit"
+bool isExitCommand(const string& input) {
+    return input == "exit";
+}
+
 int main() {
     BSTree library;
     UserTree userTree;
@@ -55,100 +60,201 @@ int main() {
                         cin >> subChoice;
 
                         switch (subChoice) {
-                        case 1: { //Add book
+                        case 1: { // Add book
                             clearScreen();
+                            setColor(BRIGHT_YELLOW);
+                            cout << ".-------------------------.\n";
+                            cout << "|  Type 'exit' to cancel  |\n";
+                            cout << "'-------------------------'\n";
+                            setColor(RESET);
                             int id, year, quantity;
                             string title, author, genre, status;
+                            bool cancelOperation = false;  // Flag to track cancellation
 
-                            do{
+                            // Enter Book ID
+                            while (true) {
                                 setColor(BRIGHT_YELLOW);
-                                cout << "Enter Book ID: "; cin >> id;
+                                cout << "Enter Book ID: ";
+                                string inputId;
+                                cin >> inputId;
 
-                                // Check if the Book ID already exists
-                                if (library.getBookById(id) != nullptr) {  // Using getBookById to check for duplicates
-                                    setColor(RED);
-                                    cout << ".---------------------------------------------------------------.\n";
-                                    cout << "| Error: Book ID already exists. Please enter a unique Book ID. |\n";
-                                    cout << "'---------------------------------------------------------------'\n";
-                                    setColor(RESET);
-
-                                    moveCursorUp(4); // Move the cursor up to the ID prompt
-                                    clearLine(); // Clear the ID prompt line
-                                    clearLine(); // Clear the first error line
-                                    clearLine(); // Clear the second error line
-                                } else {
-                                    break;  // Unique ID found, exit the loop
+                                if (isExitCommand(inputId)) {
+                                    cancelOperation = true;  // Set cancel flag
+                                    break;  // Exit loop to return to book menu
                                 }
-                            }while(library.getBookById(id) != nullptr);
 
+                                try {
+                                    id = stoi(inputId); // Convert to int
+                                    if (library.getBookById(id) != nullptr) {  // Check for duplicates
+                                        setColor(RED);
+                                        cout << ".---------------------------------------------------------------.\n";
+                                        cout << "| Error: Book ID already exists. Please enter a unique Book ID. |\n";
+                                        cout << "'---------------------------------------------------------------'\n";
+                                        setColor(RESET);
+                                    } else {
+                                        break;  // Unique ID found
+                                    }
+                                } catch (invalid_argument&) {
+                                    setColor(RED);
+                                    cout << ".----------------------------------------------.\n";
+                                    cout << "| Invalid input. Please enter a valid Book ID. |\n";
+                                    cout << "'----------------------------------------------'\n";
+                                    setColor(RESET);
+                                }
+                            }
+                            if (cancelOperation) break;  // Cancel and go back to book menu
+
+                            // Enter Title
                             setColor(YELLOW);
-                            cout << "Enter Title: "; cin.ignore(); getline(cin, title);
+                            cout << "Enter Title: ";
+                            cin.ignore(); // Clear the newline left in the buffer
+                            getline(cin, title);
+                            if (isExitCommand(title)) {
+                                cancelOperation = true;  // Set cancel flag
+                                break;  // Exit to book menu
+                            }
+
+                            // Enter Author
                             setColor(BRIGHT_GREEN);
-                            cout << "Enter Author: "; getline(cin, author);
+                            cout << "Enter Author: ";
+                            getline(cin, author);
+                            if (isExitCommand(author)) {
+                                cancelOperation = true;  // Set cancel flag
+                                break;  // Exit to book menu
+                            }
+
+                            // Enter Genre
                             setColor(GREEN);
-                            cout << "Enter Genre: "; getline(cin, genre);
+                            cout << "Enter Genre: ";
+                            getline(cin, genre);
+                            if (isExitCommand(genre)) {
+                                cancelOperation = true;  // Set cancel flag
+                                break;  // Exit to book menu
+                            }
+
+                            // Enter Year
                             setColor(BRIGHT_CYAN);
-                            cout << "Enter Year: "; cin >> year;
-                            do {
-                                setColor(CYAN);
-                                cout << "Enter Quantity: "; cin >> quantity;
-                                if(quantity <= 0) {
-                                    setColor(RED);
-                                    cout << ".-------------------------------------------------.\n";
-                                    cout << "| Quantity must larger than 0! Please try again!  |\n";
-                                    cout << "'-------------------------------------------------'\n";
-                                    system("pause");
-                                    setColor(RESET);
+                            while (true) {
+                                cout << "Enter Year: ";
+                                string inputYear;
+                                cin >> inputYear;
 
-                                    moveCursorUp(5); // Move cursor up to the Quantity prompt
-                                    clearLine(); // Clear Quantity prompt
-                                    clearLine(); // Clear the error message
-                                    clearLine(); // Clear the bottom border line
+                                if (isExitCommand(inputYear)) {
+                                    cancelOperation = true;  // Set cancel flag
+                                    break;  // Exit to book menu
                                 }
-                            }while(quantity <= 0);
 
+                                try {
+                                    year = stoi(inputYear);
+                                    break;  // Valid year entered
+                                } catch (invalid_argument&) {
+                                    setColor(RED);
+                                    cout << ".-------------------------------------------.\n";
+                                    cout << "| Invalid input. Please enter a valid Year. |\n";
+                                    cout << "'-------------------------------------------'\n";
+                                    setColor(RESET);
+                                }
+                            }
+                            if (cancelOperation) break;  // Cancel and go back to book menu
+
+                            // Enter Quantity
+                            while (true) {
+                                setColor(CYAN);
+                                cout << "Enter Quantity: ";
+                                string inputQuantity;
+                                cin >> inputQuantity;
+
+                                if (isExitCommand(inputQuantity)) {
+                                    cancelOperation = true;  // Set cancel flag
+                                    break;  // Exit to book menu
+                                }
+
+                                try {
+                                    quantity = stoi(inputQuantity);
+                                    if (quantity <= 0) {
+                                        setColor(RED);
+                                        cout << ".----------------------------------------------------.\n";
+                                        cout << "| Quantity must be greater than 0! Please try again. |\n";
+                                        cout << "'----------------------------------------------------'\n";
+                                        setColor(RESET);
+                                    } else {
+                                        break;  // Valid quantity entered
+                                    }
+                                } catch (invalid_argument&) {
+                                    setColor(RED);
+                                    cout << ".-----------------------------------------------.\n";
+                                    cout << "| Invalid input. Please enter a valid Quantity. |\n";
+                                    cout << "'-----------------------------------------------'\n";
+                                    setColor(RESET);
+                                }
+                            }
+                            if (cancelOperation) break;  // Cancel and go back to book menu
+
+                            // Enter Status
                             setColor(BRIGHT_BLUE);
-                            do{
-                                cout << "Enter Status (Available, Rented, Updating): "; cin.ignore(); getline(cin, status);
+                            while (true) {
+                                setColor(CYAN);
+                                cout << "Enter Status (Available, Rented): ";
+                                setColor(RESET);
+                                cin.ignore(); // Clear buffer
+                                getline(cin, status);
+
+                                if (isExitCommand(status)) {
+                                    cancelOperation = true;  // Set cancel flag
+                                    break;  // Exit to book menu
+                                }
 
                                 status = library.matchStatus(status);
                                 if (status.empty()) {
                                     setColor(RED);
-                                    cout << ".----------------------------------------------------------------.\n";
-                                    cout << "|  Invalid status. Please enter Available, Rented, or Updating.  |\n";
-                                    cout << "'----------------------------------------------------------------'\n";
+                                    cout << ".--------------------------------------------------------------.\n";
+                                    cout << "| Invalid status. Please enter Available, Rented, or Updating. |\n";
+                                    cout << "'--------------------------------------------------------------'\n";
                                     setColor(BRIGHT_BLUE);
-
-                                    moveCursorUp(4); // Move up to the Quantity prompt
-                                    clearLine();
-                                    clearLine();
-                                    clearLine();
+                                } else {
+                                    break;  // Valid status entered
                                 }
-                            } while(status.empty());
+                            }
+                            if (cancelOperation) break;  // Cancel and go back to book menu
+
+                            // If we reach this point, the book can be added
                             setColor(BLUE);
                             library.addBook(id, title, author, genre, year, quantity, status);
                             clearScreen();
                             setColor(GREEN);
-                            cout << ".---------------------------.\n";
-                            cout << "| Book added successfully!  |\n";
-                            cout << "'---------------------------'\n";
+                            cout << ".--------------------------.\n";
+                            cout << "| Book added successfully! |\n";
+                            cout << "'--------------------------'\n";
                             setColor(RESET);
                             library.saveToFile(filename);
                             system("pause");
-                            break;
+                            break;  // End of adding book
                         }
                         case 2: { // Update book information
                             string bookTitle;
+                            setColor(BRIGHT_YELLOW);
+                            cout << ".-------------------------.\n";
+                            cout << "|  Type 'exit' to cancel  |\n";
+                            cout << "'-------------------------'\n";
+                            setColor(RESET);
                             setColor(MAGENTA);
                             cout << "Enter the Title of the Book to Update: ";
                             setColor(RESET);
                             cin.ignore();
                             getline(cin, bookTitle);
 
+                            if (isExitCommand(bookTitle)) {
+                                // User chose to cancel the operation
+                                clearScreen();
+                                break; // Go back to the book menu
+                            }
+
+                            // Proceed with updating the book information
                             library.updateBookInformation(bookTitle);
                             system("pause");
                             break;
                         }
+
                         case 3: {//List book
                             clearScreen();
                             setColor(BRIGHT_MAGENTA);
@@ -163,11 +269,17 @@ int main() {
                             break;
                         }
                         case 4: {  // Search Book by Title
-                            string bookTitle;
-                            setColor(BRIGHT_MAGENTA);
-                            cout << "Enter Book Title to Search (suggestions will appear as you type): ";
+                            setColor(BRIGHT_YELLOW);
+                            cout << ".-------------------------.\n";
+                            cout << "|  Type 'exit' to cancel  |\n";
+                            cout << "'-------------------------'\n";
                             setColor(RESET);
 
+                            string bookTitle;
+                            setColor(BRIGHT_MAGENTA);
+                            cout << "Enter Book Title to Search: ";
+                            setColor(RESET);
+                            
                             char ch;
 
                             // Display initial empty suggestions
@@ -181,14 +293,26 @@ int main() {
                                 if (ch == '\r') break;  // Stop on Enter key ('\r' is the Enter key in Windows)
 
                                 // Add character to the search term
-                                bookTitle += ch;
+                                if (ch == 8) { // Handle backspace
+                                    if (!bookTitle.empty()) {
+                                        bookTitle.pop_back(); // Remove the last character
+                                    }
+                                } else {
+                                    bookTitle += ch; // Add character to the search term
+                                }
 
                                 // Clear screen and display prompt again with current input
                                 clearScreen();
                                 setColor(BRIGHT_MAGENTA);
-                                cout << "Enter Book Title to Search (suggestions will appear as you type): " << bookTitle << endl;
+                                cout << "Enter Book Title to Search: " << bookTitle << endl;
                                 setColor(RESET);
 
+                                // Check for exit command
+                                if (bookTitle == "exit") {
+                                    clearScreen();
+                                    break;  // Exit to book menu
+                                }
+                                
                                 // Convert current input to lowercase for case-insensitive comparison
                                 string lowerBookTitle = bookTitle;
                                 transform(lowerBookTitle.begin(), lowerBookTitle.end(), lowerBookTitle.begin(), ::tolower);
@@ -211,33 +335,35 @@ int main() {
                             }
 
                             // After Enter is pressed, search for the exact title entered
-                            Book* foundBook = library.searchBook(bookTitle);
-                            if (foundBook != nullptr) {
-                                setColor(GREEN);
-                                cout << "\nFound Book:\n";
+                            if (bookTitle != "exit") { // Only search if exit wasn't typed
+                                Book* foundBook = library.searchBook(bookTitle);
+                                if (foundBook != nullptr) {
+                                    setColor(GREEN);
+                                    cout << "\nFound Book:\n";
 
-                                // Table header
-                                cout << left << setw(10) << "ID" 
-                                    << setw(30) << "Title" 
-                                    << setw(20) << "Author"
-                                    << setw(15) << "Quantity"
-                                    << setw(10) << "Status" 
-                                    << endl;
-                                cout << "------------------------------------------------------------------------------------" << endl;
+                                    // Table header
+                                    cout << left << setw(10) << "ID" 
+                                        << setw(30) << "Title" 
+                                        << setw(20) << "Author"
+                                        << setw(15) << "Quantity"
+                                        << setw(10) << "Status" 
+                                        << endl;
+                                    cout << "------------------------------------------------------------------------------------" << endl;
 
-                                // Book information
-                                cout << left << setw(10) << foundBook->getBookId()
-                                    << setw(30) << foundBook->getTitle()
-                                    << setw(20) << foundBook->getAuthor()
-                                    << setw(15) << foundBook->getQuantity()
-                                    << setw(10) << foundBook->getStatus()
-                                    << endl;
+                                    // Book information
+                                    cout << left << setw(10) << foundBook->getBookId()
+                                        << setw(30) << foundBook->getTitle()
+                                        << setw(20) << foundBook->getAuthor()
+                                        << setw(15) << foundBook->getQuantity()
+                                        << setw(10) << foundBook->getStatus()
+                                        << endl;
 
-                                setColor(RESET);
-                            } else {
-                                setColor(RED);
-                                cout << "\nNo book found with title \"" << bookTitle << "\"" << endl;
-                                setColor(RESET);
+                                    setColor(RESET);
+                                } else {
+                                    setColor(RED);
+                                    cout << "\nNo book found with title \"" << bookTitle << "\"" << endl;
+                                    setColor(RESET);
+                                }
                             }
                             system("pause");
                             break;
@@ -245,9 +371,14 @@ int main() {
 
                         case 5: { // Delete book
                             clearScreen();
+                            setColor(BRIGHT_YELLOW);
+                            cout << ".-------------------------.\n";
+                            cout << "|  Type 'exit' to cancel  |\n";
+                            cout << "'-------------------------'\n";
+                            setColor(RESET);
                             string title;
                             setColor(BRIGHT_RED);
-                            cout << "Enter Book Title to Delete (suggestions will appear as you type): ";
+                            cout << "Enter Book Title to Delete: ";
                             setColor(RESET);
                             
                             char ch;
@@ -266,12 +397,18 @@ int main() {
                                     title += ch;  // Add character to title
                                 }
 
+                                // Check for exit command
+                                if (title == "exit") {
+                                    clearScreen();
+                                    break; // Exit to book menu
+                                }
+
                                 // Clear screen for updated suggestions
                                 clearScreen();  // Implement clearScreen to refresh the display as needed
                             
                                 // Display the prompt and current input
                                 setColor(BRIGHT_RED);
-                                cout << "Enter Book Title to Delete (suggestions will appear as you type): " << title << endl;
+                                cout << "Enter Book Title to Delete: " << title << endl;
                                 setColor(RESET);
 
                                 string lowerTitle = title;
@@ -280,9 +417,14 @@ int main() {
                                 suggestions = library.getSuggestionsByTitle(lowerTitle);
 
                                 // Display suggestions
+                                setColor(GREEN);
                                 cout << "Suggestions: ";
                                 if (suggestions.empty()) {
-                                    cout << "No suggestions available.";
+                                    setColor(RED);
+                                    cout << ".---------------------------.\n";
+                                    cout << "| No suggestions available. |\n";
+                                    cout << "'---------------------------'\n";
+                                    setColor(RESET);
                                 } else {
                                     for (const auto& book : suggestions) {
                                         string bookTitle = book->getTitle();
@@ -295,21 +437,27 @@ int main() {
                                     }
                                 }
                                 cout << endl;
+                                setColor(RESET);
                             }
 
                             // Final deletion confirmation
-                            if (!title.empty()) {
-                                    library.deleteBookByTitle(title);  // Call the delete function (even without a bool return type)
-                                    setColor(GREEN);
-                                    cout << "Book deleted successfully!" << endl;
-                                    setColor(RESET);
-                                    library.saveToFile(filename);
-                                } else {
-                                    setColor(RED);
-                                    cout << "Book not found or could not be deleted." << endl;
-                                    setColor(RESET);
-                                }
-
+                            if (!title.empty() && title != "exit") { // Only delete if exit wasn't typed
+                                if (!title.empty()) {
+                                        library.deleteBookByTitle(title);  // Call the delete function (even without a bool return type)
+                                        setColor(GREEN);
+                                        cout << ".----------------------------.\n";
+                                        cout << "| Book deleted successfully! |\n";
+                                        cout << "'----------------------------'\n";
+                                        setColor(RESET);
+                                        library.saveToFile(filename);
+                                    } else {
+                                        setColor(RED);
+                                        cout << ".-----------------------------------------.\n";
+                                        cout << "| Book not found or could not be deleted. |\n";
+                                        cout << "'-----------------------------------------'\n";
+                                        setColor(RESET);
+                                    }
+                            }
                             system("pause");
                             break;
                         }
@@ -335,6 +483,12 @@ int main() {
                         switch (subChoice) {
                         case 1: { // Add user
                             clearScreen();
+                            setColor(BRIGHT_YELLOW);
+                            cout << ".-------------------------.\n";
+                            cout << "|  Type 'exit' to cancel  |\n";
+                            cout << "'-------------------------'\n";
+                            setColor(RESET);
+
                             string name, email, username, password;
                             int day, month, year;
 
@@ -350,7 +504,12 @@ int main() {
                             cout << "Enter User Name: "; 
                             cin.ignore(); 
                             getline(cin, name);
-                            setColor(RESET);
+
+                            // Check for exit command
+                            if (name == "exit") {
+                                clearScreen();
+                                break; // Exit to the book menu
+                            }
 
                             // Get email with duplicate check and format validation
                             bool validEmail = false;
@@ -359,6 +518,12 @@ int main() {
                                 cout << "Enter Email: "; 
                                 getline(cin, email);
                                 setColor(RESET);
+
+                                // Check for exit command
+                                if (email == "exit") {
+                                    clearScreen();
+                                    break; // Exit to the book menu
+                                }
 
                                 // Check for existing email
                                 auto emailIt = find_if(existingUsers.begin(), existingUsers.end(), [&](User* user) {
@@ -370,12 +535,16 @@ int main() {
 
                                 if (!emailFormatValid) {
                                     setColor(RED);
-                                    cout << "Invalid email format. Please enter a valid '@gmail.com' or '.edu' email." << endl;
+                                    cout << ".--------------------------------------------------------------------------.\n";
+                                    cout << "| Invalid email format. Please enter a valid '@gmail.com' or '.edu' email. |\n";
+                                    cout << "'--------------------------------------------------------------------------'\n";
                                     setColor(RESET);
                                     system("pause");
                                 } else if (emailIt != existingUsers.end()) {
                                     setColor(RED);
-                                    cout << "Email already exists. Please use a different email." << endl;
+                                    cout << ".-----------------------------------------------------.\n";
+                                    cout << "| Email already exists. Please use a different email. |\n";
+                                    cout << "'-----------------------------------------------------'\n";
                                     setColor(RESET);
                                     system("pause");
                                 } else {
@@ -386,8 +555,15 @@ int main() {
                             // Get username with duplicate check
                             bool validUsername = false;
                             do {
+                                setColor(BLUE);
                                 cout << "Enter Username: "; 
                                 getline(cin, username);
+
+                                // Check for exit command
+                                if (username == "exit") {
+                                    clearScreen();
+                                    break; // Exit to the book menu
+                                }
 
                                 // Check for existing username
                                 auto usernameIt = find_if(existingUsers.begin(), existingUsers.end(), [&](User* user) {
@@ -396,7 +572,9 @@ int main() {
 
                                 if (usernameIt != existingUsers.end()) {
                                     setColor(RED);
-                                    cout << "Username already exists. Please use a different username." << endl;
+                                    cout << ".-----------------------------------------------------------.\n";
+                                    cout << "| Username already exists. Please use a different username. |\n";
+                                    cout << "'-----------------------------------------------------------'\n";
                                     setColor(RESET);
                                     system("pause");
                                 } else {
@@ -408,7 +586,12 @@ int main() {
                             setColor(MAGENTA);
                             cout << "Enter Password: "; 
                             getline(cin, password);
-                            setColor(RESET);
+
+                            // Check for exit command
+                            if (password == "exit") {
+                                clearScreen();
+                                break; // Exit to the book menu
+                            }
 
                             // Get birthday with validation
                             bool validDate = false;
@@ -416,13 +599,27 @@ int main() {
                                 setColor(YELLOW);
                                 cout << "Enter Birthday (Day Month Year): "; 
                                 cin >> day >> month >> year;
-                                setColor(RESET);
+
+                                // Check for exit command
+                                if (cin.fail()) {
+                                    cin.clear(); // Clear error flags
+                                    string exitCheck;
+                                    cin >> exitCheck;
+                                    if (exitCheck == "exit") {
+                                        clearScreen();
+                                        break; // Exit to the book menu
+                                    }
+                                    // If not exit, try to parse the day, month, year as integers
+                                    continue; // Go to the next iteration
+                                }
 
                                 if (Date::isValidDate(day, month, year)) {
                                     validDate = true;
                                 } else {
                                     setColor(RED);
-                                    cout << "Invalid date entered. Please enter a valid date." << endl;
+                                    cout << ".--------------------------------------------------.\n";
+                                    cout << "| Invalid date entered. Please enter a valid date. |\n";
+                                    cout << "'--------------------------------------------------'\n";
                                     setColor(RESET);
                                     // Clear the error state and ignore invalid input to allow re-entry
                                     cin.clear();
@@ -430,25 +627,53 @@ int main() {
                                 }
                             } while (!validDate);
 
-                            // Add user and save to file
-                            userTree.addUser(new User(name, Date(day, month, year), email, username, password));
-                            cout << "User added successfully!" << endl;
-                            userTree.saveUsersToFile(filename);
-                            
+                            // Add user and save to file if all details are valid and not cancelled
+                            if (!name.empty() && !email.empty() && !username.empty() && !password.empty()) {
+                                userTree.addUser(new User(name, Date(day, month, year), email, username, password));
+                                setColor(GREEN);
+                                cout << ".--------------------------.\n";
+                                cout << "| User added successfully! |\n";
+                                cout << "'--------------------------'\n";
+                                setColor(RESET);
+                                userTree.saveUsersToFile(filename);
+                            }
+
                             system("pause");
                             break;
                         }
                         case 2: { // Update User Information
                             clearScreen();
+                            setColor(BRIGHT_YELLOW);
+                            cout << ".-------------------------.\n";
+                            cout << "|  Type 'exit' to cancel  |\n";
+                            cout << "'-------------------------'\n";
+                            setColor(RESET);
+
                             string username;
+                            setColor(BLUE);
                             cout << "Enter Username to Update: ";
+                            setColor(RESET);
                             cin.ignore();
                             getline(cin, username);
 
+                            // Check for exit command
+                            if (username == "exit") {
+                                clearScreen();
+                                break; // Exit to the previous menu
+                            }
+
+                            // Attempt to update user information
                             userTree.updateUserInformation(username);
+                            setColor(GREEN);
+                            cout << ".----------------------------------------.\n";
+                            cout << "| User information updated successfully! |\n";
+                            cout << "'----------------------------------------'\n";
+                            setColor(RESET);
+
                             system("pause");
                             break;
                         }
+
                         case 3:
                             clearScreen();
                             cout << "\nList of Users in the System:" << endl;
@@ -458,9 +683,17 @@ int main() {
                         // Case 4: Search for User with Suggestions
                         case 4: {
                             clearScreen();
+                            setColor(BRIGHT_YELLOW);
+                            cout << ".-------------------------.\n";
+                            cout << "|  Type 'exit' to cancel  |\n";
+                            cout << "'-------------------------'\n";
+                            setColor(RESET);
+
                             string username;
                             char ch;
+                            setColor(BLUE);
                             cout << "Enter Username to Search: ";
+                            setColor(RESET);
                             cin.ignore();
 
                             // Dynamically update suggestions based on input
@@ -476,26 +709,46 @@ int main() {
                                     username += ch;
                                 }
 
+                                // Check for exit command
+                                if (username == "exit") {
+                                    clearScreen();
+                                    break; // Exit to the previous menu
+                                }
+
                                 clearScreen(); // Clear screen to refresh suggestions
+                                setColor(BLUE);
                                 cout << "Enter Username to Search: " << username << endl;
+                                setColor(RESET);
 
                                 // Display search suggestions
                                 vector<User*> suggestions = userTree.suggestUsersByUsername(username);
                                 if (!suggestions.empty()) {
+                                    setColor(GREEN);
                                     cout << "Suggestions:" << endl;
                                     for (const auto& user : suggestions) {
                                         cout << " - " << user->getUsername() << " (" << user->getMail() << ")" << endl;
                                     }
+                                    setColor(RESET);
                                 }
                             }
 
-                            // Perform final search
-                            User* foundUser = userTree.searchUser(username);
-                            if (foundUser) {
-                                cout << "Found User: " << foundUser->getUsername() << " (" << foundUser->getMail() << ")" << endl;
-                            } else {
-                                cout << "No user found with username " << username << endl;
+                            if (!username.empty() && username != "exit") {
+                                // Perform final search
+                                User* foundUser = userTree.searchUser(username);
+                                if (foundUser) {
+                                    setColor(GREEN);
+                                    cout << "Found User: " << foundUser->getUsername() << " (" << foundUser->getMail() << ")" << endl;
+                                    setColor(RESET);
+                                } else {
+                                    setColor(RED);
+                                    cout << "No user found with username ";
+                                    setColor(BRIGHT_YELLOW);
+                                    cout << username << endl;
+                                    setColor(RESET);
+                                    setColor(RESET);
+                                }
                             }
+
                             system("pause");
                             break;
                         }
@@ -503,6 +756,12 @@ int main() {
                         // Case 5: Delete User with Confirmation Prompt
                         case 5: {
                             clearScreen();
+                            setColor(BRIGHT_YELLOW);
+                            cout << ".-------------------------.\n";
+                            cout << "|  Type 'exit' to cancel  |\n";
+                            cout << "'-------------------------'\n";
+                            setColor(RESET);
+
                             string username;
                             char confirmation;
 
@@ -512,32 +771,47 @@ int main() {
                             getline(cin, username);
                             setColor(RESET);
 
-                            User* foundUser = userTree.searchUser(username);
-                            if (!foundUser) {
-                                setColor(RED);
-                                cout << "No user found with username " << username << endl;
+                            // Check for cancellation
+                            if (username == "exit") {
+                                clearScreen();
+                                setColor(BRIGHT_YELLOW);
+                                cout << ".---------------------.\n";
+                                cout << "| Deletion cancelled. |\n";
+                                cout << "'---------------------'\n";
                                 setColor(RESET);
                             } else {
-                                setColor(BLUE);
-                                cout << "Are you sure you want to delete user '" << username << "'? (Y/N): ";
-                                confirmation = _getch();
-                                if (confirmation == 'Y' || confirmation == 'y') {
-                                    userTree.deleteUser(username);
-                                    setColor(GREEN);
-                                    cout << ".------------------------------.\n";
-                                    cout << "|  User deleted successfully!  |\n";
-                                    cout << "'------------------------------'\n";
+                                User* foundUser = userTree.searchUser(username);
+                                if (!foundUser) {
+                                    setColor(RED);
+                                    cout << "No user found with username " << username << endl;
                                     setColor(RESET);
-                                    userTree.saveUsersToFile(filename);
                                 } else {
-                                    setColor(BRIGHT_YELLOW);
-                                    cout << ".---------------------------.\n";
-                                    cout << "|    Deletion cancelled.    |\n";
-                                    cout << "'---------------------------'\n";
+                                    setColor(BLUE);
+                                    cout << "Are you sure you want to delete user '";
+                                    setColor(GREEN);
+                                    cout << username;
+                                    setColor(RESET); 
+                                    cout << "'? (Y/N): ";
+                                    confirmation = _getch();
+                                    if (confirmation == 'Y' || confirmation == 'y') {
+                                        userTree.deleteUser(username);
+                                        setColor(GREEN);
+                                        cout << ".------------------------------.\n";
+                                        cout << "|  User deleted successfully!  |\n";
+                                        cout << "'------------------------------'\n";
+                                        setColor(RESET);
+                                        userTree.saveUsersToFile(filename);
+                                    } else {
+                                        setColor(BRIGHT_YELLOW);
+                                        cout << ".---------------------------.\n";
+                                        cout << "|    Deletion cancelled.    |\n";
+                                        cout << "'---------------------------'\n";
+                                        setColor(RESET);
+                                    }
                                     setColor(RESET);
                                 }
-                                setColor(RESET);
                             }
+
                             system("pause");
                             break;
                         }
@@ -588,6 +862,12 @@ int main() {
                 switch (mainChoice) {
                     case 1: { // Borrow Book
                         clearScreen();
+                        setColor(BRIGHT_YELLOW);
+                        cout << ".-------------------------.\n";
+                        cout << "|  Type 'exit' to cancel  |\n";
+                        cout << "'-------------------------'\n";
+                        setColor(RESET);
+
                         string bookTitle;
                         char ch;
 
@@ -618,6 +898,7 @@ int main() {
 
                             // Xóa màn hình để làm mới phần gợi ý
                             clearScreen();
+                            setColor(BLUE);
                             cout << "Enter the title of the book you want to borrow: " << bookTitle << endl;
 
                             // Kiểm tra xem có người dùng nào đang đăng nhập không
@@ -628,7 +909,17 @@ int main() {
                                 cout << "'---------------------------------'\n";
                                 setColor(RESET);
                                 break; // Thoát khỏi vòng lặp
-                            } else {
+                            } 
+                            // Check for cancellation
+                            else if (bookTitle == "exit") {
+                                setColor(BRIGHT_YELLOW);
+                                cout << ".----------------------.\n";
+                                cout << "| Borrowing cancelled. |\n";
+                                cout << "'----------------------'\n";
+                                setColor(RESET);
+                                break; // Exit the loop
+                            }
+                            else {
                                 // Hiển thị gợi ý sách
                                 vector<Book*> suggestions = library.getSuggestionsByTitle(bookTitle); // Gọi hàm gợi ý
                                 if (!suggestions.empty()) {
@@ -650,7 +941,7 @@ int main() {
                         setColor(RESET);
 
                         // Mượn sách khi đã nhập xong tiêu đề
-                        if (!userTree.getCurrentUserName().empty()) {
+                        if (!userTree.getCurrentUserName().empty() && bookTitle != "exit") {
                             userTree.borrowBook(userTree.getCurrentUserName(), bookTitle, library); // Gọi hàm borrowBook với tên sách
                         }
                         
@@ -660,6 +951,12 @@ int main() {
                     }
                     case 2: { // Return Book
                         clearScreen();
+                        setColor(BRIGHT_YELLOW);
+                        cout << ".-------------------------.\n";
+                        cout << "|  Type 'exit' to cancel  |\n";
+                        cout << "'-------------------------'\n";
+                        setColor(RESET);
+
                         string bookTitle;
                         char ch;
 
@@ -689,13 +986,26 @@ int main() {
 
                             // Clear screen for suggestions
                             clearScreen();
+                            setColor(BLUE);
                             cout << "Enter the title of the book you want to return: " << bookTitle << endl;
+                            setColor(RESET);
 
                             // Check for logged-in user
                             string currentUser = userTree.getCurrentUserName();
                             if (currentUser.empty()) {
-                                cout << "No user is currently logged in." << endl;
+                                setColor(RED);
+                                cout << ".---------------------------------.\n";
+                                cout << "| No user is currently logged in. |\n";
+                                cout << "'---------------------------------'\n";
+                                setColor(RESET);
                                 break; // Exit loop if no user is logged in
+                            } else if (bookTitle == "exit") {
+                                setColor(BRIGHT_YELLOW);
+                                cout << ".----------------------.\n";
+                                cout << "| Returning cancelled. |\n";
+                                cout << "'----------------------'\n";
+                                setColor(RESET);
+                                break; // Exit the loop
                             }
 
                             // Read from borrows.txt and search for suggestions
@@ -722,24 +1032,34 @@ int main() {
                                 }
                                 borrowsFile.close();
                             } else {
-                                cout << "Error: Unable to open borrows.txt" << endl;
+                                setColor(RED);
+                                cout << ".------------------------------------.\n";
+                                cout << "| Error: Unable to open borrows.txt  |\n";
+                                cout << "'------------------------------------'\n";
+                                setColor(RESET);
                                 break; // Exit if file cannot be opened
                             }
 
                             // Show suggestions
                             if (!suggestions.empty()) {
+                                setColor(GREEN);
                                 cout << "Suggestions:\n";
                                 for (const auto& suggestion : suggestions) {
                                     cout << " - " << suggestion << endl; // Display each suggestion
                                 }
+                                setColor(RESET);
                             } else {
-                                cout << "No suggestions available." << endl;
+                                setColor(RED);
+                                cout << ".---------------------------.\n"; 
+                                cout << "| No suggestions available. |\n";
+                                cout << "'---------------------------'\n";
+                                setColor(RESET);
                             }
                         }
                         setColor(RESET);
 
                         // Return book if user is logged in
-                        if (!userTree.getCurrentUserName().empty()) {
+                        if (!userTree.getCurrentUserName().empty() && bookTitle != "exit") {
                             userTree.returnBook(userTree.getCurrentUserName(), bookTitle, library); // Call returnBook with book title
                         }
 
@@ -764,7 +1084,7 @@ int main() {
                         system("pause");
                         break;
                     }
-                    case 4: { // Log out
+                    case 0: { // Log out
                         setColor(YELLOW);
                         cout << ".------------------.\n";
                         cout << "|  Logging out...  |\n";
