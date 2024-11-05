@@ -71,8 +71,8 @@ public:
 
     //save book details to a file
     void saveToFile(ofstream& outfile) const {
-        outfile << bookId << " ," << title << ", " << author << ", " << genre << ", "
-            << publicationYear << ", " << quantity << ", " << status << endl;
+        outfile << bookId << "," << title << "," << author << "," << genre << ","
+            << publicationYear << "," << quantity << "," << status << endl;
     }
 
     //load book details from a line of text
@@ -198,35 +198,35 @@ private:
         return node;
     }
 
-void printHeader() const {
-    cout << string(97, '-') << endl;
-    cout << left 
-         << setw(12) << "Book ID"
-         << setw(35) << "Title"
-         << setw(25) << "Author"
-         << setw(10) << "Quantity"
-         << setw(15) << "Status" 
-         << endl;
-    cout << string(97, '-') << endl;  // Adjust separator to match column width
-}
-
-void inorder(TreeNode* node) const {
-    if (node) {
-        inorder(node->left);
-
-        setColor(GREEN);
+    void printHeader() const {
+        cout << string(97, '-') << endl;
         cout << left 
-             << setw(12) << node->book->getBookId()
-             << setw(35) << node->book->getTitle()
-             << setw(25) << node->book->getAuthor()
-             << setw(10) << node->book->getQuantity()
-             << setw(15) << node->book->getStatus() 
-             << endl;
-        setColor(RESET);
-
-        inorder(node->right);
+            << setw(12) << "Book ID"
+            << setw(35) << "Title"
+            << setw(25) << "Author"
+            << setw(10) << "Quantity"
+            << setw(15) << "Status" 
+            << endl;
+        cout << string(97, '-') << endl;  // Adjust separator to match column width
     }
-}
+
+    void inorder(TreeNode* node) const {
+        if (node) {
+            inorder(node->left);
+
+            setColor(GREEN);
+            cout << left 
+                << setw(12) << node->book->getBookId()
+                << setw(35) << node->book->getTitle()
+                << setw(25) << node->book->getAuthor()
+                << setw(10) << node->book->getQuantity()
+                << setw(15) << node->book->getStatus() 
+                << endl;
+            setColor(RESET);
+
+            inorder(node->right);
+        }
+    }
 
 public:
     BSTree() : root(nullptr) {}

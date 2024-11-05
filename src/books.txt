@@ -1,6 +1,12 @@
-101 ,NextJs,           Bill,           Tech, 2024, 10,           Available
-102 ,ReactJs,           Fer,           Tech, 2024, 10,           Available
-103 ,DotNet,           Noah,           2024, 2024, 9,           Available
-107 ,ill,   Gate,   Tech, 2024, 10,   Available
-108 ,BC,  ABC,  2024, 20204, 10,  Rented
-109 ,ABC, ABC, ACB, 2024, 10, Available
+101,NextJs,Bill,Tech,2024,10,Available
+102,ReactJs,Fer,Tech,2024,10,Available
+103,DotNet,Noah,2024,2024,9,Available
+107,ill,Gate,Tech,2024,10,Available
+108,BC,ABC,2024,20204,10,Rented
+109,ABC,ABC,ACB,2024,10,Available
+111,ABC,ABC,ABC,2024,10,Available
+112,B,B,B,2024,10,Available
+113,C,C,C,2024,10,Available
+114,D,D,D,2024,10,Available
+115,E,E,E,2024,10,Available
+116,F,F,F,2024,9,Available

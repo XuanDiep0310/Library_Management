@@ -283,14 +283,19 @@ void displayUserActionMenu() {
     setColor(BRIGHT_MAGENTA);
     std::cout << "|---------------------------------|\n";
     setColor(MAGENTA);
-    std::cout << "|   3. Show Book                  |\n";
+    std::cout << "|   3. Show Rented Book           |\n";
     setColor(BRIGHT_RED);
     std::cout << "|---------------------------------|\n";
     setColor(RED);
-    std::cout << "|   0. Log out                    |\n";
+    std::cout << "|   4. Show Book                  |\n";
     setColor(BRIGHT_YELLOW);
     std::cout << "'---------------------------------'\n";
+    setColor(GREEN);
+    std::cout << "|   0. Log Out                    |\n";
+    setColor(BRIGHT_GREEN);
+    std::cout << "'---------------------------------'\n";
     setColor(RESET);
+
 }
 
 bool adminLogin() {

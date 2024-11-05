@@ -1089,6 +1089,19 @@ int main() {
                         system("pause");
                         break;
                     }
+                    case 4: {
+                        clearScreen();
+                        setColor(BRIGHT_MAGENTA);
+                        cout << "               .----------------------------------------------------.\n";
+                        setColor(MAGENTA);
+                        cout << "               |=========== List of Books in the Library ===========|\n";
+                        setColor(BRIGHT_RED);
+                        cout << "               '----------------------------------------------------'\n";
+                        setColor(RESET);
+                        library.displayBooks();
+                        system("pause");
+                        break;
+                    }
                     case 0: { // Log out
                         setColor(YELLOW);
                         cout << ".------------------.\n";
@@ -1106,7 +1119,7 @@ int main() {
                         setColor(RESET);
                         system("pause");
                 }
-            } while (mainChoice != 4); // Repeat until user chooses to log out
+            } while (mainChoice != 0); // Repeat until user chooses to log out
         }
         else if (overalChoice == 0) {
             // Save books to file before exiting
