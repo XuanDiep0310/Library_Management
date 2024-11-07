@@ -5,6 +5,7 @@
 #include <ctime>
 #include <iomanip>
 #include <sstream>
+#include <stdexcept>
 
 using namespace std;
 
@@ -21,12 +22,12 @@ public:
     static bool isValidHour(int hour);
     static bool isValidMinute(int minute);
     static bool isValidSecond(int second);
-    static Date defaultDate;
 
+    // Initialize defaultDate to a specific date to avoid uninitialized state issues
+    static Date defaultDate;
 
     // Define the addDays function
     Date addDays(int days);
-
     // Define a toString function
     string toString() const;
     static Date fromString(const string& dateString);
@@ -81,7 +82,7 @@ private:
 };
 
 // Constructor and Destructor
-Date::Date(int day, int month, int year, int second, int minute, int hour) : day(day), month(month), year(year), hour(hour), minute(minute), second(second) {}
+Date::Date(int day, int month, int year, int hour, int minute, int second) : day(day), month(month), year(year), hour(hour), minute(minute), second(second) {}
 Date::~Date() {}
 
 // Utility functions
@@ -262,4 +263,4 @@ int Date::toDays() const {
 }
 
 // Static Member
-Date Date::defaultDate;
+Date Date::defaultDate; 

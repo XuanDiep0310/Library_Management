@@ -232,17 +232,8 @@ public:
         return false; // Login failed
     }
 
-    bool isEmailFormatValid(const string& email) {
-        // Regular expression to match common email domains
-        regex emailPattern(R"((^[\w.-]+@[a-zA-Z0-9.-]+\.(com|net|org|edu|gov|mil|co\.\w+|vn)$)|"
-                        R"(^[\w.-]+@(gmail|yahoo|outlook|icloud|zoho|aol|gmx|yandex|mail|lycos)\.(com|edu|net|org|ru|de|vn|co\.\w+)$))");
-
-        // Check if the email matches the regular expression pattern
-        return regex_match(email, emailPattern);
-    }
-
     void createAccount() {
-        User* newUser = User::createAccount();
+        User* newUser = User::createAccount(getAllUsers());
         if (newUser) {
             addUser(newUser);
             setColor(GREEN);
