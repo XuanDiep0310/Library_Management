@@ -167,18 +167,18 @@ private:
     }
 
     // Delete a book by title
-    TreeNode* deleteBookByTitle(TreeNode* node, const string& title) {
+    TreeNode* deleteBookByTitle(TreeNode* node, const string& title, bool& deleted) {
         if (!node) return nullptr;
 
-        // Traverse the tree to find the book with the specified title
         if (title < node->book->getTitle()) {
-            node->left = deleteBookByTitle(node->left, title);
+            node->left = deleteBookByTitle(node->left, title, deleted);
         }
         else if (title > node->book->getTitle()) {
-            node->right = deleteBookByTitle(node->right, title);
+            node->right = deleteBookByTitle(node->right, title, deleted);
         }
         else {
-            // Title matches
+            // Found the node to delete
+            deleted = true;
             if (!node->left) {
                 TreeNode* temp = node->right;
                 delete node;
@@ -190,10 +190,10 @@ private:
                 return temp;
             }
 
-            // Node with two children: Get the inorder successor (smallest in the right subtree)
+            // Node with two children: Get the inorder successor
             TreeNode* minRight = findMin(node->right);
             node->book = minRight->book;
-            node->right = deleteBookByTitle(node->right, minRight->book->getTitle());
+            node->right = deleteBookByTitle(node->right, minRight->book->getTitle(), deleted);
         }
         return node;
     }
@@ -238,11 +238,11 @@ public:
 
         // Define regular expressions for each status
         regex availablePattern(R"(.*\b(avail|avai|av|a|available)\b.*)");
-        regex rentedPattern(R"(.*\b(rent|rented|r)\b.*)");
+        regex updatingPattern(R"(^\s*(updat|upd|up|u|updating)\s*$)");
 
         // Match against each status pattern
         if (regex_search(loweredInput, availablePattern)) return "Available";
-        if (regex_search(loweredInput, rentedPattern)) return "Rented";
+        if (regex_match(loweredInput, updatingPattern)) return "Updating";
 
         return ""; // No valid status found
     }
@@ -388,8 +388,10 @@ public:
         return searchBookByTitle(root, title);
     }
 
-    void deleteBookByTitle(const string& title) {
-        root = deleteBookByTitle(root, title);
+    bool deleteBookByTitle(const string& title) {
+        bool deleted = false;
+        root = deleteBookByTitle(root, title, deleted);
+        return deleted;
     }
 
     void displayBooks() const {
