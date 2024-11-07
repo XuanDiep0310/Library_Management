@@ -586,7 +586,7 @@ int main() {
                                 });
 
                                 // Email format validation
-                                bool emailFormatValid = (email.find("@gmail.com") != string::npos) || (email.find(".edu") != string::npos);
+                                bool emailFormatValid = userTree.isEmailFormatValid(email);
 
                                 if (!emailFormatValid) {
                                     setColor(RED);
