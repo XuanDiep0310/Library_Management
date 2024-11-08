@@ -575,7 +575,11 @@ int main() {
                                 }
                                 file.close();
                             } else {
-                                cout << "Error: Could not open users.txt\n";
+                                setColor(RED);
+                                cout << ".----------------------------------.\n";
+                                cout << "| Error: Could not open users.txt  |\n";
+                                cout << "'----------------------------------'\n";
+                                setColor(RESET);
                                 system("pause");
                                 break;
                             }

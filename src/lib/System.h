@@ -5,153 +5,155 @@
 #include "UserTree.h"
 #include "Graphic.h"
 
+using namespace std;
+
 void displayBookMenu() {
     setColor(MAGENTA);
-    std::cout << ".---------------------------------.\n";
+    cout << ".---------------------------------.\n";
     setColor(BRIGHT_MAGENTA);
-    std::cout << "|======== Book Management ========|\n";
+    cout << "|======== Book Management ========|\n";
     setColor(BLUE);
-    std::cout << "|---------------------------------|\n";
+    cout << "|---------------------------------|\n";
     setColor(BRIGHT_BLUE);
-    std::cout << "|   1. Add Book                   |\n";
+    cout << "|   1. Add Book                   |\n";
     setColor(CYAN);
-    std::cout << "|---------------------------------|\n";
+    cout << "|---------------------------------|\n";
     setColor(BRIGHT_CYAN);
-    std::cout << "|   2. Update Book Information    |\n";
+    cout << "|   2. Update Book Information    |\n";
     setColor(GREEN);
-    std::cout << "|---------------------------------|\n";
+    cout << "|---------------------------------|\n";
     setColor(BRIGHT_GREEN);
-    std::cout << "|   3. Display Books              |\n";
+    cout << "|   3. Display Books              |\n";
     setColor(YELLOW);
-    std::cout << "|---------------------------------|\n";
+    cout << "|---------------------------------|\n";
     setColor(BRIGHT_YELLOW);
-    std::cout << "|   4. Search Book by title       |\n";
+    cout << "|   4. Search Book by title       |\n";
     setColor(RED);
-    std::cout << "|---------------------------------|\n";
+    cout << "|---------------------------------|\n";
     setColor(BRIGHT_RED);
-    std::cout << "|   5. Delete Book by title       |\n";
+    cout << "|   5. Delete Book by title       |\n";
     setColor(YELLOW);
-    std::cout << "|---------------------------------|\n";
+    cout << "|---------------------------------|\n";
     setColor(BRIGHT_YELLOW);
-    std::cout << "|   0. Go back                    |\n";
+    cout << "|   0. Go back                    |\n";
     setColor(GREEN);
-    std::cout << "'---------------------------------'\n";
+    cout << "'---------------------------------'\n";
     setColor(BRIGHT_GREEN);
-    std::cout << "Enter your choice: ";
+    cout << "Enter your choice: ";
     setColor(RESET);
 }
 
 void displayUserMenu() {
     setColor(BRIGHT_RED);
-    std::cout << ".---------------------------------.\n";
+    cout << ".---------------------------------.\n";
     setColor(RED);
-    std::cout << "|======== User Management ========|\n";
+    cout << "|======== User Management ========|\n";
     setColor(YELLOW);
-    std::cout << "|---------------------------------|\n";
+    cout << "|---------------------------------|\n";
     setColor(BRIGHT_YELLOW);
-    std::cout << "|   1. Add User                   |\n";
+    cout << "|   1. Add User                   |\n";
     setColor(BRIGHT_GREEN);
-    std::cout << "|---------------------------------|\n";
+    cout << "|---------------------------------|\n";
     setColor(GREEN);
-    std::cout << "|   2. Update User Infomation     |\n";
+    cout << "|   2. Update User Infomation     |\n";
     setColor(CYAN);
-    std::cout << "|---------------------------------|\n";
+    cout << "|---------------------------------|\n";
     setColor(BRIGHT_CYAN);
-    std::cout << "|   3. Display Users              |\n";
+    cout << "|   3. Display Users              |\n";
     setColor(BRIGHT_BLUE);
-    std::cout << "|---------------------------------|\n";
+    cout << "|---------------------------------|\n";
     setColor(BLUE);
-    std::cout << "|   4. Search User by Username    |\n";
+    cout << "|   4. Search User by Username    |\n";
     setColor(MAGENTA);
-    std::cout << "|---------------------------------|\n";
+    cout << "|---------------------------------|\n";
     setColor(BRIGHT_MAGENTA);
-    std::cout << "|   5. Delete User by Username    |\n";
+    cout << "|   5. Delete User by Username    |\n";
     setColor(BRIGHT_BLUE);
-    std::cout << "|---------------------------------|\n";
+    cout << "|---------------------------------|\n";
     setColor(BLUE);
-    std::cout << "|   0. Go back                    |\n";
+    cout << "|   0. Go back                    |\n";
     setColor(CYAN);
-    std::cout << "'---------------------------------'\n";
+    cout << "'---------------------------------'\n";
     setColor(BRIGHT_CYAN);
-    std::cout << "Enter your choice: ";
+    cout << "Enter your choice: ";
     setColor(RESET);
 }
 
 void displayMainMenu() {
     clearScreen();
     setColor(GREEN);
-    std::cout << ".-------------------------------------.\n";
+    cout << ".-------------------------------------.\n";
     setColor(BRIGHT_GREEN);
-    std::cout << "|===== Library Management System =====|\n";
+    cout << "|===== Library Management System =====|\n";
     setColor(CYAN);
-    std::cout << "|-------------------------------------|\n";
+    cout << "|-------------------------------------|\n";
     setColor(BRIGHT_CYAN);
-    std::cout << "|   1. Books Management               |\n";
+    cout << "|   1. Books Management               |\n";
     setColor(BRIGHT_BLUE);
-    std::cout << "|-------------------------------------|\n";
+    cout << "|-------------------------------------|\n";
     setColor(BLUE);
-    std::cout << "|   2. Users Management               |\n";
+    cout << "|   2. Users Management               |\n";
     setColor(BRIGHT_MAGENTA);
-    std::cout << "|-------------------------------------|\n";
+    cout << "|-------------------------------------|\n";
     setColor(MAGENTA);
-    std::cout << "|   0. Logout                         |\n";
+    cout << "|   0. Logout                         |\n";
     setColor(BRIGHT_RED);
-    std::cout << "'-------------------------------------'\n";
+    cout << "'-------------------------------------'\n";
     setColor(RED);
-    std::cout << "Enter your choice: ";
+    cout << "Enter your choice: ";
     setColor(RESET);
 }
 
 void displayOveralMenu() {
     clearScreen();
     setColor(BRIGHT_RED);
-    std::cout << "._.    _ ._.\n";
-    std::cout << "| |   (_)| |__  _ __ __ _ _ __ __ _ _   \n";
+    cout << "._.    _ ._.\n";
+    cout << "| |   (_)| |__  _ __ __ _ _ __ __ _ _   \n";
     setColor(RED);
-    std::cout << "| |   | || '_ \\| '__/ _` | '__/| | | |\n";
+    cout << "| |   | || '_ \\| '__/ _` | '__/| | | |\n";
     setColor(BRIGHT_YELLOW);
-    std::cout << "| |___| || |_) | | | (_| | |   | |_| |\n";
+    cout << "| |___| || |_) | | | (_| | |   | |_| |\n";
     setColor(YELLOW);
-    std::cout << "|_____|_||.__,/|_|  \\__,_|_|    \\__, |\n";
+    cout << "|_____|_||.__,/|_|  \\__,_|_|    \\__, |\n";
     setColor(BRIGHT_GREEN);
-    std::cout << "                                |___/\n";
+    cout << "                                |___/\n";
     setColor(GREEN);
-    std::cout << "    _                _ _           _   _\n";
+    cout << "    _                _ _           _   _\n";
     setColor(BRIGHT_CYAN);
-    std::cout << "   / \\   _ __  _ __ | (_) ___ __ _| |_(_) ___  _ __\n";
+    cout << "   / \\   _ __  _ __ | (_) ___ __ _| |_(_) ___  _ __\n";
     setColor(CYAN);
-    std::cout << "  / _ \\ | '_ \\| '_ \\| | |/ __/ _` | __| |/ _ \\| '_ \\\n";
+    cout << "  / _ \\ | '_ \\| '_ \\| | |/ __/ _` | __| |/ _ \\| '_ \\\n";
     setColor(BRIGHT_BLUE);
-    std::cout << " / ___ \\| |_) | |_) | | | (_| (_| | |_| | (_) | | | |\n";
+    cout << " / ___ \\| |_) | |_) | | | (_| (_| | |_| | (_) | | | |\n";
     setColor(BLUE);
-    std::cout << "/_/   \\_\\ .__/| .__/|_|_|\\___\\__,_|\\__|_|\\___/|_| |_|\n";
+    cout << "/_/   \\_\\ .__/| .__/|_|_|\\___\\__,_|\\__|_|\\___/|_| |_|\n";
     setColor(BRIGHT_MAGENTA);
-    std::cout << "        |_|   |_|\n";
+    cout << "        |_|   |_|\n";
     setColor(MAGENTA);
-    std::cout << "          .--------------------.\n";
+    cout << "          .--------------------.\n";
     setColor(BLUE);
-    std::cout << "          |   1. Admin login   |\n";
+    cout << "          |   1. Admin login   |\n";
     setColor(BRIGHT_BLUE);
-    std::cout << "          |--------------------|\n";
+    cout << "          |--------------------|\n";
     setColor(CYAN);
-    std::cout << "          |   2. User login    |\n";
+    cout << "          |   2. User login    |\n";
     setColor(BRIGHT_CYAN);
-    std::cout << "          |--------------------|\n";
+    cout << "          |--------------------|\n";
     setColor(GREEN);
-    std::cout << "          |   0. Exit          |\n";
+    cout << "          |   0. Exit          |\n";
     setColor(BRIGHT_GREEN);
-    std::cout << "          '--------------------'\n";
+    cout << "          '--------------------'\n";
     setColor(YELLOW);
-    std::cout << "          Enter your choice: ";
+    cout << "          Enter your choice: ";
     setColor(RESET);
 }
 
 // Function to get username with Esc key handling
-std::string getUsername() {
-    std::string username;
+string getUsername() {
+    string username;
     char ch;
 
-    std::cout << "\nEnter Username: ";
+    cout << "\nEnter Username: ";
     while (true) {
         ch = _getch();
 
@@ -159,24 +161,24 @@ std::string getUsername() {
             return ""; // Return an empty string to indicate cancellation
         }
         else if (ch == '\r') { // Enter key pressed
-            std::cout << std::endl;
+            cout << endl;
             break;
         }
         else if (ch == '\b' && !username.empty()) { // Backspace pressed
             username.pop_back();
-            std::cout << "\b \b"; // Erase the last character
+            cout << "\b \b"; // Erase the last character
         }
         else if (isprint(ch)) { // Printable character
             username += ch;
-            std::cout << ch;
+            cout << ch;
         }
     }
     return username;
 }
 
 // Function to get password with masking and Tab for toggle visibility
-std::string getPassword() {
-    std::string password;
+string getPassword() {
+    string password;
     bool showPassword = false;
     char ch;
 
@@ -188,58 +190,58 @@ std::string getPassword() {
         }
 
         if (ch == '\r') { // Enter key pressed
-            std::cout << std::endl;
+            cout << endl;
             break;
         }
         else if (ch == '\b' && !password.empty()) { // Backspace pressed
             password.pop_back();
-            std::cout << "\b \b"; // Move back, erase character, move back again
+            cout << "\b \b"; // Move back, erase character, move back again
         }
         else if (ch == '\t') { // Tab key pressed to toggle visibility
             showPassword = !showPassword;
             // Clear the line and reprint the prompt with updated visibility
-            std::cout << "\rEnter Password: ";
-            for (size_t i = 0; i < password.size() + 20; ++i) std::cout << ' '; // Clear extra characters
-            std::cout << "\rEnter Password: "; // Reset cursor position
+            cout << "\rEnter Password: ";
+            for (size_t i = 0; i < password.size() + 20; ++i) cout << ' '; // Clear extra characters
+            cout << "\rEnter Password: "; // Reset cursor position
             for (char c : password) {
-                std::cout << (showPassword ? c : '*');
+                cout << (showPassword ? c : '*');
             }
         }
         else if (isprint(ch)) { // Printable characters
             password += ch;
-            std::cout << (showPassword ? ch : '*');
+            cout << (showPassword ? ch : '*');
         }
     }
     return password;
 }
 
 bool login(UserTree& userTree) {
-    std::cout << "Press ";
+    cout << "Press ";
     setColor(RED);
-    std::cout << "[Esc]";
+    cout << "[Esc]";
     setColor(RESET); 
-    std::cout << " to cancel!\n"; 
-    std::string username = getUsername();
+    cout << " to cancel!\n"; 
+    string username = getUsername();
     if (username.empty()) { // Check if Esc was pressed during username entry
         setColor(YELLOW);
-        std::cout << "\n.------------------------------------------.\n";
-        std::cout << "|  Login canceled. Returning to main menu  |.\n";
-        std::cout << "'------------------------------------------'\n";
+        cout << "\n.------------------------------------------.\n";
+        cout << "|  Login canceled. Returning to main menu  |.\n";
+        cout << "'------------------------------------------'\n";
         setColor(RESET);
         system("pause");
         return false; // Exit immediately without asking for password
     }
 
-    std::cout << "---Press ";
+    cout << "---Press ";
     setColor(BLUE); 
-    std::cout << "[tab]";
+    cout << "[tab]";
     setColor(RESET); 
-    std::cout << " to show password---\n";
-    std::cout << "Enter Password: ";
-    std::string password = getPassword();
+    cout << " to show password---\n";
+    cout << "Enter Password: ";
+    string password = getPassword();
     if (password.empty()) { // Check if Esc was pressed during password entry
         setColor(YELLOW);
-        std::cout << "\nLogin canceled.\n";
+        cout << "\nLogin canceled.\n";
         setColor(RESET);
         system("pause");
         return false;
@@ -248,18 +250,18 @@ bool login(UserTree& userTree) {
     clearScreen();
     if (userTree.login(username, password)) {
         setColor(GREEN);
-        std::cout << ".---------------------.\n";
-        std::cout << "|  Login successful!  |\n";
-        std::cout << "'---------------------'\n";
+        cout << ".---------------------.\n";
+        cout << "|  Login successful!  |\n";
+        cout << "'---------------------'\n";
         setColor(RESET);
         system("pause");
         return true;
     }
     else {
         setColor(RED);
-        std::cout << ".--------------------------------------------------------.\n";
-        std::cout << "|    Invalid username or password. Please try again.     |\n";
-        std::cout << "'--------------------------------------------------------'\n";
+        cout << ".--------------------------------------------------------.\n";
+        cout << "|    Invalid username or password. Please try again.     |\n";
+        cout << "'--------------------------------------------------------'\n";
         setColor(RESET);
         system("pause");
         return false;
@@ -269,76 +271,76 @@ bool login(UserTree& userTree) {
 void displayUserActionMenu() {
     clearScreen();
     setColor(BRIGHT_YELLOW);
-    std::cout << ".---------------------------------.\n";
+    cout << ".---------------------------------.\n";
     setColor(YELLOW);
-    std::cout << "|========= User's Action =========|\n";
+    cout << "|========= User's Action =========|\n";
     setColor(BRIGHT_CYAN);
-    std::cout << ".---------------------------------.\n";
+    cout << ".---------------------------------.\n";
     setColor(CYAN);
-    std::cout << "|   1. Borrow Book                |\n";
+    cout << "|   1. Borrow Book                |\n";
     setColor(BRIGHT_BLUE);
-    std::cout << "|---------------------------------|\n";
+    cout << "|---------------------------------|\n";
     setColor(BLUE);
-    std::cout << "|   2. Return Book                |\n";
+    cout << "|   2. Return Book                |\n";
     setColor(BRIGHT_MAGENTA);
-    std::cout << "|---------------------------------|\n";
+    cout << "|---------------------------------|\n";
     setColor(MAGENTA);
-    std::cout << "|   3. Show Rented Book           |\n";
+    cout << "|   3. Show Rented Book           |\n";
     setColor(BRIGHT_RED);
-    std::cout << "|---------------------------------|\n";
+    cout << "|---------------------------------|\n";
     setColor(RED);
-    std::cout << "|   4. Show Book                  |\n";
+    cout << "|   4. Show Book                  |\n";
     setColor(BRIGHT_YELLOW);
-    std::cout << "'---------------------------------'\n";
+    cout << "'---------------------------------'\n";
     setColor(GREEN);
-    std::cout << "|   0. Log Out                    |\n";
+    cout << "|   0. Log Out                    |\n";
     setColor(BRIGHT_GREEN);
-    std::cout << "'---------------------------------'\n";
+    cout << "'---------------------------------'\n";
     setColor(RESET);
 
 }
 
 bool adminLogin() {
     clearScreen();
-    std::string username, password;
-    std::cout << "Press ";
+    string username, password;
+    cout << "Press ";
     setColor(RED);
-    std::cout << "[Esc]";
+    cout << "[Esc]";
     setColor(RESET); 
-    std::cout << " to cancel!\n"; 
+    cout << " to cancel!\n"; 
     username = getUsername();
     if (username.empty()) { // Check if Esc was pressed during username entry
         setColor(YELLOW);
-        std::cout << "\n.-------------------------------------------.\n";
-        std::cout << "|  Login canceled. Returning to main menu.  |\n";
-        std::cout << "'-------------------------------------------'\n";
+        cout << "\n.-------------------------------------------.\n";
+        cout << "|  Login canceled. Returning to main menu.  |\n";
+        cout << "'-------------------------------------------'\n";
         setColor(RESET);
         system("pause");
         return false; // Exit immediately without asking for password
     }
 
-    std::cout << "---Press ";
+    cout << "---Press ";
     setColor(BLUE); 
-    std::cout << "[tab]";
+    cout << "[tab]";
     setColor(RESET); 
-    std::cout << " to show password---\n";
-    std::cout << "Enter Password: "; 
+    cout << " to show password---\n";
+    cout << "Enter Password: "; 
     password = getPassword();
     clearScreen();
     if (username == "admin" && password == "admin123") {
         setColor(GREEN);
-        std::cout << ".----------------------------.\n";
-        std::cout << "|  Admin login successful!   |\n";
-        std::cout << "'----------------------------'\n";
+        cout << ".----------------------------.\n";
+        cout << "|  Admin login successful!   |\n";
+        cout << "'----------------------------'\n";
         setColor(RESET);
         system("pause");
         return true;
     }
     else {
         setColor(RED);
-        std::cout << ".-----------------------------------------------.\n";
-        std::cout << "| Invalid admin credentials. Please try again.  |\n";
-        std::cout << "'-----------------------------------------------'\n";
+        cout << ".-----------------------------------------------.\n";
+        cout << "| Invalid admin credentials. Please try again.  |\n";
+        cout << "'-----------------------------------------------'\n";
         setColor(RESET);
         system("pause");
         return false;

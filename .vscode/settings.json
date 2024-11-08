@@ -4,6 +4,8 @@
     "limits": "cpp",
     "iosfwd": "cpp",
     "istream": "cpp",
-    "fstream": "cpp"
+    "fstream": "cpp",
+    "regex": "cpp",
+    "iostream": "cpp"
   }
 }

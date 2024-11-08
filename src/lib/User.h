@@ -117,9 +117,7 @@ public:
 				cout << "| Email already exists. Use a different email. |\n";
 				cout << "'----------------------------------------------'\n";
 				setColor(RESET);
-			} else {
-				validEmail = true;
-			}
+			} else validEmail = true;
 		} while (!validEmail);
 
 		// Prompt for username with exit check
@@ -139,15 +137,24 @@ public:
 				cout << "| Username already exists. Use a different username. |\n";
 				cout << "'----------------------------------------------------'\n";
 				setColor(RESET);
-			} else {
-				validUsername = true;
-			}
+			} else validUsername = true;
 		} while (!validUsername);
 
 		// Prompt for password with exit check
-		cout << "Enter Password: ";
-		getline(cin, password);
-		if (password == "exit") return nullptr;
+		do {
+			setColor(CYAN);
+			cout << "Enter Password: ";
+			setColor(RESET);
+			getline(cin, password);
+			if (password == "exit") return nullptr;
+			if (password.length() < 6) {
+				setColor(RED);
+				cout << ".----------------------------------------.\n";
+				cout << "| Password must at least at 6 character! |\n";
+				cout << "'----------------------------------------'\n";
+				setColor(RESET);
+			}
+		} while(password.length() < 6);
 
 		// Prompt for birthday with exit check
 		bool validDate = false;
