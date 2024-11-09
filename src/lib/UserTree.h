@@ -602,6 +602,7 @@ public:
 
         ifstream borrowFile("borrows.txt");
         ofstream tempFile("temp.txt");
+        ofstream returnFile("returns.txt", ios::app);
         string line;
         bool bookFound = false;
 
@@ -625,10 +626,34 @@ public:
                     // For example, updating the book's quantity
                     book->markAsReturned();  // Assuming you have this method
 
+                    int daysLate = Date::calculateDaysLate(fileBorrowDate, Date::currentDate());
+                    int penaltyFee = daysLate * 10000;  // 10,000 VND mỗi ngày trễ
+
                     // Log the return details
                     cout << "Book returned successfully!" << endl;
                     cout << "User: " << fileUser << ", Book: " << fileBookTitle << endl;
-                    cout << "Borrowed on: " << fileBorrowDate << ", Expected return: " << filePredictedReturnDate << endl;
+                    cout << "Borrowed on: " << fileBorrowDate << endl; 
+                    setColor(YELLOW);
+                    cout << "Expected return: " << filePredictedReturnDate << endl;
+                    setColor(RESET);
+                    setColor(GREEN);
+                    cout << "Return Date: " << Date::currentDate() << endl;
+                    setColor(RESET);
+
+                    if (daysLate > 0) {
+                        cout << "Late by: " << daysLate << " days." << endl;
+                        cout << "Penalty Fee: " << penaltyFee << " VND" << endl;
+                    } else cout << "No penalty fee." << endl;
+
+
+                    // Lưu thông tin trả sách vào returns.txt
+                    returnFile << "User: " << fileUser 
+                            << ", Book: " << fileBookTitle 
+                            << ", Borrowed on: " << fileBorrowDate 
+                            << ", Returned on: " << Date::currentDate()
+                            << ", Days late: " << daysLate
+                            << ", Penatly fee: " << penaltyFee << " VND"  
+                            << endl;
 
                     continue; // Skip this line as we are returning this book
                 }
@@ -649,7 +674,7 @@ public:
             setColor(RED);
             cout << ".-------------------------.\n";
             cout << "|  No record found for the |\n";
-            cout << "|  specified book return.   |\n";
+            cout << "|  specified book return.  |\n";
             cout << "'-------------------------'\n";
             setColor(RESET);
         }
@@ -658,7 +683,9 @@ public:
     void loadBorrowedBooks(const string& filename) {
         ifstream borrowFile(filename);
         if (!borrowFile.is_open()) {
+            setColor(RED);
             cerr << "Failed to open " << filename << endl;
+            setColor(RESET);
             return;
         }
 
@@ -677,7 +704,9 @@ public:
     void loadReturnedBooks(const string& filename) {
         ifstream returnFile(filename);
         if (!returnFile.is_open()) {
+            setColor(RED);
             cerr << "Failed to open " << filename << endl;
+            setColor(RESET);
             return;
         }
 
@@ -696,7 +725,9 @@ public:
     void loadAdvanceBorrows(const string& filename) {
         ifstream advanceFile(filename);
         if (!advanceFile.is_open()) {
+            setColor(RED);
             cerr << "Failed to open " << filename << endl;
+            setColor(RESET);
             return;
         }
 

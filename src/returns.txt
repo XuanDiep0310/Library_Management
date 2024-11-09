@@ -1,0 +1,4 @@
+101,OOP,Bill,Tech,2024,7,Available
+User: hoangdb1910, Book: OOP, Borrowed on: 09-11-2024 19:44:20, Returned on: 09-11-2024 19:44:43
+User: hoangdb1910, Book: OOP, Borrowed on: 09-11-2024 20:14:49, Returned on: 09-11-2024 20:14:53, Days late: 7, Penatly fee: 70000 VND
+User: hoangdb1910, Book: OOP, Borrowed on: 09-11-2024 20:19:21, Returned on: 09-11-2024 20:19:26, Days late: 0, Penatly fee: 0 VND

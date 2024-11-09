@@ -69,6 +69,19 @@ public:
                      currentTime->tm_sec);
     }
 
+    static int calculateDaysLate(const string& predictedReturnDate, const Date& actualReturnDate) {
+        Date predictedDate = Date::fromString(predictedReturnDate);
+
+        if (!predictedDate.isValid() || !actualReturnDate.isValid()) {
+            cerr << "Invalid date format detected." << endl;
+            return 0; // Không thể tính ngày trễ nếu ngày không hợp lệ
+        }
+
+        // Tính số ngày giữa ngày dự đoán và ngày thực tế
+        int daysLate = actualReturnDate - predictedDate;
+        return (daysLate > 0) ? daysLate : 0; // Nếu ngày trễ âm (đúng hạn), trả về 0
+    }
+
     bool isValid() const {
         return isValidDate(day, month, year) &&
             isValidHour(hour) &&

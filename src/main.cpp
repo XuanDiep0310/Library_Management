@@ -9,18 +9,10 @@
 #include <algorithm>
 #include <limits>
 #include <conio.h>
-#include <regex> // Include for regex validation
+#include <regex>
 #include <chrono>  
 
 using namespace std;
-
-void borrowBook(const string& username, const string& bookTitle, BSTree& bookTree); 
-void returnBook(const string& username, const string& bookTitle, BSTree& bookTree);
-
-// Function to check if the input string is "exit"
-bool isExitCommand(const string& input) {
-    return input == "exit";
-}
 
 int main() {
     BSTree library;
@@ -317,6 +309,7 @@ int main() {
                             break;
                         }
                         case 4: {  // Search Book by Title
+                            clearScreen();
                             setColor(BRIGHT_YELLOW);
                             cout << ".-------------------------.\n";
                             cout << "|  Type 'exit' to cancel  |\n";
@@ -384,6 +377,10 @@ int main() {
 
                             // After Enter is pressed, search for the exact title entered
                             if (bookTitle != "exit") { // Only search if exit wasn't typed
+                                // Convert search term to lowercase for case-insensitive search
+                                string lowerBookTitle = bookTitle;
+                                transform(lowerBookTitle.begin(), lowerBookTitle.end(), lowerBookTitle.begin(), ::tolower);
+
                                 Book* foundBook = library.searchBook(bookTitle);
                                 if (foundBook != nullptr) {
                                     setColor(GREEN);
@@ -713,9 +710,7 @@ int main() {
                             system("pause");
                             break;
                         }
-
-                        // Case 5: Delete User with Confirmation Prompt
-                        case 5: {
+                        case 5: { //Delete User with Confirmation Prompt
                             clearScreen();
                             setColor(BRIGHT_YELLOW);
                             cout << ".-------------------------.\n";
@@ -734,7 +729,11 @@ int main() {
                                 }
                                 file.close();
                             } else {
-                                cout << "Error: Could not open users.txt\n";
+                                setColor(RED);
+                                cout << ".---------------------------------.\n";
+                                cout << "| Error: Could not open users.txt |\n";
+                                cout << "'---------------------------------'\n";
+                                setColor(RESET);
                                 break;
                             }
 
@@ -974,7 +973,7 @@ int main() {
                         // Input loop
                         while (true) {
                             ch = _getch();  // Get character input from keyboard
-
+                            
                             // Exit on Enter key (ASCII 13)
                             if (ch == 13) {  // Change '\r' to 13 for clarity
                                 break; // End input
@@ -1071,7 +1070,6 @@ int main() {
                             userTree.returnBook(userTree.getCurrentUserName(), bookTitle, library); // Call returnBook with book title
                         }
 
-                        library.saveToFile(filename);
                         system("pause");
                         break;
                     }

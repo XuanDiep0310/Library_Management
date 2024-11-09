@@ -7,6 +7,11 @@
 
 using namespace std;
 
+// Function to check if the input string is "exit"
+bool isExitCommand(const string& input) {
+    return input == "exit";
+}
+
 void displayBookMenu() {
     setColor(MAGENTA);
     cout << ".---------------------------------.\n";
@@ -153,7 +158,9 @@ string getUsername() {
     string username;
     char ch;
 
-    cout << "\nEnter Username: ";
+    setColor(BLUE);
+    cout << "Enter Username: ";
+    setColor(RESET);
     while (true) {
         ch = _getch();
 
@@ -216,11 +223,15 @@ string getPassword() {
 }
 
 bool login(UserTree& userTree) {
-    cout << "Press ";
+    setColor(BRIGHT_YELLOW);
+    cout << ".-------------------------------------.\n";
+    cout << "|    Press ";
     setColor(RED);
     cout << "[Esc]";
-    setColor(RESET); 
-    cout << " to cancel!\n"; 
+    setColor(RESET);
+    cout << " to cancel!           |\n";
+    cout << "'-------------------------------------'\n";
+    setColor(YELLOW);
     string username = getUsername();
     if (username.empty()) { // Check if Esc was pressed during username entry
         setColor(YELLOW);
@@ -232,12 +243,18 @@ bool login(UserTree& userTree) {
         return false; // Exit immediately without asking for password
     }
 
-    cout << "---Press ";
-    setColor(BLUE); 
-    cout << "[tab]";
-    setColor(RESET); 
-    cout << " to show password---\n";
+    setColor(BRIGHT_YELLOW);
+    cout << ".---------------------------------------.\n";
+    cout << "|     Press ";
+    setColor(BLUE);
+    cout << "[Tab]";
+    setColor(RESET);
+    cout << " to show password      |\n";
+    cout << "'---------------------------------------'\n";
+    setColor(RESET);
+    setColor(BLUE);
     cout << "Enter Password: ";
+    setColor(RESET);
     string password = getPassword();
     if (password.empty()) { // Check if Esc was pressed during password entry
         setColor(YELLOW);
@@ -296,18 +313,24 @@ void displayUserActionMenu() {
     cout << "|   0. Log Out                    |\n";
     setColor(BRIGHT_GREEN);
     cout << "'---------------------------------'\n";
+    setColor(CYAN);
+    cout << "Enter your choice: ";
     setColor(RESET);
-
 }
 
 bool adminLogin() {
     clearScreen();
     string username, password;
-    cout << "Press ";
+    setColor(BRIGHT_YELLOW);
+    cout << ".-------------------------------------.\n";
+    cout << "|    Press ";
     setColor(RED);
     cout << "[Esc]";
-    setColor(RESET); 
-    cout << " to cancel!\n"; 
+    setColor(RESET);
+    cout << " to cancel!           |\n";
+    cout << "'-------------------------------------'\n";
+    setColor(YELLOW);
+ 
     username = getUsername();
     if (username.empty()) { // Check if Esc was pressed during username entry
         setColor(YELLOW);
@@ -319,12 +342,19 @@ bool adminLogin() {
         return false; // Exit immediately without asking for password
     }
 
-    cout << "---Press ";
-    setColor(BLUE); 
-    cout << "[tab]";
-    setColor(RESET); 
-    cout << " to show password---\n";
-    cout << "Enter Password: "; 
+    setColor(BRIGHT_YELLOW);
+    cout << ".---------------------------------------.\n";
+    cout << "|     Press ";
+    setColor(BLUE);
+    cout << "[Tab]";
+    setColor(RESET);
+    cout << " to show password      |\n";
+    cout << "'---------------------------------------'\n";
+    setColor(RESET);
+    setColor(BLUE);
+    cout << "Enter Password: ";
+    setColor(RESET);
+
     password = getPassword();
     clearScreen();
     if (username == "admin" && password == "admin123") {
