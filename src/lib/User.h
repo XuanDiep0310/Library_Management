@@ -100,9 +100,9 @@ public:
 
 			if (!isEmailFormatValid(email)) {
 				setColor(RED);
-				cout << "\n.----------------------------------------------------------.\n";
-				cout << "| Invalid email format. Please use '@gmail.com' or '.edu'. |\n";
-				cout << "'----------------------------------------------------------'\n";
+				cout << "\n.---------------------------------------------------------.\n";
+				cout << "| Invalid email format. Please use true form of an email. |\n";
+				cout << "'---------------------------------------------------------'\n";
 				setColor(RESET);
 				continue;
 			}

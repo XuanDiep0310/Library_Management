@@ -1,5 +1,6 @@
 #pragma once
 #include "UserNode.h"
+#include "BookTree.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -29,10 +30,21 @@ private:
     }
 
     User* search(UserNode* node, const string& username) const {
-        if (node == nullptr || node->user->getUsername() == username) {
-            return node ? node->user : nullptr;
+        string lowerUsername = username;
+        transform(lowerUsername.begin(), lowerUsername.end(), lowerUsername.begin(), ::tolower);
+
+        if (node == nullptr) {
+            return nullptr;
         }
-        if (username < node->user->getUsername()) {
+
+        string nodeUsername = node->user->getUsername();
+        transform(nodeUsername.begin(), nodeUsername.end(), nodeUsername.begin(), ::tolower);
+
+        if (nodeUsername == lowerUsername) {
+            return node->user;
+        }
+
+        if (lowerUsername < nodeUsername) {
             return search(node->left, username);
         }
         return search(node->right, username);
@@ -72,10 +84,15 @@ private:
     UserNode* deleteUser(UserNode* node, const string& username) {
         if (node == nullptr) return node;
 
-        if (username < node->user->getUsername()) {
+        string lowerUsername = username;
+        transform(lowerUsername.begin(), lowerUsername.end(), lowerUsername.begin(), ::tolower);
+        string nodeUsername = node->user->getUsername();
+        transform(nodeUsername.begin(), nodeUsername.end(), nodeUsername.begin(), ::tolower);
+
+        if (lowerUsername < nodeUsername) {
             node->left = deleteUser(node->left, username);
         }
-        else if (username > node->user->getUsername()) {
+        else if (lowerUsername > nodeUsername) {
             node->right = deleteUser(node->right, username);
         }
         else {
@@ -247,8 +264,12 @@ public:
     }
 
     void updateUserInformation(const string& username) {
+        // Convert the username to lowercase for case-insensitive search
+        string lowerUsername = username;
+        transform(lowerUsername.begin(), lowerUsername.end(), lowerUsername.begin(), ::tolower);
+
         // Search for the user to update
-        User* user = searchUser(username);
+        User* user = searchUser(lowerUsername);
         if (!user) {
             setColor(RED);
             cout << ".------------------.\n"; 
@@ -267,7 +288,12 @@ public:
         cout << "Current Name: " << user->getName() << endl;
         cout << "Enter new name (or leave empty to keep current): ";
         string newName;
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
         getline(cin, newName);
+        if (isExitCommand(newName)) {
+            clearScreen();  // Optionally clear the screen if you want to reset the display
+            return; // Exit to menu
+        }
         if (!newName.empty()) {
             user->setName(newName);
         }
@@ -281,6 +307,10 @@ public:
             setColor(BRIGHT_MAGENTA);
             cout << "Enter new Email (or leave empty to keep current): ";
             getline(cin, newEmail);
+            if (isExitCommand(newEmail)) {
+                clearScreen();  // Optionally clear the screen if you want to reset the display
+                return; // Exit to menu
+            }
             setColor(RESET);
 
             // Check for existing email only if the user is changing the email
@@ -289,14 +319,11 @@ public:
                     return u->getMail() == newEmail;
                 });
 
-                // Email format validation
-                bool emailFormatValid = (newEmail.find("@gmail.com") != string::npos) || (newEmail.find(".st.utc2.edu.vn") != string::npos);
-
-                if (!emailFormatValid) {
+                if (!User::isEmailFormatValid(newEmail)) {
                     setColor(RED);
-                    cout << ".---------------------------------------------------------------------------.\n";
-                    cout << "| Invalid email format. Please enter a valid '@gmail.com' or '.edu' email.  |\n";
-                    cout << "'---------------------------------------------------------------------------'\n";
+                    cout << ".------------------------------------------------------------.\n";
+                    cout << "| Invalid email format. Please enter a valid form of email.  |\n";
+                    cout << "'------------------------------------------------------------'\n";
                     setColor(RESET);
                     system("pause");
                 } else if (emailIt != existingUsers.end()) {
@@ -323,6 +350,10 @@ public:
         cout << "Enter new password (or leave empty to keep current): ";
         string newPassword;
         getline(cin, newPassword);
+        if (isExitCommand(newPassword)) {
+            clearScreen();  // Optionally clear the screen if you want to reset the display
+            return; // Exit to menu
+        }
         if (!newPassword.empty()) {
             user->setPassword(newPassword);
         }
@@ -337,6 +368,10 @@ public:
             cout << "Enter new birthday (dd mm yyyy, or leave empty to keep current): ";
             string dateInput;
             getline(cin, dateInput);
+            if (isExitCommand(dateInput)) {
+                clearScreen();  // Optionally clear the screen if you want to reset the display
+                return; // Exit to menu
+            }
 
             if (!dateInput.empty()) {
                 istringstream dateStream(dateInput);
@@ -438,7 +473,6 @@ public:
 
         borrowedFile.close();
     }
-
 
     void borrowBook(const string& username, const string& bookTitle, BSTree& bookTree) {
         string filename = "books.txt";

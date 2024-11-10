@@ -7,6 +7,11 @@
 
 using namespace std;
 
+// Function to check if the input string is "exit"
+bool isExitCommand(const string& input) {
+    return input == "exit";
+}
+
 // Mã ANSI để đổi màu
 const string RED = "\033[31m";
 const string GREEN = "\033[32m";

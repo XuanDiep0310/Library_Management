@@ -1,5 +1,6 @@
 #include <iostream>
 #include "./lib/Book.h"
+#include "./lib/BookTree.h"
 #include "./lib/UserTree.h"
 #include "./lib/User.h"
 #include "./lib/System.h"
@@ -359,7 +360,7 @@ int main() {
                                 transform(lowerBookTitle.begin(), lowerBookTitle.end(), lowerBookTitle.begin(), ::tolower);
 
                                 // Retrieve suggestions based on the current title input
-                                vector<Book*> suggestions = library.getSuggestionsByTitle(bookTitle);
+                                vector<Book*> suggestions = library.getSuggestionsByTitle(lowerBookTitle);
 
                                 // Display updated suggestions
                                 setColor(CYAN);
@@ -381,7 +382,7 @@ int main() {
                                 string lowerBookTitle = bookTitle;
                                 transform(lowerBookTitle.begin(), lowerBookTitle.end(), lowerBookTitle.begin(), ::tolower);
 
-                                Book* foundBook = library.searchBook(bookTitle);
+                                Book* foundBook = library.searchBook(lowerBookTitle);
                                 if (foundBook != nullptr) {
                                     setColor(GREEN);
                                     cout << "\nFound Book:\n";
@@ -470,8 +471,12 @@ int main() {
                                 cout << "Enter Book Title to Delete: " << title << endl;
                                 setColor(RESET);
 
+                                // Convert input title to lowercase for case-insensitive comparison
+                                string lowerTitle = title;
+                                transform(lowerTitle.begin(), lowerTitle.end(), lowerTitle.begin(), ::tolower);
+
                                 // Display suggestions (assuming library.getSuggestionsByTitle provides book title suggestions)
-                                vector<Book*> suggestions = library.getSuggestionsByTitle(title);
+                                vector<Book*> suggestions = library.getSuggestionsByTitle(lowerTitle);
                                 setColor(GREEN);
                                 cout << "\nSuggestions: ";
                                 if (!suggestions.empty()) {
@@ -490,7 +495,10 @@ int main() {
 
                             // Attempt to delete the book if the title is not empty or "exit"
                             if (!title.empty() && title != "exit") {
-                                bool deleted = library.deleteBookByTitle(title); // Use the modified delete function
+                                string lowerTitle = title;
+                                transform(lowerTitle.begin(), lowerTitle.end(), lowerTitle.begin(), ::tolower);
+
+                                bool deleted = library.deleteBookByTitle(lowerTitle); // Use the modified delete function
                                 if (deleted) {
                                     setColor(GREEN);
                                     cout << "\n.------------------------------.\n";
@@ -591,6 +599,10 @@ int main() {
                                     username += ch;
                                 }
 
+                                // Convert the input username to lowercase for case-insensitive comparison
+                                string lowerUsername = username;
+                                transform(lowerUsername.begin(), lowerUsername.end(), lowerUsername.begin(), ::tolower);
+
                                 // Clear the screen and re-display the prompt and current input
                                 clearScreen();
                                 setColor(BRIGHT_YELLOW);
@@ -607,7 +619,11 @@ int main() {
                                 // Show suggestions based on the current input
                                 cout << "\nSuggestions:\n";
                                 for (const auto& user : usernames) {
-                                    if (user.find(username) == 0) { // Check if username starts with input
+                                    // Convert stored usernames to lowercase and check if they match the input
+                                    string lowerUser = user;
+                                    transform(lowerUser.begin(), lowerUser.end(), lowerUser.begin(), ::tolower);
+                                    
+                                    if (lowerUser.find(lowerUsername) == 0) { // Check if username starts with input
                                         cout << " - " << user << endl;
                                     }
                                 }
@@ -677,6 +693,10 @@ int main() {
                                 setColor(BLUE);
                                 cout << "Enter Username to Search: " << username << endl;
                                 setColor(RESET);
+                                
+                                 // Display search suggestions with inline lowercase transformation
+                                string searchKey = username;
+                                transform(searchKey.begin(), searchKey.end(), searchKey.begin(), ::tolower);
 
                                 // Display search suggestions
                                 vector<User*> suggestions = userTree.suggestUsersByUsername(username);
@@ -695,7 +715,10 @@ int main() {
                                 User* foundUser = userTree.searchUser(username);
                                 if (foundUser) {
                                     setColor(GREEN);
-                                    cout << "Found User: " << foundUser->getUsername() << " (" << foundUser->getMail() << ")" << endl;
+                                    cout << "Found User: " << foundUser->getUsername() << endl;
+                                    cout << " - Username: " << foundUser->getUsername() << endl;
+                                    cout << " - Email: " << foundUser->getMail() << endl;
+                                    cout << " - Birthday: " << foundUser->getBirthday().toString() << endl;
                                     setColor(RESET);
                                 } else {
                                     setColor(RED);
@@ -765,10 +788,16 @@ int main() {
                                 setColor(RESET);
                                 cout << username << endl;
 
-                                // Display suggestions based on current input
+                                // Convert entered username to lowercase for case-insensitive matching
+                                string lowerUsername = username;
+                                transform(lowerUsername.begin(), lowerUsername.end(), lowerUsername.begin(), ::tolower);
+
+                                // Display suggestions based on lowercase input
                                 cout << "\nSuggestions:\n";
                                 for (const auto& user : usernames) {
-                                    if (user.find(username) == 0) { // Display usernames that start with the input
+                                    string lowerUser = user;
+                                    transform(lowerUser.begin(), lowerUser.end(), lowerUser.begin(), ::tolower);
+                                    if (lowerUser.find(lowerUsername) == 0) { // Display usernames that start with the lowercase input
                                         cout << " - " << user << endl;
                                     }
                                 }

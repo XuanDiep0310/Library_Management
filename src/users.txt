@@ -1,4 +1,3 @@
 admin,admin123,Admin Name,1,1,1900
 hoangdb1910,19102005,hoangdb,1,1,1900
 dinhvo123,123456,Dinh Vo,3,10,2005
-xundip0310,123456,Cao Xuan Diep,1,1,1900

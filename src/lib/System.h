@@ -7,11 +7,6 @@
 
 using namespace std;
 
-// Function to check if the input string is "exit"
-bool isExitCommand(const string& input) {
-    return input == "exit";
-}
-
 void displayBookMenu() {
     setColor(MAGENTA);
     cout << ".---------------------------------.\n";
