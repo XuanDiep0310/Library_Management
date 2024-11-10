@@ -1,4 +1,0 @@
-1,Toan roi rac,toan hoc,kim dong,2003,Nguyen van a,10,9,Phuong phap tinh,toan hoc,nhi dong,2022,Nguyen van b,10,8
-3,Co so du lieu,toan hoc,da nang,2009,Nguyen van c,10,10,Cau truc may tinh,tin hoc,thanh nien,2010,Nguyen Van d,10,8
-9,Lich su dang,lich su,kim dong,2022,Mai Xuan Truong,10,10,Dia ly,dia ly,Giao duc,2003,Nguyen Van C,11,11
-16,Giai tich 1,toan hoc,Kim dong,2003,Nguyen Van D,10,10,Dia ly,dia ly,Giao duc,2003,Nguyen Van C,11,11
