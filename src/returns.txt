@@ -3,3 +3,9 @@ User: hoangdb1910, Book: OOP, Borrowed on: 09-11-2024 19:44:20, Returned on: 09-
 User: hoangdb1910, Book: OOP, Borrowed on: 09-11-2024 20:14:49, Returned on: 09-11-2024 20:14:53, Days late: 7, Penatly fee: 70000 VND
 User: hoangdb1910, Book: OOP, Borrowed on: 09-11-2024 20:19:21, Returned on: 09-11-2024 20:19:26, Days late: 0, Penatly fee: 0 VND
 User: hoangdb1910, Book: oop, Borrowed on: 10-11-2024 10:28:46, Returned on: 10-11-2024 10:28:54, Days late: 0, Penatly fee: 0 VND
+User: hoangdb1910, Book: OOP, Borrowed on: 11-11-2024 13:50:51, Returned on: 11-11-2024 13:50:54, Days late: 0, Penatly fee: 0 VND
+User: hoangdb1910, Book: webDesign, Borrowed on: 11-11-2024 14:01:56, Returned on: 11-11-2024 14:02:49, Days late: 0, Penatly fee: 0 VND
+User: hoangdb1910, Book: OOP, Borrowed on: 11-11-2024 14:34:27, Returned on: 11-11-2024 14:34:35, Days late: 0, Penatly fee: 0 VND
+User: hoangdb1910, Book: OOP, Borrowed on: 11-11-2024 14:35:19, Returned on: 11-11-2024 14:35:28, Days late: 0, Penatly fee: 0 VND
+User: hoangdb1910, Book: OOP, Borrowed on: 11-11-2024 14:37:22, Returned on: 11-11-2024 14:37:28, Days late: 0, Penatly fee: 0 VND
+User: hoangdb1910, Book: OOP, Borrowed on: 11-11-2024 14:37:48, Returned on: 11-11-2024 14:38:01, Days late: 0, Penatly fee: 0 VND

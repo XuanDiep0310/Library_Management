@@ -656,8 +656,6 @@ public:
                 if (fileUser == username && fileBookTitle == bookTitle) {
                     bookFound = true;
 
-                    // Here you can implement any logic for returning the book
-                    // For example, updating the book's quantity
                     book->markAsReturned();  // Assuming you have this method
 
                     int daysLate = Date::calculateDaysLate(fileBorrowDate, Date::currentDate());
@@ -688,7 +686,6 @@ public:
                             << ", Days late: " << daysLate
                             << ", Penatly fee: " << penaltyFee << " VND"  
                             << endl;
-
                     continue; // Skip this line as we are returning this book
                 }
             }
@@ -700,17 +697,41 @@ public:
         borrowFile.close();
         tempFile.close();
 
-        // Replace the original file with the temporary file
+        // Cập nhật thông tin sách trong books.txt
+        ifstream booksFile("books.txt");
+        ofstream tempBooksFile("temp_books.txt");
+        bool updated = false;
+
+        while (getline(booksFile, line)) {
+            Book currentBook = Book::fromString(line);
+            if (currentBook.getTitle() == bookTitle) {
+                int tempQuantity = currentBook.getQuantity();
+                currentBook.setQuantity(tempQuantity++);
+                tempBooksFile << currentBook.toString() << endl;
+                updated = true;
+            } else {
+                tempBooksFile << line << endl;
+            }
+        }
+
+        booksFile.close();
+        tempBooksFile.close();
+
+        remove("books.txt");
+        rename("temp_books.txt", "books.txt");
+
         remove("borrows.txt");
         rename("temp.txt", "borrows.txt");
 
         if (!bookFound) {
             setColor(RED);
             cout << ".-------------------------.\n";
-            cout << "|  No record found for the |\n";
-            cout << "|  specified book return.  |\n";
+            cout << "| No record found for the |\n";
+            cout << "| specified book return.  |\n";
             cout << "'-------------------------'\n";
             setColor(RESET);
+        } else if (!updated) {
+            cout << "Failed to update book information in books.txt" << endl;
         }
     }
 

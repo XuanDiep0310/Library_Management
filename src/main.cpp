@@ -1098,7 +1098,7 @@ int main() {
                         if (!userTree.getCurrentUserName().empty() && bookTitle != "exit") {
                             userTree.returnBook(userTree.getCurrentUserName(), bookTitle, library); // Call returnBook with book title
                         }
-
+                        library.saveToFile(filename);
                         system("pause");
                         break;
                     }

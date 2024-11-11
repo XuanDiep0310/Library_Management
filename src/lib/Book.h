@@ -108,4 +108,28 @@ public:
         }
     }
 
+    static Book fromString(const string& str) {
+        istringstream stream(str);
+        string bookIdStr, title, author, genre, pubYearStr, quantityStr, status;
+        getline(stream, bookIdStr, ',');
+        getline(stream, title, ',');
+        getline(stream, author, ',');
+        getline(stream, genre, ',');
+        getline(stream, pubYearStr, ',');
+        getline(stream, quantityStr, ',');
+        getline(stream, status);
+
+        int bookId = stoi(bookIdStr);
+        int pubYear = stoi(pubYearStr);
+        int quantity = stoi(quantityStr);
+
+        return Book(bookId, title, author, genre, pubYear, quantity, status);
+    }
+
+    string toString() const {
+        ostringstream stream;
+        stream << bookId << "," << title << "," << author << "," << genre << ","
+               << publicationYear << "," << quantity << "," << status;
+        return stream.str();
+    }
 };
