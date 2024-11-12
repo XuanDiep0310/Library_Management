@@ -29,26 +29,67 @@ private:
         return node;
     }
 
-    User* search(UserNode* node, const string& username) const {
-        string lowerUsername = username;
-        transform(lowerUsername.begin(), lowerUsername.end(), lowerUsername.begin(), ::tolower);
-
-        if (node == nullptr) {
-            return nullptr;
-        }
-
-        string nodeUsername = node->user->getUsername();
-        transform(nodeUsername.begin(), nodeUsername.end(), nodeUsername.begin(), ::tolower);
-
-        if (nodeUsername == lowerUsername) {
-            return node->user;
-        }
-
-        if (lowerUsername < nodeUsername) {
-            return search(node->left, username);
-        }
-        return search(node->right, username);
+    User* search(UserNode* node, const string& email) const {
+    ifstream file("users.txt");
+    if (!file.is_open()) {
+        cerr << "Error: Could not open users.txt" << endl;
+        return nullptr;
     }
+
+    string lowerEmail = email;
+    transform(lowerEmail.begin(), lowerEmail.end(), lowerEmail.begin(), ::tolower);
+    lowerEmail = trim(lowerEmail);
+
+    string line;
+    while (getline(file, line)) {
+        istringstream iss(line);
+        vector<string> fields;
+        string field;
+
+        // Split line by commas to populate the fields
+        while (getline(iss, field, ',')) {
+            fields.push_back(field);
+        }
+
+        // Verify the file has enough fields (assuming email is the 4th field, zero-indexed)
+        if (fields.size() >= 7) {  // Ensure we have all 7 fields from the file
+            string fileEmail = fields[3]; // The email should be at index 3
+            transform(fileEmail.begin(), fileEmail.end(), fileEmail.begin(), ::tolower);
+            fileEmail = trim(fileEmail);
+
+            if (fileEmail == lowerEmail) {
+                // Debugging output to verify data
+                cout << "Found matching email: " << fileEmail << endl;
+                cout << "User data from file: " << endl;
+                cout << "Username: " << fields[0] << endl;
+                cout << "Password: " << fields[1] << endl;
+                cout << "Name: " << fields[2] << endl;
+                cout << "Email: " << fields[3] << endl;
+                cout << "Birthdate: " << fields[4] << "/" << fields[5] << "/" << fields[6] << endl;
+
+                // Create and return a new User object with the parsed data
+                string username = fields[0];        // Username
+                string password = fields[1];        // Password
+                string name = fields[2];            // Name
+                string email = fields[3];           // Email
+                int birthDay = stoi(fields[4]);     // Birth date day
+                int birthMonth = stoi(fields[5]);   // Birth date month
+                int birthYear = stoi(fields[6]);    // Birth date year
+                Date birthday(birthDay, birthMonth, birthYear);
+
+                // Close the file and return the user found
+                file.close();
+                return new User(name, birthday, email, username, password);
+            }
+        }
+    }
+
+    // If no user found, close the file and return nullptr
+    file.close();
+    return nullptr;
+}
+
+
 
     void printHeader() const {
         // Print table header
@@ -179,26 +220,58 @@ public:
         return strLower.find(substrLower) != string::npos;
     }
 
-    void suggestUsersByUsername(UserNode* node, const string& partialUsername, vector<User*>& suggestions) {
+    void suggestUsersByEmail(UserNode* node, const string& partialEmail, vector<User*>& suggestions) {
         if (node == nullptr) {
             return;
         }
 
         // Perform in-order traversal to maintain sorted order of suggestions
-        suggestUsersByUsername(node->left, partialUsername, suggestions);
+        suggestUsersByEmail(node->left, partialEmail, suggestions);
 
-        // Check if the username contains the partial input (case-insensitive)
-        if (caseInsensitiveContains(node->user->getUsername(), partialUsername)) {
+        // Check if the email contains the partial input (case-insensitive)
+        if (caseInsensitiveContains(node->user->getMail(), partialEmail)) {
             suggestions.push_back(node->user);
         }
 
-        suggestUsersByUsername(node->right, partialUsername, suggestions);
+        suggestUsersByEmail(node->right, partialEmail, suggestions);
     }
 
     // Public method to get user suggestions by partial username
-    vector<User*> suggestUsersByUsername(const string& partialUsername) {
-        vector<User*> suggestions;
-        suggestUsersByUsername(root, partialUsername, suggestions);
+    vector<string> suggestUsersByEmail(const string& filename, const string& partialEmail) {
+        vector<string> suggestions;
+        ifstream file(filename);
+
+        if (!file.is_open()) {
+            cerr << "Error: Unable to open " << filename << endl;
+            return suggestions;
+        }
+
+        string line;
+        string lowerPartialEmail = partialEmail;
+        transform(lowerPartialEmail.begin(), lowerPartialEmail.end(), lowerPartialEmail.begin(), ::tolower);
+
+        while (getline(file, line)) {
+            // Split line by commas to get email (assuming email is the 4th field)
+            istringstream iss(line);
+            vector<string> fields;
+            string field;
+
+            while (getline(iss, field, ',')) {
+                fields.push_back(field);
+            }
+
+            if (fields.size() >= 4) { // Ensure there are at least 4 fields
+                string email = fields[3];
+                string lowerEmail = email;
+                transform(lowerEmail.begin(), lowerEmail.end(), lowerEmail.begin(), ::tolower);
+
+                if (lowerEmail.find(lowerPartialEmail) == 0) { // Check if email starts with input
+                    suggestions.push_back(email);
+                }
+            }
+        }
+
+        file.close();
         return suggestions;
     }
 
@@ -210,8 +283,8 @@ public:
     }
 
     // Function to search for a user by username
-    User* searchUser(const string& username) const {
-        return search(root, username);
+    User* searchUser(const string& email) const {
+        return search(root, email);
     }
 
     // Function to display all users
@@ -263,13 +336,13 @@ public:
         }
     }
 
-    void updateUserInformation(const string& username) {
-        // Convert the username to lowercase for case-insensitive search
-        string lowerUsername = username;
-        transform(lowerUsername.begin(), lowerUsername.end(), lowerUsername.begin(), ::tolower);
+    void updateUserInformation(const string& email) {
+        // Convert the email to lowercase for case-insensitive search
+        string lowerEmail = email;
+        transform(lowerEmail.begin(), lowerEmail.end(), lowerEmail.begin(), ::tolower);
 
-        // Search for the user to update
-        User* user = searchUser(lowerUsername);
+        // Search for the user to update by email
+        User* user = searchUser(lowerEmail);
         if (!user) {
             setColor(RED);
             cout << ".------------------.\n"; 
@@ -280,129 +353,187 @@ public:
         }
 
         setColor(YELLOW);
-        cout << "Updating information for user: " << username << endl;
+        cout << "Updating information for user: " << email << endl;
         setColor(BRIGHT_YELLOW);
 
-        // Get new name
-        setColor(BRIGHT_BLUE);
-        cout << "Current Name: " << user->getName() << endl;
-        cout << "Enter new name (or leave empty to keep current): ";
-        string newName;
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
-        getline(cin, newName);
-        if (isExitCommand(newName)) {
-            clearScreen();  // Optionally clear the screen if you want to reset the display
-            return; // Exit to menu
-        }
-        if (!newName.empty()) {
-            user->setName(newName);
-        }
-        setColor(RESET);
-
-        // Get new email with duplicate check
-        string newEmail;
-        bool validEmail = false;
-        vector<User*> existingUsers = getAllUsers(); // Get existing users for duplicate check
-        do {
-            setColor(BRIGHT_MAGENTA);
-            cout << "Enter new Email (or leave empty to keep current): ";
-            getline(cin, newEmail);
-            if (isExitCommand(newEmail)) {
-                clearScreen();  // Optionally clear the screen if you want to reset the display
-                return; // Exit to menu
-            }
+        bool continueUpdating = true;
+        while (continueUpdating) {
+            // Display Menu to Update User Information
+            setColor(RED);
+            cout << "\n.------------------------------------.\n";
+            setColor(BRIGHT_BLUE);
+            cout << "|  Select the information to update  |\n";
+            setColor(CYAN);
+            cout << "|------------------------------------|\n";
+            setColor(MAGENTA);
+            cout << "|  1. Name                           |\n";
             setColor(RESET);
+            cout << "|------------------------------------|\n";
+            setColor(RED);
+            cout << "|  2. Email                          |\n";
+            setColor(BRIGHT_CYAN);
+            cout << "|------------------------------------|\n";
+            setColor(BRIGHT_YELLOW);
+            cout << "|  3. Password                       |\n";
+            setColor(BRIGHT_RED);
+            cout << "|------------------------------------|\n";
+            setColor(BRIGHT_BLUE);
+            cout << "|  4. Birthday                       |\n";
+            setColor(BRIGHT_MAGENTA);
+            cout << "|------------------------------------|\n";
+            setColor(YELLOW);
+            cout << "|  5. Cancel                         |\n";
+            setColor(CYAN);
+            cout << "'------------------------------------'\n";
+            setColor(RESET);
+            
+            // Get User's Choice
+            int choice;
+            cout << "Enter your choice: ";
+            cin >> choice;
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');  // Clear the input buffer
 
-            // Check for existing email only if the user is changing the email
-            if (!newEmail.empty()) {
-                auto emailIt = find_if(existingUsers.begin(), existingUsers.end(), [&](User* u) {
-                    return u->getMail() == newEmail;
-                });
-
-                if (!User::isEmailFormatValid(newEmail)) {
-                    setColor(RED);
-                    cout << ".------------------------------------------------------------.\n";
-                    cout << "| Invalid email format. Please enter a valid form of email.  |\n";
-                    cout << "'------------------------------------------------------------'\n";
+            switch (choice) {
+                case 1: {
+                    // Get new name
+                    setColor(BRIGHT_BLUE);
+                    cout << "Current Name: " << user->getName() << endl;
+                    cout << "Enter new name (or leave empty to keep current): ";
+                    string newName;
+                    getline(cin, newName);
+                    if (isExitCommand(newName)) {
+                        continueUpdating = false; // Exit to menu
+                        break;
+                    }
+                    if (!newName.empty()) {
+                        user->setName(newName);
+                    }
                     setColor(RESET);
-                    system("pause");
-                } else if (emailIt != existingUsers.end()) {
-                    setColor(RED);
-                    cout << ".-----------------------------------------------------.\n";
-                    cout << "| Email already exists. Please use a different email. |\n";
-                    cout << "'-----------------------------------------------------'\n";
-                    setColor(RESET);
-                    system("pause");
-                } else {
-                    validEmail = true; // Email is valid, exit the loop
+                    break;
                 }
-            } else {
-                validEmail = true; // No new email provided, keep the current one
-            }
-        } while (!validEmail);
+                case 2: {
+                    // Get new email with duplicate check
+                    string newEmail;
+                    bool validEmail = false;
+                    vector<User*> existingUsers = getAllUsers(); // Get existing users for duplicate check
+                    do {
+                        setColor(BRIGHT_MAGENTA);
+                        cout << "Enter new Email (or leave empty to keep current): ";
+                        getline(cin, newEmail);
+                        if (isExitCommand(newEmail)) {
+                            continueUpdating = false; // Exit to menu
+                            break;
+                        }
+                        setColor(RESET);
 
-        if (!newEmail.empty()) {
-            user->setMail(newEmail);
-        }
-        
-        setColor(BLUE);
-        // Get new password
-        cout << "Enter new password (or leave empty to keep current): ";
-        string newPassword;
-        getline(cin, newPassword);
-        if (isExitCommand(newPassword)) {
-            clearScreen();  // Optionally clear the screen if you want to reset the display
-            return; // Exit to menu
-        }
-        if (!newPassword.empty()) {
-            user->setPassword(newPassword);
-        }
-        setColor(RESET);
+                        // Check for existing email only if the user is changing the email
+                        if (!newEmail.empty()) {
+                            auto emailIt = find_if(existingUsers.begin(), existingUsers.end(), [&](User* u) {
+                                return u->getMail() == newEmail;
+                            });
 
-        // Get new birthday
-        setColor(CYAN);
-        cout << "Current Birthday: " << user->getBirthday().toString() << endl;
-        bool validDate = false;
-        int newDay, newMonth, newYear;
-        do {
-            cout << "Enter new birthday (dd mm yyyy, or leave empty to keep current): ";
-            string dateInput;
-            getline(cin, dateInput);
-            if (isExitCommand(dateInput)) {
-                clearScreen();  // Optionally clear the screen if you want to reset the display
-                return; // Exit to menu
-            }
+                            if (!User::isEmailFormatValid(newEmail)) {
+                                setColor(RED);
+                                cout << ".------------------------------------------------------------.\n";
+                                cout << "| Invalid email format. Please enter a valid email format.  |\n";
+                                cout << "'------------------------------------------------------------'\n";
+                                setColor(RESET);
+                                system("pause");
+                            } else if (emailIt != existingUsers.end()) {
+                                setColor(RED);
+                                cout << ".-----------------------------------------------------.\n";
+                                cout << "| Email already exists. Please use a different email. |\n";
+                                cout << "'-----------------------------------------------------'\n";
+                                setColor(RESET);
+                                system("pause");
+                            } else {
+                                validEmail = true; // Email is valid, exit the loop
+                            }
+                        } else {
+                            validEmail = true; // No new email provided, keep the current one
+                        }
+                    } while (!validEmail);
 
-            if (!dateInput.empty()) {
-                istringstream dateStream(dateInput);
-                dateStream >> newDay >> newMonth >> newYear;
-
-                if (!dateStream.fail() && Date::isValidDate(newDay, newMonth, newYear)) {
-                    user->setBirthday(Date(newDay, newMonth, newYear));
-                    validDate = true; // Date is valid, exit the loop
-                } else {
-                    setColor(RED);
-                    cout << ".--------------------------------------------------.\n";
-                    cout << "| Invalid date entered. Please enter a valid date. |\n";
-                    cout << "'--------------------------------------------------'\n";
-                    setColor(RESET);
-                    system("pause");
+                    if (!newEmail.empty()) {
+                        user->setMail(newEmail);
+                    }
+                    break;
                 }
-            } else {
-                validDate = true; // No new date provided, keep the current one
-            }
-        } while (!validDate);
-        setColor(RESET);
-        cin.clear(); // Clear the input stream
-        cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Ignore the rest of the line to avoid issues
+                case 3: {
+                    // Get new password
+                    setColor(BLUE);
+                    cout << "Enter new password (or leave empty to keep current): ";
+                    string newPassword;
+                    getline(cin, newPassword);
+                    if (isExitCommand(newPassword)) {
+                        continueUpdating = false; // Exit to menu
+                        break;
+                    }
+                    if (!newPassword.empty()) {
+                        user->setPassword(newPassword);
+                    }
+                    setColor(RESET);
+                    break;
+                }
+                case 4: {
+                    // Get new birthday
+                    setColor(CYAN);
+                    cout << "Current Birthday: " << user->getBirthday().toString() << endl;
+                    bool validDate = false;
+                    int newDay, newMonth, newYear;
+                    do {
+                        cout << "Enter new birthday (dd mm yyyy, or leave empty to keep current): ";
+                        string dateInput;
+                        getline(cin, dateInput);
+                        if (isExitCommand(dateInput)) {
+                            continueUpdating = false; // Exit to menu
+                            break;
+                        }
 
-        // Save updated user information to file
-        saveUsersToFile("users.txt");
-        setColor(GREEN);
-        cout << ".----------------------------------------.\n";
-        cout << "| User information updated successfully! |\n";
-        cout << "'----------------------------------------'\n";
-        setColor(RESET);
+                        if (!dateInput.empty()) {
+                            istringstream dateStream(dateInput);
+                            dateStream >> newDay >> newMonth >> newYear;
+
+                            if (!dateStream.fail() && Date::isValidDate(newDay, newMonth, newYear)) {
+                                user->setBirthday(Date(newDay, newMonth, newYear));
+                                validDate = true; // Date is valid, exit the loop
+                            } else {
+                                setColor(RED);
+                                cout << ".--------------------------------------------------.\n";
+                                cout << "| Invalid date entered. Please enter a valid date. |\n";
+                                cout << "'--------------------------------------------------'\n";
+                                setColor(RESET);
+                                system("pause");
+                            }
+                        } else {
+                            validDate = true; // No new date provided, keep the current one
+                        }
+                    } while (!validDate);
+                    setColor(RESET);
+                    break;
+                }
+                case 5: {
+                    // Exit to menu
+                    continueUpdating = false;
+                    break;
+                }
+                default:
+                    setColor(RED);
+                    cout << "Invalid choice! Please select a valid option.\n";
+                    setColor(RESET);
+                    break;
+            }
+
+            // Save updated user information to file after all changes
+            if (!continueUpdating) {
+                saveUsersToFile("users.txt");
+                setColor(GREEN);
+                cout << ".----------------------------------------.\n";
+                cout << "| User information updated successfully! |\n";
+                cout << "'----------------------------------------'\n";
+                setColor(RESET);
+            }
+        }
     }
 
     void showRentedBooks() {
@@ -821,6 +952,7 @@ public:
             outFile << node->user->getUsername() << ","
                 << node->user->getPassword() << ","
                 << node->user->getName() << ","
+                << node->user->getMail() << ", "
                 << node->user->getBirthday().getDay() << ","
                 << node->user->getBirthday().getMonth() << ","
                 << node->user->getBirthday().getYear() << endl;

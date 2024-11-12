@@ -182,68 +182,153 @@ public:
         Book* bookToUpdate = searchBookByTitle(title);
         if (bookToUpdate != nullptr) {
             setColor(GREEN);
-            cout << ".----------------------------------------------------------------------------.\n";
-            cout << "|  Book found. Enter new information (leave blank to keep current values):   |\n";
-            cout << "'----------------------------------------------------------------------------'\n";
-            setColor(RESET);
-
-            string newTitle, newAuthor, newGenre, newStatus;
-            int newPubYear = -1, newQuantity = -1;
-
-            setColor(CYAN);
-            cout << "Enter new Title (current: " << bookToUpdate->getTitle() << "): ";
-            getline(cin, newTitle);
-            if (!newTitle.empty()) bookToUpdate->setTitle(newTitle);
-
-            cout << "Enter new Author (current: " << bookToUpdate->getAuthor() << "): ";
-            getline(cin, newAuthor);
-            if (!newAuthor.empty()) bookToUpdate->setAuthor(newAuthor);
-
-            cout << "Enter new Genre (current: " << bookToUpdate->getGenre() << "): ";
-            getline(cin, newGenre);
-            if (!newGenre.empty()) bookToUpdate->setGenre(newGenre);
-
-            cout << "Enter new Publication Year (current: " << bookToUpdate->getPublicationYear() << "): ";
-            if (cin >> newPubYear && newPubYear > 0) {
-                bookToUpdate->setPublicationYear(newPubYear);
-            } else {
-                setColor(RED);
-                cout << "Invalid Publication Year. Keeping current value.\n";
-                setColor(RESET);
-                cin.clear(); // Clear error flag
-            }
-            cin.ignore(); // Clear newline character
-
-            cout << "Enter new Quantity (current: " << bookToUpdate->getQuantity() << "): ";
-            if (cin >> newQuantity && newQuantity >= 0) {
-                bookToUpdate->setQuantity(newQuantity);
-            } else {
-                setColor(RED);
-                cout << "Invalid Quantity. Keeping current value.\n";
-                setColor(RESET);
-                cin.clear();
-            }
-            cin.ignore(); // Clear newline character
-
-            do {
-                cout << "Enter new Status (current: " << bookToUpdate->getStatus() << "): ";
-                getline(cin, newStatus);
-                newStatus = matchStatus(newStatus);
-                if (!newStatus.empty()) {
-                    bookToUpdate->setStatus(newStatus);
-                } else if (!newStatus.empty()) {
-                    setColor(RED);
-                    cout << "Invalid Status. Keeping current value.\n";
-                    setColor(RESET);
-                }
-            } while (!newStatus.empty() && newStatus.empty()); // Repeat until valid
-
-            clearScreen();
-            setColor(GREEN);
             cout << ".----------------------------------------.\n";
-            cout << "| Book information updated successfully! |\n";
+            cout << "| Book found. Choose information to edit |\n";
             cout << "'----------------------------------------'\n";
             setColor(RESET);
+
+            int choice = -1;
+            do {
+                setColor(BRIGHT_CYAN);
+                cout << "\n.------------------------------.\n";
+                setColor(CYAN);
+                cout << "|  Select an option to update  |\n";
+                setColor(BRIGHT_BLUE);
+                cout << "|------------------------------|\n";
+                setColor(BLUE);
+                cout << "|  1. Title                    |\n";
+                setColor(BRIGHT_MAGENTA);
+                cout << "|------------------------------|\n";
+                setColor(MAGENTA);
+                cout << "|  2. Author                   |\n";
+                setColor(BRIGHT_RED);
+                cout << "|------------------------------|\n";
+                setColor(RED);
+                cout << "|  3. Genre                    |\n";
+                setColor(BRIGHT_YELLOW);
+                cout << "|------------------------------|\n";
+                setColor(YELLOW);
+                cout << "|  4. Publication Year         |\n";
+                setColor(BRIGHT_GREEN);
+                cout << "|------------------------------|\n";
+                setColor(GREEN);
+                cout << "|  5. Quantity                 |\n";
+                setColor(BRIGHT_CYAN);
+                cout << "|------------------------------|\n";
+                setColor(CYAN);
+                cout << "|  6. Status                   |\n";
+                setColor(BRIGHT_BLUE);
+                cout << "|------------------------------|\n";
+                setColor(BLUE);
+                cout << "|  0. Done                     |\n";
+                setColor(BRIGHT_MAGENTA);
+                cout << "'------------------------------'\n";
+                setColor(RESET);
+                cout << "Enter your choice: ";
+
+                cin >> choice;
+                cin.ignore(); // To ignore the newline after the choice
+
+                switch (choice) {
+                    case 1: {
+                        string newTitle;
+                        setColor(CYAN);
+                        cout << "Enter new Title (current: " << bookToUpdate->getTitle() << "): ";
+                        setColor(RESET);
+                        getline(cin, newTitle);
+                        if (!newTitle.empty()) bookToUpdate->setTitle(newTitle);
+                        break;
+                    }
+                    case 2: {
+                        string newAuthor;
+                        setColor(CYAN);
+                        cout << "Enter new Author (current: " << bookToUpdate->getAuthor() << "): ";
+                        setColor(RESET);
+                        getline(cin, newAuthor);
+                        if (!newAuthor.empty()) bookToUpdate->setAuthor(newAuthor);
+                        break;
+                    }
+                    case 3: {
+                        string newGenre;
+                        setColor(CYAN);
+                        cout << "Enter new Genre (current: " << bookToUpdate->getGenre() << "): ";
+                        setColor(RESET);
+                        getline(cin, newGenre);
+                        if (!newGenre.empty()) bookToUpdate->setGenre(newGenre);
+                        break;
+                    }
+                    case 4: {
+                        int newPubYear;
+                        setColor(CYAN);
+                        cout << "Enter new Publication Year (current: " << bookToUpdate->getPublicationYear() << "): ";
+                        setColor(RESET);
+                        if (cin >> newPubYear && newPubYear > 0) {
+                            bookToUpdate->setPublicationYear(newPubYear);
+                        } else {
+                            setColor(RED);
+                            cout << ".--------------------------------------------------.\n";
+                            cout << "| Invalid Publication Year. Keeping current value. |\n";
+                            cout << "'--------------------------------------------------'\n";
+                            setColor(RESET);
+                            cin.clear();
+                        }
+                        cin.ignore();
+                        break;
+                    }
+                    case 5: {
+                        int newQuantity;
+                        setColor(CYAN);
+                        cout << "Enter new Quantity (current: " << bookToUpdate->getQuantity() << "): ";
+                        setColor(RESET);
+                        if (cin >> newQuantity && newQuantity >= 0) {
+                            bookToUpdate->setQuantity(newQuantity);
+                        } else {
+                            setColor(RED);
+                            cout << ".------------------------------------------.\n";
+                            cout << "| Invalid Quantity. Keeping current value. |\n";
+                            cout << "'------------------------------------------'\n";
+                            setColor(RESET);
+                            cin.clear();
+                        }
+                        cin.ignore();
+                        break;
+                    }
+                    case 6: {
+                        string newStatus;
+                        do {
+                            setColor(CYAN);
+                            cout << "Enter new Status (current: " << bookToUpdate->getStatus() << "): ";
+                            setColor(RESET);
+                            getline(cin, newStatus);
+                            newStatus = matchStatus(newStatus);
+                            if (!newStatus.empty()) {
+                                bookToUpdate->setStatus(newStatus);
+                            } else {
+                                setColor(RED);
+                                cout << ".----------------------------------------.\n";
+                                cout << "| Invalid Status. Keeping current value. |\n";
+                                cout << "'----------------------------------------'\n";
+                                setColor(RESET);
+                            }
+                        } while (newStatus.empty());
+                        break;
+                    }
+                    case 0:
+                        setColor(GREEN);
+                        cout << "\n.----------------------------------------.\n";
+                        cout << "| Book information update completed.     |\n";
+                        cout << "'----------------------------------------'\n";
+                        setColor(RESET);
+                        break;
+                    default:
+                        setColor(RED);
+                        cout << ".-----------------------------------.\n";
+                        cout << "| Invalid choice. Please try again. |\n";
+                        cout << "'-----------------------------------'\n";
+                        setColor(RESET);
+                        break;
+                }
+            } while (choice != 0);
         } else {
             setColor(RED);
             cout << "<- No book found with title \"" << title << "\". ->" << endl;

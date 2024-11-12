@@ -270,6 +270,7 @@ int main() {
                         }
 
                         case 2: { // Update book information
+                            clearScreen();
                             string bookTitle;
                             setColor(BRIGHT_YELLOW);
                             cout << ".-------------------------.\n";
@@ -280,8 +281,61 @@ int main() {
                             cout << "Enter the Title of the Book to Update: ";
                             setColor(RESET);
                             
-                            cin.ignore();
-                            getline(cin, bookTitle);
+                            char ch;
+
+                            // Display initial empty suggestions
+                            setColor(CYAN);
+                            cout << "\nSuggestions: ";
+                            setColor(RESET);
+
+                            while (true) {
+                                // Read a single character
+                                ch = _getch();  // Use _getch() for immediate character capture without Enter key
+                                if (ch == '\r') break;  // Stop on Enter key ('\r' is the Enter key in Windows)
+
+                                // Add character to the search term
+                                if (ch == 8) { // Handle backspace
+                                    if (!bookTitle.empty()) {
+                                        bookTitle.pop_back(); // Remove the last character
+                                    }
+                                } else {
+                                    bookTitle += ch; // Add character to the search term
+                                }
+
+                                // Clear screen and display prompt again with current input
+                                clearScreen();
+                                setColor(BRIGHT_MAGENTA);
+                                cout << "Enter the Title of the Book to Update: " << bookTitle << endl;
+                                setColor(RESET);
+
+                                // Check for exit command
+                                if (bookTitle == "exit") {
+                                    clearScreen();
+                                    break;  // Exit to book menu
+                                }
+                                
+                                // Convert current input to lowercase for case-insensitive comparison
+                                string lowerBookTitle = bookTitle;
+                                transform(lowerBookTitle.begin(), lowerBookTitle.end(), lowerBookTitle.begin(), ::tolower);
+
+                                // Retrieve suggestions based on the current title input
+                                vector<Book*> suggestions = library.getSuggestionsByTitle(lowerBookTitle);
+
+                                // Display updated suggestions
+                                setColor(CYAN);
+                                cout << "\nSuggestions: ";
+                                if (!suggestions.empty()) {
+                                    for (auto* book : suggestions) {
+                                        cout << book->getTitle() << "  ";
+                                    }
+                                } else {
+                                    cout << "No matches found.\n";
+                                }
+                                cout << endl;
+                                setColor(RESET);
+                            }
+
+                            cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
                             if (isExitCommand(bookTitle)) {
                                 // User chose to cancel the operation
@@ -556,7 +610,7 @@ int main() {
                             system("pause");
                             break;
                         }
-                        case 2: { // Update User Information
+                        case 2: { // Update User Information by Email
                             clearScreen();
                             setColor(BRIGHT_YELLOW);
                             cout << ".-------------------------.\n";
@@ -565,18 +619,32 @@ int main() {
                             setColor(RESET);
 
                             setColor(BLUE);
-                            cout << "Enter Username to Update: ";
+                            cout << "Enter Email to Update: ";
                             setColor(RESET);
 
-                            string username;
-                            vector<string> usernames;
+                            string email;
+                            vector<string> emails;
                             ifstream file("users.txt");
 
-                            // Load usernames from the file into the vector
+                            // Load emails from the file into the vector
                             if (file.is_open()) {
                                 string line;
                                 while (getline(file, line)) {
-                                    usernames.push_back(line);
+                                    // Split the line by comma and extract the 4th element (email)
+                                    size_t pos = 0;
+                                    int fieldIndex = 0;
+                                    string token;
+                                    while ((pos = line.find(',')) != string::npos) {
+                                        token = line.substr(0, pos);
+                                        line.erase(0, pos + 1);
+                                        fieldIndex++;
+
+                                        // When we reach the 4th field (email)
+                                        if (fieldIndex == 3) {
+                                            emails.push_back(line); // The remaining part is the email
+                                            break;
+                                        }
+                                    }
                                 }
                                 file.close();
                             } else {
@@ -592,16 +660,16 @@ int main() {
                             char ch;
                             while ((ch = _getch()) != '\r') { // Loop until Enter key is pressed
                                 if (ch == '\b') { // Handle Backspace
-                                    if (!username.empty()) {
-                                        username.pop_back(); // Remove last character from username
+                                    if (!email.empty()) {
+                                        email.pop_back(); // Remove last character from email
                                     }
                                 } else if (isprint(ch)) { // Append printable characters
-                                    username += ch;
+                                    email += ch;
                                 }
 
-                                // Convert the input username to lowercase for case-insensitive comparison
-                                string lowerUsername = username;
-                                transform(lowerUsername.begin(), lowerUsername.end(), lowerUsername.begin(), ::tolower);
+                                // Convert the input email to lowercase for case-insensitive comparison
+                                string lowerEmail = email;
+                                transform(lowerEmail.begin(), lowerEmail.end(), lowerEmail.begin(), ::tolower);
 
                                 // Clear the screen and re-display the prompt and current input
                                 clearScreen();
@@ -612,19 +680,19 @@ int main() {
                                 setColor(RESET);
 
                                 setColor(BLUE);
-                                cout << "Enter Username to Update: ";
+                                cout << "Enter Email to Update: ";
                                 setColor(RESET);
-                                cout << username << endl;
+                                cout << email << endl;
 
                                 // Show suggestions based on the current input
                                 cout << "\nSuggestions:\n";
-                                for (const auto& user : usernames) {
-                                    // Convert stored usernames to lowercase and check if they match the input
-                                    string lowerUser = user;
-                                    transform(lowerUser.begin(), lowerUser.end(), lowerUser.begin(), ::tolower);
+                                for (const auto& userEmail : emails) {
+                                    // Convert stored emails to lowercase and check if they match the input
+                                    string lowerUserEmail = userEmail;
+                                    transform(lowerUserEmail.begin(), lowerUserEmail.end(), lowerUserEmail.begin(), ::tolower);
                                     
-                                    if (lowerUser.find(lowerUsername) == 0) { // Check if username starts with input
-                                        cout << " - " << user << endl;
+                                    if (lowerUserEmail.find(lowerEmail) == 0) { // Check if email starts with input
+                                        cout << " - " << userEmail << endl;
                                     }
                                 }
                             }
@@ -632,13 +700,13 @@ int main() {
                             cout << endl; // Move to the next line after Enter key
 
                             // Check for exit command
-                            if (username == "exit") {
+                            if (email == "exit") {
                                 clearScreen();
                                 break; // Exit to the previous menu
                             }
 
-                            // Attempt to update user information
-                            userTree.updateUserInformation(username);
+                            // Attempt to update user information based on email
+                            userTree.updateUserInformation(email);
                             setColor(GREEN);
                             cout << ".----------------------------------------.\n";
                             cout << "| User information updated successfully! |\n";
@@ -655,7 +723,7 @@ int main() {
                             system("pause");
                             break;
                         }
-                        case 4: { //Search for User with Suggestions
+                        case 4: { // Search for User with Suggestions by Email
                             clearScreen();
                             setColor(BRIGHT_YELLOW);
                             cout << ".-------------------------.\n";
@@ -663,10 +731,10 @@ int main() {
                             cout << "'-------------------------'\n";
                             setColor(RESET);
 
-                            string username;
+                            string email;
                             char ch;
                             setColor(BLUE);
-                            cout << "Enter Username to Search: ";
+                            cout << "Enter Email to Search: ";
                             setColor(RESET);
                             cin.ignore();
 
@@ -676,58 +744,43 @@ int main() {
                                 if (ch == '\r') { // Enter key pressed
                                     break;
                                 } else if (ch == '\b') { // Backspace
-                                    if (!username.empty()) {
-                                        username.pop_back();
+                                    if (!email.empty()) {
+                                        email.pop_back();
                                     }
                                 } else {
-                                    username += ch;
+                                    email += ch;
                                 }
 
                                 // Check for exit command
-                                if (username == "exit") {
+                                if (email == "exit") {
                                     clearScreen();
                                     break; // Exit to the previous menu
                                 }
 
                                 clearScreen(); // Clear screen to refresh suggestions
                                 setColor(BLUE);
-                                cout << "Enter Username to Search: " << username << endl;
+                                cout << "Enter Email to Search: " << email << endl;
                                 setColor(RESET);
                                 
-                                 // Display search suggestions with inline lowercase transformation
-                                string searchKey = username;
+                                // Display search suggestions with inline lowercase transformation
+                                string searchKey = email;
                                 transform(searchKey.begin(), searchKey.end(), searchKey.begin(), ::tolower);
 
-                                // Display search suggestions
-                                vector<User*> suggestions = userTree.suggestUsersByUsername(username);
+                                // Display search suggestions based on email
+                                vector<string> suggestions = userTree.suggestUsersByEmail("users.txt",email);
                                 if (!suggestions.empty()) {
                                     setColor(GREEN);
                                     cout << "Suggestions:" << endl;
-                                    for (const auto& user : suggestions) {
-                                        cout << " - " << user->getUsername() << " (" << user->getMail() << ")" << endl;
+                                    for (const auto& suggestion : suggestions) {
+                                        cout << " - " << suggestion << endl;
                                     }
                                     setColor(RESET);
                                 }
                             }
 
-                            if (!username.empty() && username != "exit") {
-                                // Perform final search
-                                User* foundUser = userTree.searchUser(username);
-                                if (foundUser) {
-                                    setColor(GREEN);
-                                    cout << "Found User: " << foundUser->getUsername() << endl;
-                                    cout << " - Username: " << foundUser->getUsername() << endl;
-                                    cout << " - Email: " << foundUser->getMail() << endl;
-                                    cout << " - Birthday: " << foundUser->getBirthday().toString() << endl;
-                                    setColor(RESET);
-                                } else {
-                                    setColor(RED);
-                                    cout << "No user found with username ";
-                                    setColor(BRIGHT_YELLOW);
-                                    cout << username << endl;
-                                    setColor(RESET);
-                                    setColor(RESET);
-                                }
+                            if (!email.empty() && email != "exit") {
+                                // Perform final search by email
+                                User* foundUser = userTree.searchUser(email);
                             }
 
                             system("pause");

@@ -4,6 +4,10 @@
 #include <iostream>
 #include <stdexcept>
 #include <iomanip>
+#include <algorithm>
+#include <cctype>
+#include <locale>
+
 
 using namespace std;
 
@@ -53,4 +57,25 @@ void moveCursor(int x, int y) {
 // Function to move the cursor down by a specific number of lines
 void moveCursorDown(int lines) {
     cout << "\33[" << lines << "B";
+}
+
+// Trim from the start (left)
+inline std::string& ltrim(std::string& s) {
+    s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](unsigned char ch) {
+        return !std::isspace(ch);
+    }));
+    return s;
+}
+
+// Trim from the end (right)
+inline std::string& rtrim(std::string& s) {
+    s.erase(std::find_if(s.rbegin(), s.rend(), [](unsigned char ch) {
+        return !std::isspace(ch);
+    }).base(), s.end());
+    return s;
+}
+
+// Trim from both ends
+inline std::string& trim(std::string& s) {
+    return ltrim(rtrim(s));
 }
