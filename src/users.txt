@@ -1,1 +1,2 @@
 admin,admin123,Admin Name,admin@example.com,1,1,2000
+hoangdb1910,19102005,Hoang,buidinhhoang1910@gmail.com,19,10,2005

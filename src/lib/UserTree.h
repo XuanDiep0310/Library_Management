@@ -30,66 +30,115 @@ private:
     }
 
     User* search(UserNode* node, const string& email) const {
-    ifstream file("users.txt");
-    if (!file.is_open()) {
-        cerr << "Error: Could not open users.txt" << endl;
+        ifstream file("users.txt");
+        if (!file.is_open()) {
+            cerr << "Error: Could not open users.txt" << endl;
+            return nullptr;
+        }
+
+        string lowerEmail = email;
+        transform(lowerEmail.begin(), lowerEmail.end(), lowerEmail.begin(), ::tolower);
+        lowerEmail = trim(lowerEmail);
+
+        string line;
+        while (getline(file, line)) {
+            istringstream iss(line);
+            vector<string> fields;
+            string field;
+
+            // Split line by commas to populate the fields
+            while (getline(iss, field, ',')) {
+                fields.push_back(field);
+            }
+
+            // Verify the file has enough fields (assuming email is the 4th field, zero-indexed)
+            if (fields.size() >= 7) {  // Ensure we have all 7 fields from the file
+                string fileEmail = fields[3]; // The email should be at index 3
+                transform(fileEmail.begin(), fileEmail.end(), fileEmail.begin(), ::tolower);
+                fileEmail = trim(fileEmail);
+
+                if (fileEmail == lowerEmail) {
+                    // Debugging output to verify data
+                    cout << "Found matching email: " << fileEmail << endl;
+                    cout << "User data from file: " << endl;
+                    cout << "Username: " << fields[0] << endl;
+                    cout << "Password: " << fields[1] << endl;
+                    cout << "Name: " << fields[2] << endl;
+                    cout << "Email: " << fields[3] << endl;
+                    cout << "Birthdate: " << fields[4] << "/" << fields[5] << "/" << fields[6] << endl;
+
+                    // Create and return a new User object with the parsed data
+                    string username = fields[0];        // Username
+                    string password = fields[1];        // Password
+                    string name = fields[2];            // Name
+                    string email = fields[3];           // Email
+                    int birthDay = stoi(fields[4]);     // Birth date day
+                    int birthMonth = stoi(fields[5]);   // Birth date month
+                    int birthYear = stoi(fields[6]);    // Birth date year
+                    Date birthday(birthDay, birthMonth, birthYear);
+
+                    // Close the file and return the user found
+                    file.close();
+                    return new User(name, birthday, email, username, password);
+                }
+            }
+        }
+
+        // If no user found, close the file and return nullptr
+        file.close();
         return nullptr;
     }
 
-    string lowerEmail = email;
-    transform(lowerEmail.begin(), lowerEmail.end(), lowerEmail.begin(), ::tolower);
-    lowerEmail = trim(lowerEmail);
-
-    string line;
-    while (getline(file, line)) {
-        istringstream iss(line);
-        vector<string> fields;
-        string field;
-
-        // Split line by commas to populate the fields
-        while (getline(iss, field, ',')) {
-            fields.push_back(field);
+    User* searchByUsername(UserNode* node, const string& username) const {
+        ifstream file("users.txt");
+        if (!file.is_open()) {
+            cerr << "Error: Could not open users.txt" << endl;
+            return nullptr;
         }
 
-        // Verify the file has enough fields (assuming email is the 4th field, zero-indexed)
-        if (fields.size() >= 7) {  // Ensure we have all 7 fields from the file
-            string fileEmail = fields[3]; // The email should be at index 3
-            transform(fileEmail.begin(), fileEmail.end(), fileEmail.begin(), ::tolower);
-            fileEmail = trim(fileEmail);
+        string lowerUsername = username;
+        transform(lowerUsername.begin(), lowerUsername.end(), lowerUsername.begin(), ::tolower);
+        lowerUsername = trim(lowerUsername);
 
-            if (fileEmail == lowerEmail) {
-                // Debugging output to verify data
-                cout << "Found matching email: " << fileEmail << endl;
-                cout << "User data from file: " << endl;
-                cout << "Username: " << fields[0] << endl;
-                cout << "Password: " << fields[1] << endl;
-                cout << "Name: " << fields[2] << endl;
-                cout << "Email: " << fields[3] << endl;
-                cout << "Birthdate: " << fields[4] << "/" << fields[5] << "/" << fields[6] << endl;
+        string line;
+        while (getline(file, line)) {
+            istringstream iss(line);
+            vector<string> fields;
+            string field;
 
-                // Create and return a new User object with the parsed data
-                string username = fields[0];        // Username
-                string password = fields[1];        // Password
-                string name = fields[2];            // Name
-                string email = fields[3];           // Email
-                int birthDay = stoi(fields[4]);     // Birth date day
-                int birthMonth = stoi(fields[5]);   // Birth date month
-                int birthYear = stoi(fields[6]);    // Birth date year
-                Date birthday(birthDay, birthMonth, birthYear);
+            // Split line by commas to populate the fields
+            while (getline(iss, field, ',')) {
+                fields.push_back(field);
+            }
 
-                // Close the file and return the user found
-                file.close();
-                return new User(name, birthday, email, username, password);
+            // Verify the file has enough fields (assuming username is the 1st field, zero-indexed)
+            if (fields.size() >= 7) {  // Ensure we have all 7 fields from the file
+                string fileUsername = fields[0]; // Username should be at index 0
+                transform(fileUsername.begin(), fileUsername.end(), fileUsername.begin(), ::tolower);
+                fileUsername = trim(fileUsername);
+
+                if (fileUsername == lowerUsername) {
+                    // Create and return a new User object with the parsed data
+                    string username = fields[0];        // Username
+                    string password = fields[1];        // Password
+                    string name = fields[2];            // Name
+                    string email = fields[3];           // Email
+                    int birthDay = stoi(fields[4]);     // Birth date day
+                    int birthMonth = stoi(fields[5]);   // Birth date month
+                    int birthYear = stoi(fields[6]);    // Birth date year
+                    Date birthday(birthDay, birthMonth, birthYear);
+
+                    // Close the file and return the user found
+                    file.close();
+                    return new User(name, birthday, email, username, password);
+                }
             }
         }
+
+        // If no user found, close the file and return nullptr
+        file.close();
+        return nullptr;
     }
-
-    // If no user found, close the file and return nullptr
-    file.close();
-    return nullptr;
-}
-
-
 
     void printHeader() const {
         // Print table header
@@ -284,6 +333,10 @@ public:
         return search(root, email);
     }
 
+    User* searchUserByUsername(const string& username) const {
+        return searchByUsername(root, username);
+    }
+
     // Function to display all users
     void displayUsers() const {
         printHeader();
@@ -297,21 +350,19 @@ public:
 
     // Function to handle user login
     bool login(const string& username, const string& password) {
-        User* user = searchUser(username); // Corrected to use searchUser
+        User* user = searchUserByUsername(username); // Corrected to use searchUser
         if (user) {
             if (user->getPassword() == password) {
-                currentUserName = username; // This will now work
+                currentUserName = username; // Set current user
                 return true; // Login successful
-            }
-            else {
+            } else {
                 setColor(RED);
                 cout << ".---------------------.\n";
                 cout << "| Incorrect password. |\n";
                 cout << "'---------------------'\n";
                 setColor(RESET);
             }
-        }
-        else {
+        } else {
             setColor(RED);
             cout << ".------------------.\n";
             cout << "| User not found.  |\n";
