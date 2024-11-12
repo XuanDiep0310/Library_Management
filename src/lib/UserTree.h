@@ -122,29 +122,26 @@ private:
     }
 
     // Helper function to delete a user
-    UserNode* deleteUser(UserNode* node, const string& username) {
+    UserNode* deleteUser(UserNode* node, const string& email) {
         if (node == nullptr) return node;
 
-        string lowerUsername = username;
-        transform(lowerUsername.begin(), lowerUsername.end(), lowerUsername.begin(), ::tolower);
-        string nodeUsername = node->user->getUsername();
-        transform(nodeUsername.begin(), nodeUsername.end(), nodeUsername.begin(), ::tolower);
+        string lowerEmail = email;
+        transform(lowerEmail.begin(), lowerEmail.end(), lowerEmail.begin(), ::tolower);
+        string nodeEmail = node->user->getMail();
+        transform(nodeEmail.begin(), nodeEmail.end(), nodeEmail.begin(), ::tolower);
 
-        if (lowerUsername < nodeUsername) {
-            node->left = deleteUser(node->left, username);
-        }
-        else if (lowerUsername > nodeUsername) {
-            node->right = deleteUser(node->right, username);
-        }
-        else {
+        if (lowerEmail < nodeEmail) {
+            node->left = deleteUser(node->left, email);
+        } else if (lowerEmail > nodeEmail) {
+            node->right = deleteUser(node->right, email);
+        } else {
             // Node with only one child or no child
             if (node->left == nullptr) {
                 UserNode* temp = node->right;
                 delete node->user;
                 delete node;
                 return temp;
-            }
-            else if (node->right == nullptr) {
+            } else if (node->right == nullptr) {
                 UserNode* temp = node->left;
                 delete node->user;
                 delete node;
@@ -154,7 +151,7 @@ private:
             // Node with two children: get the inorder successor
             UserNode* temp = findMin(node->right);
             node->user = temp->user;
-            node->right = deleteUser(node->right, temp->user->getUsername());
+            node->right = deleteUser(node->right, temp->user->getMail());
         }
         return node;
     }
@@ -294,8 +291,8 @@ public:
     }
 
     // Function to delete a user by username
-    void deleteUser(const string& username) {
-        root = deleteUser(root, username);
+    void deleteUser(const string& email) {
+        root = deleteUser(root, email);
     }
 
     // Function to handle user login
@@ -333,6 +330,12 @@ public:
             cout << "| User account created successfully! |\n";
             cout << "'------------------------------------'\n";
             setColor(RESET);
+        } else {
+            setColor(RED);
+            cout << ".----------------------------------------------.\n";
+            cout << "| Account creation canceled or duplicate email |\n";
+            cout << "'----------------------------------------------'\n";
+            setColor(RESET);
         }
     }
 
@@ -357,6 +360,7 @@ public:
         setColor(BRIGHT_YELLOW);
 
         bool continueUpdating = true;
+        bool hasChanges = false;
         while (continueUpdating) {
             // Display Menu to Update User Information
             setColor(RED);
@@ -407,6 +411,7 @@ public:
                     }
                     if (!newName.empty()) {
                         user->setName(newName);
+                        hasChanges = true; 
                     }
                     setColor(RESET);
                     break;
@@ -448,15 +453,13 @@ public:
                                 system("pause");
                             } else {
                                 validEmail = true; // Email is valid, exit the loop
+                                user->setMail(newEmail);
+                                hasChanges = true;
                             }
                         } else {
                             validEmail = true; // No new email provided, keep the current one
                         }
                     } while (!validEmail);
-
-                    if (!newEmail.empty()) {
-                        user->setMail(newEmail);
-                    }
                     break;
                 }
                 case 3: {
@@ -471,6 +474,7 @@ public:
                     }
                     if (!newPassword.empty()) {
                         user->setPassword(newPassword);
+                        hasChanges = true;
                     }
                     setColor(RESET);
                     break;
@@ -496,6 +500,7 @@ public:
 
                             if (!dateStream.fail() && Date::isValidDate(newDay, newMonth, newYear)) {
                                 user->setBirthday(Date(newDay, newMonth, newYear));
+                                hasChanges = true;
                                 validDate = true; // Date is valid, exit the loop
                             } else {
                                 setColor(RED);
@@ -519,13 +524,15 @@ public:
                 }
                 default:
                     setColor(RED);
-                    cout << "Invalid choice! Please select a valid option.\n";
+                    cout << ".-----------------------------------------------.\n";
+                    cout << "| Invalid choice! Please select a valid option. |\n";
+                    cout << "'-----------------------------------------------'\n";
                     setColor(RESET);
                     break;
             }
 
             // Save updated user information to file after all changes
-            if (!continueUpdating) {
+            if (hasChanges) {
                 saveUsersToFile("users.txt");
                 setColor(GREEN);
                 cout << ".----------------------------------------.\n";
@@ -931,13 +938,18 @@ public:
 
 
     // Function to save users to a file
-    void saveUsersToFile(const string& filename) const {
-        ofstream outFile(filename);
+    void saveUsersToFile(const string& filename, bool isNewUserOnly = false) const {
+        ofstream outFile(filename, ios::app); // Sử dụng ios::app để chỉ thêm dữ liệu mới
         if (outFile.is_open()) {
-            saveUsersToFile(root, outFile);
+            if (isNewUserOnly) {
+                saveUsersToFile(root, outFile); // Chỉ lưu người dùng mới nhất
+            } else {
+                outFile.close(); // Đóng file tạm để mở lại ở chế độ ghi đè
+                ofstream outFile(filename); // Mở lại file ở chế độ ghi đè cho toàn bộ cây
+                saveUsersToFile(root, outFile); // Lưu toàn bộ cây người dùng
+            }
             outFile.close();
-        }
-        else {
+        } else {
             setColor(RED);
             cerr << ".---------------------------------.\n";
             cerr << "| Error opening file for writing. |\n";
@@ -946,20 +958,22 @@ public:
         }
     }
 
+    // Hàm đệ quy để lưu thông tin từ một node cụ thể
     void saveUsersToFile(UserNode* node, ofstream& outFile) const {
         if (node != nullptr) {
-            // Save user details in a structured format
+            // Lưu thông tin người dùng ở định dạng cấu trúc
             outFile << node->user->getUsername() << ","
-                << node->user->getPassword() << ","
-                << node->user->getName() << ","
-                << node->user->getMail() << ", "
-                << node->user->getBirthday().getDay() << ","
-                << node->user->getBirthday().getMonth() << ","
-                << node->user->getBirthday().getYear() << endl;
+                    << node->user->getPassword() << ","
+                    << node->user->getName() << ","
+                    << node->user->getMail() << ","
+                    << node->user->getBirthday().getDay() << ","
+                    << node->user->getBirthday().getMonth() << ","
+                    << node->user->getBirthday().getYear() << endl;
             saveUsersToFile(node->left, outFile);
             saveUsersToFile(node->right, outFile);
         }
     }
+
 
     // Function to load users from a file
     void loadUsersFromFile(const string& filename) {
@@ -968,18 +982,22 @@ public:
             string line;
             while (getline(inFile, line)) {
                 istringstream iss(line);
-                string username, password, name;
+                string username, password, name, email;
                 int day, month, year;
+
+                // Đọc các trường từ dòng
                 if (getline(iss, username, ',') &&
                     getline(iss, password, ',') &&
                     getline(iss, name, ',') &&
+                    getline(iss, email, ',') && // Đọc email thật
                     (iss >> day) && (iss.ignore()) &&
                     (iss >> month) && (iss.ignore()) &&
                     (iss >> year)) {
 
-                    Date birthday(day, month, year); // Assume Date has a suitable constructor
-                    User* user = new User(name, birthday, "dummy@mail.com", username, password); // Use dummy email for now
-                    addUser(user);
+                    // Tạo đối tượng Date và User
+                    Date birthday(day, month, year);
+                    User* user = new User(name, birthday, email, username, password);
+                    addUser(user); // Thêm người dùng vào hệ thống
                 }
             }
             inFile.close();

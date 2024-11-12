@@ -707,12 +707,6 @@ int main() {
 
                             // Attempt to update user information based on email
                             userTree.updateUserInformation(email);
-                            setColor(GREEN);
-                            cout << ".----------------------------------------.\n";
-                            cout << "| User information updated successfully! |\n";
-                            cout << "'----------------------------------------'\n";
-                            setColor(RESET);
-
                             system("pause");
                             break;
                         }
@@ -794,14 +788,24 @@ int main() {
                             cout << "'-------------------------'\n";
                             setColor(RESET);
 
-                            vector<string> usernames;
+                            vector<string> emails;
                             ifstream file("users.txt");
 
-                            // Load usernames from file into the vector
+                            // Load emails from file into the vector
                             if (file.is_open()) {
                                 string line;
                                 while (getline(file, line)) {
-                                    usernames.push_back(line);
+                                    istringstream iss(line);
+                                    string username, password, name, email;
+                                    int day, month, year;
+                                    
+                                    // Đọc các trường từ dòng
+                                    if (getline(iss, username, ',') &&
+                                        getline(iss, password, ',') &&
+                                        getline(iss, name, ',') &&
+                                        getline(iss, email, ',')) {
+                                        emails.push_back(email); // Lưu email vào vector
+                                    }
                                 }
                                 file.close();
                             } else {
@@ -813,19 +817,19 @@ int main() {
                                 break;
                             }
 
-                            string username;
+                            string email;
                             setColor(RED);
-                            cout << "Enter Username to Delete: ";
+                            cout << "Enter Email to Delete: ";
                             setColor(RESET);
 
                             char ch;
                             while ((ch = _getch()) != '\r') { // Loop until Enter key is pressed
                                 if (ch == '\b') { // Handle Backspace
-                                    if (!username.empty()) {
-                                        username.pop_back(); // Remove the last character
+                                    if (!email.empty()) {
+                                        email.pop_back(); // Remove the last character
                                     }
                                 } else if (isprint(ch)) { // Append printable characters
-                                    username += ch;
+                                    email += ch;
                                 }
 
                                 // Clear the screen and re-display the prompt and current input
@@ -837,20 +841,20 @@ int main() {
                                 setColor(RESET);
 
                                 setColor(RED);
-                                cout << "Enter Username to Delete: ";
+                                cout << "Enter Email to Delete: ";
                                 setColor(RESET);
-                                cout << username << endl;
+                                cout << email << endl;
 
                                 // Convert entered username to lowercase for case-insensitive matching
-                                string lowerUsername = username;
-                                transform(lowerUsername.begin(), lowerUsername.end(), lowerUsername.begin(), ::tolower);
+                                string lowerEmail = email;
+                                transform(lowerEmail.begin(), lowerEmail.end(), lowerEmail.begin(), ::tolower);
 
                                 // Display suggestions based on lowercase input
                                 cout << "\nSuggestions:\n";
-                                for (const auto& user : usernames) {
+                                for (const auto& user : emails) {
                                     string lowerUser = user;
                                     transform(lowerUser.begin(), lowerUser.end(), lowerUser.begin(), ::tolower);
-                                    if (lowerUser.find(lowerUsername) == 0) { // Display usernames that start with the lowercase input
+                                    if (lowerUser.find(lowerEmail) == 0) { // Display emails that start with the lowercase input
                                         cout << " - " << user << endl;
                                     }
                                 }
@@ -859,7 +863,7 @@ int main() {
                             cout << endl; // Move to the next line after Enter key
 
                             // Check for cancellation
-                            if (username == "exit") {
+                            if (email == "exit") {
                                 clearScreen();
                                 setColor(BRIGHT_YELLOW);
                                 cout << ".---------------------.\n";
@@ -867,21 +871,21 @@ int main() {
                                 cout << "'---------------------'\n";
                                 setColor(RESET);
                             } else {
-                                User* foundUser = userTree.searchUser(username);
+                                User* foundUser = userTree.searchUser(email);
                                 if (!foundUser) {
                                     setColor(RED);
-                                    cout << "No user found with username " << username << endl;
+                                    cout << "No user found with email " << email << endl;
                                     setColor(RESET);
                                 } else {
                                     setColor(BLUE);
                                     cout << "Are you sure you want to delete user '";
                                     setColor(GREEN);
-                                    cout << username;
+                                    cout << email;
                                     setColor(RESET); 
                                     cout << "'? (Y/N): ";
                                     char confirmation = _getch();
                                     if (confirmation == 'Y' || confirmation == 'y') {
-                                        userTree.deleteUser(username);
+                                        userTree.deleteUser(email);
                                         setColor(GREEN);
                                         cout << "\n.------------------------------.\n";
                                         cout << "|  User deleted successfully!  |\n";

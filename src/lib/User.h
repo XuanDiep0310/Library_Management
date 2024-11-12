@@ -85,13 +85,14 @@ public:
 		cout << ".-----------------------------.\n";
 		cout << "| Creating a new account...   |\n";
 		cout << "'-----------------------------'\n";
+		setColor(RESET);
 
 		// Prompt for name with exit check
 		cout << "Enter User Name: ";
 		getline(cin >> ws, name);
 		if (name == "exit") return nullptr;
 
-		// Prompt for email with exit check
+		// Prompt for email with exit check and duplicate check
 		bool validEmail = false;
 		do {
 			cout << "Enter Email: ";
@@ -107,6 +108,7 @@ public:
 				continue;
 			}
 
+			// Check for duplicate email
 			auto emailIt = find_if(existingUsers.begin(), existingUsers.end(), [&](const User* user) {
 				return user->getMail() == email;
 			});
@@ -117,10 +119,13 @@ public:
 				cout << "| Email already exists. Use a different email. |\n";
 				cout << "'----------------------------------------------'\n";
 				setColor(RESET);
-			} else validEmail = true;
+				//return nullptr; // Stop account creation if duplicate email is found
+			} else {
+				validEmail = true;
+			}
 		} while (!validEmail);
 
-		// Prompt for username with exit check
+		// Prompt for username with exit check and duplicate check
 		bool validUsername = false;
 		do {
 			cout << "Enter Username: ";
@@ -137,10 +142,12 @@ public:
 				cout << "| Username already exists. Use a different username. |\n";
 				cout << "'----------------------------------------------------'\n";
 				setColor(RESET);
-			} else validUsername = true;
+			} else {
+				validUsername = true;
+			}
 		} while (!validUsername);
 
-		// Prompt for password with exit check
+		// Prompt for password with length validation and exit check
 		do {
 			setColor(CYAN);
 			cout << "Enter Password: ";
@@ -150,13 +157,13 @@ public:
 			if (password.length() < 6) {
 				setColor(RED);
 				cout << ".----------------------------------------.\n";
-				cout << "| Password must at least at 6 character! |\n";
+				cout << "| Password must be at least 6 characters! |\n";
 				cout << "'----------------------------------------'\n";
 				setColor(RESET);
 			}
-		} while(password.length() < 6);
+		} while (password.length() < 6);
 
-		// Prompt for birthday with exit check
+		// Prompt for birthday with date validation and exit check
 		bool validDate = false;
 		do {
 			cout << "Enter Birthday (Day Month Year): ";
@@ -175,7 +182,7 @@ public:
 				setColor(RESET);
 				cin.ignore(numeric_limits<streamsize>::max(), '\n');
 				continue;
-			} 
+			}
 
 			if (Date::isValidDate(day, month, year)) {
 				validDate = true;
