@@ -35,6 +35,10 @@ void displayBookMenu() {
     setColor(YELLOW);
     cout << "|---------------------------------|\n";
     setColor(BRIGHT_YELLOW);
+    cout << "|   6. Manage Borrow Requests     |\n";
+    setColor(CYAN);
+    cout << "|---------------------------------|\n";
+    setColor(BRIGHT_CYAN);
     cout << "|   0. Go back                    |\n";
     setColor(GREEN);
     cout << "'---------------------------------'\n";

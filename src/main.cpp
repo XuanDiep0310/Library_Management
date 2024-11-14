@@ -5,6 +5,7 @@
 #include "./lib/User.h"
 #include "./lib/System.h"
 #include "./lib/Graphic.h"
+#include "./lib/Date.h"
 #include <cstdlib>
 #include <regex>
 #include <algorithm>
@@ -26,7 +27,7 @@ int main() {
 
     userTree.loadBorrowedBooks(borrowsFilename);
     userTree.loadReturnedBooks(returnsFilename);
-    userTree.loadAdvanceBorrows(advanceBorrowsFilename);
+    userTree.loadAdvanceBorrows(advanceBorrowsFilename);    
 
     // Load books from file at the start
     library.loadFromFile(filename);
@@ -574,6 +575,170 @@ int main() {
                             system("pause");
                             break;
                         }
+                        case 6: {  // Admin - Manage Borrow Requests
+                            while (true) {
+                                // Clear screen and display the header
+                                clearScreen();
+                                setColor(BRIGHT_YELLOW);
+                                cout << ".-----------------------------.\n";
+                                cout << "|  Type 'exit' to cancel      |\n";
+                                cout << "'-----------------------------'\n";
+                                setColor(RESET);
+
+                                ifstream borrowRequestFile("borrow_request.txt");
+                                if (!borrowRequestFile.is_open()) {
+                                    setColor(RED);
+                                    cout << ".---------------------------------.\n";
+                                    cout << "| No borrow requests to display.  |\n";
+                                    cout << "'---------------------------------'\n";
+                                    setColor(RESET);
+                                    break; // Exit if no borrow requests exist
+                                }
+
+                                string line;
+                                vector<string> requests;
+                                while (getline(borrowRequestFile, line)) {
+                                    requests.push_back(line);  // Add all borrow requests into the vector
+                                }
+                                borrowRequestFile.close();
+
+                                // Display the pending borrow requests
+                                setColor(BLUE);
+                                cout << "Pending Borrow Requests:\n";
+                                for (size_t i = 0; i < requests.size(); ++i) {
+                                    setColor(MAGENTA);
+                                    cout << i + 1 ;
+                                    setColor(BLUE);
+                                    cout << ". " << requests[i] << endl;  // Display the request number and details
+                                }
+
+                                // Allow admin to approve or deny requests
+                                string action;
+                                cout << "Enter request number to approve or deny (or 'exit' to cancel): ";
+                                getline(cin, action);
+
+                                if (action == "exit") {
+                                    break;  // Exit if the user types 'exit'
+                                }
+
+                                // Validate request number
+                                int requestNumber = -1;
+                                try {
+                                    requestNumber = stoi(action) - 1;  // Try to convert the input to an integer
+                                } catch (const std::invalid_argument&) {
+                                    setColor(RED);
+                                    cout << ".----------------------.\n";
+                                    cout << "|    Invalid input.    |\n";
+                                    cout << "'----------------------'\n";
+                                    setColor(RESET);
+                                    continue;  // Re-display the requests if input is invalid
+                                }
+
+                                if (requestNumber < 0 || requestNumber >= requests.size()) {
+                                    setColor(RED);
+                                    cout << ".----------------------.\n";
+                                    cout << "|    Invalid request.  |\n";
+                                    cout << "'----------------------'\n";
+                                    setColor(RESET);
+                                    continue;  // If the request number is out of range, re-display
+                                }
+
+                                // Process the selected borrow request
+                                string selectedRequest = requests[requestNumber];
+                                stringstream ss(selectedRequest);
+                                string username, bookTitle, status;
+                                getline(ss, username, ',');
+                                getline(ss, bookTitle, ',');
+                                getline(ss, status);
+
+                                // Trim spaces from bookTitle for accurate searching
+                                bookTitle = trim(bookTitle);
+
+                                // Remove the selected request from the list
+                                requests.erase(requests.begin() + requestNumber);
+
+                                // Ask admin to approve or deny the request
+                                cout << "Approve or deny (a/d): ";
+                                char approveOrDeny;
+                                cin >> approveOrDeny;
+                                cin.ignore();  // Clear newline after char input
+
+                                if (approveOrDeny == 'a') {
+                                    size_t pos = bookTitle.find("Book Title: ");
+                                    if (pos != string::npos) {
+                                        bookTitle = bookTitle.substr(pos + 12); // Bỏ qua "Book Title: " để chỉ lấy tên sách
+                                    }
+
+                                    // Approve the request by searching for the book in the tree
+                                    Book* book = library.searchBookByTitle(bookTitle);
+                                    if (book != nullptr) {
+                                        int quantity = book->getQuantity();
+                                        if (quantity > 0) {
+                                            book->setQuantity(quantity - 1);  // Reduce quantity of the book
+                                            setColor(GREEN);
+                                            cout << "Book successfully approved for " << username << endl;
+
+                                            // Update books.txt by saving the updated tree
+                                            ofstream updatedBooksFile("books.txt", ios::trunc);
+                                            library.saveToFile(filename);  // Assuming saveBooksToFile is a method to save tree to file
+                                            updatedBooksFile.close();
+
+                                            // Get current date
+                                            Date currentDate = Date::currentDate();
+                                            // Predict return date by adding 7 days to the current date
+                                            Date predictedReturnDate = currentDate.addDays(7);
+
+                                            // Write to borrows.txt
+                                            ofstream borrowFile("borrows.txt", ios::app);  // Open the file in append mode
+                                            if (!borrowFile.is_open()) {
+                                                setColor(RED);
+                                                cout << "Failed to open borrows.txt\n";
+                                                setColor(RESET);
+                                                continue;
+                                            }
+
+                                            // Save the borrow details in borrows.txt
+                                            borrowFile << username << "," << book->getBookId() << "," << book->getTitle() << "," << book->getAuthor() << "," 
+                                                        << book->getGenre() << "," << book->getPublicationYear() << ",1," 
+                                                        << currentDate.toString() << "," << predictedReturnDate.toString() << endl;
+
+                                            borrowFile.close();
+                                        } else {
+                                            setColor(RED);
+                                            cout << "No available copies of the book.\n";
+                                        }
+                                    } else {
+                                        setColor(RED);
+                                        cout << "Book not found in library.\n";
+                                    }
+                                    setColor(RESET);
+                                } else if (approveOrDeny == 'd') {
+                                    setColor(RED);
+                                    cout << "Request denied for " << username << endl;
+                                } else {
+                                    setColor(RED);
+                                    cout << "Invalid option, please enter 'a' or 'd'.\n";
+                                    setColor(RESET);
+                                    continue;  // Re-display if neither 'a' nor 'd' is entered
+                                }
+
+                                // Update the borrow_request.txt with the remaining requests
+                                ofstream updatedRequestFile("borrow_request.txt", ios::trunc);
+                                for (const auto& req : requests) {
+                                    updatedRequestFile << req << endl;
+                                }
+                                updatedRequestFile.close();
+
+                                // Confirm action and loop back
+                                setColor(BRIGHT_YELLOW);
+                                cout << ".-------------------------------.\n";
+                                cout << "| Action completed successfully |\n";
+                                cout << "'-------------------------------'\n";
+                                setColor(RESET);
+                                system("pause");  // Pause to let the admin review the action before clearing the screen
+                            }
+                            break;  // Exit the loop after handling borrow requests
+                        }
                         case 0:
                             break; // Go back to the main menu
                         default:
@@ -1057,6 +1222,7 @@ int main() {
                         cout << "Enter the title of the book you want to return: ";
 
                         // Input loop
+                        string recordUsername, bookID, title, borrowerName, category, year, quantityStr, borrowDate, returnDate;
                         while (true) {
                             ch = _getch();  // Get character input from keyboard
                             
@@ -1083,8 +1249,8 @@ int main() {
                             cout << "Enter the title of the book you want to return: " << bookTitle << endl;
                             setColor(RESET);
 
-                            // Check for logged-in user
                             string currentUser = userTree.getCurrentUserName();
+
                             if (currentUser.empty()) {
                                 setColor(RED);
                                 cout << ".---------------------------------.\n";
@@ -1107,20 +1273,31 @@ int main() {
                             if (borrowsFile.is_open()) {
                                 string line;
                                 while (getline(borrowsFile, line)) {
-                                    // Assuming the format in borrows.txt is: username, bookTitle, borrowDate, returnDate
-                                    // Split the line by commas and get the book title
                                     stringstream ss(line);
-                                    string username, bookTitleFromFile, borrowDate, returnDate;
+                                    
+                                    // Parse the formatted data
+                                    getline(ss, recordUsername, ','); // Read "User: username"
+                                    recordUsername = recordUsername.substr(6); // Strip "User: " prefix
 
-                                    // Read the first four fields
-                                    getline(ss, username, ',');
-                                    getline(ss, bookTitleFromFile, ',');
-                                    getline(ss, borrowDate, ',');
-                                    getline(ss, returnDate);
+                                    getline(ss, bookID, ','); // Book ID
+                                    getline(ss, title, ','); // Book title
+                                    getline(ss, borrowerName, ','); // Borrower's name
+                                    getline(ss, category, ','); // Category
+                                    getline(ss, year, ','); // Year
+                                    getline(ss, quantityStr, ','); // Quantity
+                                    getline(ss, borrowDate, ','); // Borrow date
+                                    getline(ss, returnDate); // Return date
 
-                                    // Check if the book title contains the user input
-                                    if (bookTitleFromFile.find(bookTitle) != string::npos) {
-                                        suggestions.push_back(bookTitleFromFile); // Add matching title to suggestions
+                                    // Convert both input and record title to lowercase for case-insensitive comparison
+                                    string lowerBookTitle = bookTitle;
+                                    transform(lowerBookTitle.begin(), lowerBookTitle.end(), lowerBookTitle.begin(), ::tolower);
+
+                                    string lowerTitle = title;
+                                    transform(lowerTitle.begin(), lowerTitle.end(), lowerTitle.begin(), ::tolower);
+
+                                    // Check if the title in the record contains the user input (case-insensitive)
+                                    if (lowerTitle.find(lowerBookTitle) != string::npos) {
+                                        suggestions.push_back(title); // Add matching title to suggestions
                                     }
                                 }
                                 borrowsFile.close();
@@ -1153,13 +1330,14 @@ int main() {
 
                         // Return book if user is logged in
                         if (!userTree.getCurrentUserName().empty() && bookTitle != "exit") {
-                            userTree.returnBook(userTree.getCurrentUserName(), bookTitle, library); // Call returnBook with book title
+                            string currentUser = userTree.getCurrentUserName();
+                            userTree.returnBook(currentUser, bookTitle, library); // Call returnBook with book title
                         }
                         library.saveToFile(filename);
                         system("pause");
                         break;
                     }
-                    case 3: { // Show Borrowed Books
+                    case 3: {  // Show Borrowed Books
                         clearScreen();
                         if (userTree.getCurrentUserName().empty()) {
                             setColor(RED);
@@ -1171,7 +1349,7 @@ int main() {
                             setColor(BRIGHT_GREEN);
                             cout << "Books currently borrowed by you:" << endl;
                             setColor(RESET);
-                            userTree.showRentedBooks(); // This method should list borrowed books for the current user
+                            userTree.showRentedBooks();  // This method should list borrowed books for the current user
                         }
                         system("pause");
                         break;

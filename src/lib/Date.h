@@ -256,7 +256,8 @@ istream& operator>>(istream& is, Date& dt) {
 }
 
 int Date::daysBetween(const Date& other) const {
-    return abs(toDays() - other.toDays());
+    int dayDifference = toDays() - other.toDays();
+    return dayDifference > 0 ? dayDifference : 0;  // Only positive if current date is after predicted date
 }
 
 // Convert the current date to a total number of days from a baseline (e.g., 1/1/0000)

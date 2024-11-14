@@ -1,6 +1,9 @@
 #pragma once
 #include "Book.h"
 #include <iostream>
+#include <algorithm>
+#include <cctype>
+
 using namespace std;
 
 struct TreeNode {
@@ -40,7 +43,7 @@ private:
         }
 
         // Convert both the title and node's book title to lowercase for case-insensitive comparison
-        string bookTitleLower = node->book->getTitle();
+        string bookTitleLower = trim(node->book->getTitle());
         string titleLower = title;
         transform(bookTitleLower.begin(), bookTitleLower.end(), bookTitleLower.begin(), ::tolower);
         transform(titleLower.begin(), titleLower.end(), titleLower.begin(), ::tolower);
@@ -174,8 +177,17 @@ public:
             return getBookById(node->right, bookId);
     }
 
+    string trim(const string& str) const {
+        size_t first = str.find_first_not_of(" \t");
+        if (first == string::npos) return ""; // All spaces or empty
+        size_t last = str.find_last_not_of(" \t");
+        return str.substr(first, (last - first + 1));
+    }
+
     Book* searchBookByTitle(const string& title) const {
-        return searchBookByTitle(root, title);
+        string normalizedTitle = trim(title);
+        transform(normalizedTitle.begin(), normalizedTitle.end(), normalizedTitle.begin(), ::tolower);
+        return searchBookByTitle(root, normalizedTitle);
     }
 
     void updateBookInformation(const string& title) {

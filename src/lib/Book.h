@@ -52,13 +52,18 @@ public:
     }
 
     void updateStatus(const std::string& newStatus) { status = newStatus; }
+    
+    void decrementQuantity() {
+        if (quantity > 0) {
+            quantity--;
+        } else {
+            cout << "No available copies left to borrow." << endl;
+        }
+    }
 
     void markAsBorrowed() {
-        if (quantity > 0) {
-            --quantity;
-        }
-        if (quantity == 0) {
-            status = "Rented";
+        if (isAvailable()) {
+            decrementQuantity();
         }
     }
 

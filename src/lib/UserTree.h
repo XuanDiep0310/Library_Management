@@ -595,7 +595,16 @@ public:
     }
 
     void showRentedBooks() {
-        string currentUser = getCurrentUserName();
+        string currentUser = getCurrentUserName();  // Get the current username
+        if (currentUser.empty()) {
+            setColor(RED);
+            cout << ".---------------------------------.\n";
+            cout << "| No user is currently logged in. |\n";
+            cout << "'---------------------------------'\n";
+            setColor(RESET);
+            return;
+        }
+
         ifstream borrowedFile("borrows.txt");
         bool hasRentedBooks = false;
 
@@ -629,26 +638,34 @@ public:
         // Read file and populate table rows
         string line;
         while (getline(borrowedFile, line)) {
-            size_t userPos = line.find("User: ");
-            size_t titlePos = line.find(", Book Title: ");
-            size_t borrowDatePos = line.find(", Borrow Date: ");
-            size_t returnDatePos = line.find(", Predicted Return Date: ");
+            stringstream ss(line);
+            string username, id, bookTitle, author, category, year, quantityStr, borrowDate, returnDate;
 
-            if (userPos != string::npos && titlePos != string::npos &&
-                borrowDatePos != string::npos && returnDatePos != string::npos) {
-                string username = line.substr(userPos + 6, titlePos - (userPos + 6));
-                if (username == currentUser) {
-                    string bookTitle = line.substr(titlePos + 13, borrowDatePos - (titlePos + 13));
-                    string borrowDate = line.substr(borrowDatePos + 14, returnDatePos - (borrowDatePos + 14));
-                    string returnDate = line.substr(returnDatePos + 23);
+            // Parse fields from line
+            getline(ss, username, ','); // Read username
+            getline(ss, id, ',');
+            getline(ss, bookTitle, ',');
+            getline(ss, author, ',');
+            getline(ss, category, ',');
+            getline(ss, year, ',');
+            getline(ss, quantityStr, ',');
+            getline(ss, borrowDate, ',');
+            getline(ss, returnDate);
 
-                    hasRentedBooks = true;
+            // Remove the "User: " prefix if it exists in the username
+            size_t pos = username.find("User: ");
+            if (pos != string::npos) {
+                username = username.substr(pos + 6);  // Remove the "User: " part
+            }
 
-                    // Print each row with formatted columns
-                    cout << left << setw(30) << bookTitle
-                            << setw(30) << borrowDate
-                            << setw(25) << returnDate << "\n";
-                }
+            // Check if this borrow record belongs to the current user
+            if (username == currentUser) {
+                hasRentedBooks = true;
+
+                // Print each row with formatted columns
+                cout << left << setw(30) << bookTitle
+                        << setw(30) << borrowDate
+                        << setw(25) << returnDate << "\n";
             }
         }
 
@@ -665,7 +682,7 @@ public:
 
     void borrowBook(const string& username, const string& bookTitle, BSTree& bookTree) {
         string filename = "books.txt";
-        User* user = searchUser(username);
+        User* user = searchUserByUsername(username);
         if (!user) {
             setColor(RED);
             cout << ".------------------.\n";
@@ -675,7 +692,7 @@ public:
             return;
         }
 
-        Book* book = bookTree.searchBookByTitle(bookTitle); // Assuming this retrieves a Book by ID
+        Book* book = bookTree.searchBookByTitle(bookTitle); // Retrieve book by title
         if (!book) {
             setColor(RED);
             cout << ".------------------.\n";
@@ -685,33 +702,26 @@ public:
             return;
         }
 
-        // Check if the book is available
+        // If the book is available, put it in "pending approval" state
         if (book->isAvailable()) {
-            book->markAsBorrowed();  // Updates the book status and quantity
-            user->rentBook(book->getBookId());  // Records the book in the user's borrowed books list
-
-            Date borrowDate = Date::currentDate(); // Assume this defaults to the current date
-            Date predictReturnDate = borrowDate.addDays(7);  // Predict return date = borrow date + 7 days
-
-            // Save to file
-            ofstream borrowFile("borrows.txt", ios::app);
-            if (borrowFile.is_open()) {
-                borrowFile << "User: " << username << ", Book Title: " << bookTitle 
-                          << ", Borrow Date: " << borrowDate.toString() 
-                          << ", Predicted Return Date: " << predictReturnDate.toString() 
-                          << endl;
-                borrowFile.close();
+            // Save request to borrow_request.txt for admin approval
+            ofstream borrowRequestFile("borrow_request.txt", ios::app);
+            if (borrowRequestFile.is_open()) {
+                borrowRequestFile << "User: " << username << ", Book Title: " << bookTitle << ", Status: Pending" << endl;
+                borrowRequestFile.close();
             }
 
-            setColor(GREEN);
-            cout << ".--------------------------------.\n";
-            cout << "|  Book borrowed successfully!   |\n";
-            cout << "'--------------------------------'\n";
+            setColor(YELLOW);
+            cout << ".----------------------------.\n";
+            cout << "| Book request is pending... |\n";
+            cout << "'----------------------------'\n";
             setColor(RESET);
         } else {
+            // If the book is not available, register the request for future approval
             registerBorrowInAdvance(username, book->getBookId(), bookTree);
         }
     }
+
 
     void registerBorrowInAdvance(const string& username, int bookId, BSTree& bookTree) {
         ofstream advanceFile("advance_borrows.txt", ios::app);
@@ -749,8 +759,6 @@ public:
             return Date(); // Return a default date or handle error appropriately
         }
 
-        // Assuming you have a way to track the borrow date; if it's not available,
-        // you might want to modify your User or Book classes to store it.
         Date borrowDate = getBorrowDateForBook(user, bookId); // This method needs to be implemented
 
         // Predict return date as borrow date + 7 days
@@ -803,7 +811,7 @@ public:
     }
 
     void returnBook(const string& username, const string& bookTitle, BSTree& bookTree) {
-        User* user = searchUser(username);
+        User* user = searchUserByUsername(username);
         if (!user) {
             setColor(RED);
             cout << ".-------------------.\n";
@@ -823,79 +831,120 @@ public:
             return;
         }
 
+        // Open files to read and write data
         ifstream borrowFile("borrows.txt");
         ofstream tempFile("temp.txt");
         ofstream returnFile("returns.txt", ios::app);
+
         string line;
         bool bookFound = false;
 
         while (getline(borrowFile, line)) {
             istringstream record(line);
-            string userToken, bookTitleToken, borrowDateToken, predictedReturnToken;
+            string recordUsername, id, fileBookTitle, authorName, fileCategory, year, quantityStr, borrowDate, predictedReturnDate;
+            
+            // Parse fields from the record
+            getline(record, recordUsername, ',');   // User: username
+            getline(record, id, ',');
+            getline(record, fileBookTitle, ',');
+            getline(record, authorName, ',');
+            getline(record, fileCategory, ',');
+            getline(record, year, ',');
+            getline(record, quantityStr, ',');
+            getline(record, borrowDate, ',');
+            getline(record, predictedReturnDate);
 
-            if (getline(record, userToken, ',') && getline(record, bookTitleToken, ',') &&
-                getline(record, borrowDateToken, ',') && getline(record, predictedReturnToken)) {
-                
-                // Extract the information by tokenizing strings
-                string fileUser = userToken.substr(userToken.find(":") + 2);
-                string fileBookTitle = bookTitleToken.substr(bookTitleToken.find(":") + 2);
-                string fileBorrowDate = borrowDateToken.substr(borrowDateToken.find(":") + 2);
-                string filePredictedReturnDate = predictedReturnToken.substr(predictedReturnToken.find(":") + 2);
-
-                if (fileUser == username && fileBookTitle == bookTitle) {
-                    bookFound = true;
-
-                    book->markAsReturned();  // Assuming you have this method
-
-                    int daysLate = Date::calculateDaysLate(fileBorrowDate, Date::currentDate());
-                    int penaltyFee = daysLate * 10000;  // 10,000 VND mỗi ngày trễ
-
-                    // Log the return details
-                    cout << "Book returned successfully!" << endl;
-                    cout << "User: " << fileUser << ", Book: " << fileBookTitle << endl;
-                    cout << "Borrowed on: " << fileBorrowDate << endl; 
-                    setColor(YELLOW);
-                    cout << "Expected return: " << filePredictedReturnDate << endl;
-                    setColor(RESET);
-                    setColor(GREEN);
-                    cout << "Return Date: " << Date::currentDate() << endl;
-                    setColor(RESET);
-
-                    if (daysLate > 0) {
-                        cout << "Late by: " << daysLate << " days." << endl;
-                        cout << "Penalty Fee: " << penaltyFee << " VND" << endl;
-                    } else cout << "No penalty fee." << endl;
-
-
-                    // Lưu thông tin trả sách vào returns.txt
-                    returnFile << "User: " << fileUser 
-                            << ", Book: " << fileBookTitle 
-                            << ", Borrowed on: " << fileBorrowDate 
-                            << ", Returned on: " << Date::currentDate()
-                            << ", Days late: " << daysLate
-                            << ", Penatly fee: " << penaltyFee << " VND"  
-                            << endl;
-                    continue; // Skip this line as we are returning this book
-                }
+            // Remove "User: " prefix from recordUsername
+            if (recordUsername.find("User: ") == 0) {
+                recordUsername = recordUsername.substr(6);  // Strips "User: " prefix
             }
 
-            // Write back to the temporary file if it's not the returned book
+            // Trim and ensure parsed fields are clean (extra spaces, newlines)
+            recordUsername.erase(recordUsername.find_last_not_of(" \n\r\t") + 1);
+            fileBookTitle.erase(fileBookTitle.find_last_not_of(" \n\r\t") + 1); 
+
+            // Convert both the input title and fileBookTitle to lowercase for case-insensitive comparison
+            string lowerBookTitle = bookTitle;
+            transform(lowerBookTitle.begin(), lowerBookTitle.end(), lowerBookTitle.begin(), ::tolower);
+
+            string lowerFileBookTitle = fileBookTitle;
+            transform(lowerFileBookTitle.begin(), lowerFileBookTitle.end(), lowerFileBookTitle.begin(), ::tolower);
+
+            // Match user and title
+            if (recordUsername == username && lowerFileBookTitle == lowerBookTitle) {
+                bookFound = true;
+                book->markAsReturned();  // Mark book as returned
+
+                // Calculate late fee if the return is delayed
+                Date predictedReturn = Date::fromString(predictedReturnDate);
+                Date currentDate = Date::currentDate();
+                int lateFee = 0;
+                int daysLate = 0;
+
+                if (currentDate > predictedReturn) { // Check if the return date is after the predicted return date
+                    daysLate = currentDate.daysBetween(predictedReturn);
+                    lateFee = daysLate * 10000;
+                }
+
+                // Return confirmation
+                cout << "Book returned successfully!" << endl;
+                cout << "User: " << username << ", Book: " << bookTitle << endl;
+                cout << "Borrowed on: " << borrowDate << endl;
+                setColor(CYAN);
+                cout << "Returned on: " << currentDate << endl;
+                setColor(YELLOW);
+                cout << "Expected return: " << predictedReturnDate << endl;
+                setColor(RESET);
+
+                if (lateFee > 0) {
+                    setColor(RED);
+                    cout << "Late return fee: " << lateFee << " VND (for " << daysLate << " days late)" << endl;
+                    setColor(RESET);
+                } else {
+                    setColor(GREEN);
+                    cout << "No penalty fee!" << endl;
+                    setColor(RESET);
+                }
+
+                // Log the return in returns.txt
+                returnFile << id << "," << fileBookTitle << "," << username << "," << borrowDate << ","
+                       << currentDate.toString() << "," << lateFee << endl;
+
+                continue;  // Skip this record to delete from borrows.txt
+            }
+
+            // Write unmatched records to the temporary file
             tempFile << line << endl;
         }
 
         borrowFile.close();
         tempFile.close();
 
-        // Cập nhật thông tin sách trong books.txt
+        // Update book availability in books.txt
         ifstream booksFile("books.txt");
         ofstream tempBooksFile("temp_books.txt");
         bool updated = false;
 
+        if (!booksFile.is_open()) {
+            setColor(RED);
+            cout << ".----------------------.\n";
+            cout << "| Failed to open books.txt |\n";
+            cout << "'----------------------'\n";
+            setColor(RESET);
+            return;
+        }
+
         while (getline(booksFile, line)) {
             Book currentBook = Book::fromString(line);
-            if (currentBook.getTitle() == bookTitle) {
-                int tempQuantity = currentBook.getQuantity();
-                currentBook.setQuantity(tempQuantity++);
+            string currentBookTitle = currentBook.getTitle();
+            // Trim whitespace from both titles
+            currentBookTitle.erase(currentBookTitle.find_last_not_of(" \n\r\t") + 1); 
+            string lowerBookTitle = bookTitle;
+            transform(lowerBookTitle.begin(), lowerBookTitle.end(), lowerBookTitle.begin(), ::tolower);
+            transform(currentBookTitle.begin(), currentBookTitle.end(), currentBookTitle.begin(), ::tolower);
+
+            if (currentBookTitle == lowerBookTitle) {
+                currentBook.setQuantity(currentBook.getQuantity() + 1);
                 tempBooksFile << currentBook.toString() << endl;
                 updated = true;
             } else {
@@ -906,8 +955,36 @@ public:
         booksFile.close();
         tempBooksFile.close();
 
-        remove("books.txt");
-        rename("temp_books.txt", "books.txt");
+        if (!updated) {
+            setColor(RED);
+            cout << ".---------------------------.\n";
+            cout << "| No matching book found to update |\n";
+            cout << "'---------------------------'\n";
+            setColor(RESET);
+            return;
+        }
+
+        // Rename temp file to replace the original books.txt
+        if (remove("books.txt") != 0) {
+            setColor(RED);
+            cout << ".-------------------------.\n";
+            cout << "| Failed to remove books.txt |\n";
+            cout << "'-------------------------'\n";
+            setColor(RESET);
+            return;
+        }
+
+        if (rename("temp_books.txt", "books.txt") != 0) {
+            setColor(RED);
+            cout << ".-----------------------------.\n";
+            cout << "| Failed to rename temp file to books.txt |\n";
+            cout << "'-----------------------------'\n";
+            setColor(RESET);
+            return;
+        }
+
+        // remove("books.txt");
+        // rename("temp_books.txt", "books.txt");
 
         remove("borrows.txt");
         rename("temp.txt", "borrows.txt");
