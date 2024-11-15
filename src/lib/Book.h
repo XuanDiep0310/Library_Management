@@ -24,8 +24,8 @@ private:
     int quantity;
     string status; //Available, Rented, Damaged, Lost
 public:
-    Book(int id, const string& t, const string& a, const string& g, int pubYear, int q, const string& stt)
-        : bookId(id), title(t), author(a), genre(g), publicationYear(pubYear), quantity(q), status(stt) {}
+    Book(int id, const string& t, const string& a, const string& g, int pubYear, int q)
+        : bookId(id), title(t), author(a), genre(g), publicationYear(pubYear), quantity(q) {}
 
     //Getters
     int getBookId() const { return bookId; }
@@ -103,7 +103,7 @@ public:
             int bookId = stoi(id);
             int publicationYear = stoi(pubYear);
             int quantity = stoi(qty);
-            return new Book(bookId, title, author, genre, publicationYear, quantity, status);
+            return new Book(bookId, title, author, genre, publicationYear, quantity);
         } catch (const std::invalid_argument& e) {
             cerr << "Error: Invalid number format in line: " << line << endl;
             return nullptr; // Return nullptr if stoi fails
@@ -128,13 +128,13 @@ public:
         int pubYear = stoi(pubYearStr);
         int quantity = stoi(quantityStr);
 
-        return Book(bookId, title, author, genre, pubYear, quantity, status);
+        return Book(bookId, title, author, genre, pubYear, quantity);
     }
 
     string toString() const {
         ostringstream stream;
         stream << bookId << "," << title << "," << author << "," << genre << ","
-               << publicationYear << "," << quantity << "," << status;
+               << publicationYear << "," << quantity;
         return stream.str();
     }
 };

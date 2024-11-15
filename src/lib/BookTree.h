@@ -109,12 +109,11 @@ private:
 
     void printHeader() const {
         cout << string(97, '-') << endl;
-        cout << left 
+        cout << setfill(' ') << left 
             << setw(12) << "Book ID"
             << setw(35) << "Title"
             << setw(25) << "Author"
-            << setw(10) << "Quantity"
-            << setw(15) << "Status" 
+            << setw(10) << "Quantity" 
             << endl;
         cout << string(97, '-') << endl;  // Adjust separator to match column width
     }
@@ -124,12 +123,11 @@ private:
             inorder(node->left);
 
             setColor(GREEN);
-            cout << left 
+            cout << setfill(' ') << left 
                 << setw(12) << node->book->getBookId()
                 << setw(35) << node->book->getTitle()
                 << setw(25) << node->book->getAuthor()
-                << setw(10) << node->book->getQuantity()
-                << setw(15) << node->book->getStatus() 
+                << setw(10) << node->book->getQuantity() 
                 << endl;
             setColor(RESET);
 
@@ -157,8 +155,8 @@ public:
     }
 
     void addBook(int id, const string& title, const string& author, const string& genre,
-        int publicationYear, int quantity, const string& status) {
-        Book* newBook = new Book(id, title, author, genre, publicationYear, quantity, status);
+        int publicationYear, int quantity) {
+        Book* newBook = new Book(id, title, author, genre, publicationYear, quantity);
         root = addBook(root, newBook);
     }
 
@@ -373,7 +371,7 @@ public:
                 Book* book = Book::loadFromFile(line);
                 if (book) addBook(book->getBookId(), book->getTitle(), book->getAuthor(),
                     book->getGenre(), book->getPublicationYear(),
-                    book->getQuantity(), book->getStatus());
+                    book->getQuantity());
             }
             inFile.close();
             setColor(GREEN);

@@ -229,36 +229,9 @@ int main() {
                             }
                             if (cancelOperation) break;
 
-                            // Enter Status
-                            setColor(BRIGHT_BLUE);
-                            while (true) {
-                                setColor(CYAN);
-                                cout << "Enter Status (Available, Updating): ";
-                                setColor(RESET);
-                                cin.ignore(); // Clear buffer
-                                getline(cin, status);
-
-                                if (isExitCommand(status)) {
-                                    cancelOperation = true;
-                                    break;
-                                }
-
-                                status = library.matchStatus(status);
-                                if (status.empty()) {
-                                    setColor(RED);
-                                    cout << ".-----------------------------------------------------.\n";
-                                    cout << "| Invalid status. Please enter Available or Updating. |\n";
-                                    cout << "'-----------------------------------------------------'\n";
-                                    setColor(BRIGHT_BLUE);
-                                } else {
-                                    break;
-                                }
-                            }
-                            if (cancelOperation) break;
-
                             // If we reach this point, the book can be added
                             setColor(BLUE);
-                            library.addBook(id, title, author, genre, year, quantity, status);
+                            library.addBook(id, title, author, genre, year, quantity);
                             clearScreen();
                             setColor(GREEN);
                             cout << ".--------------------------.\n";

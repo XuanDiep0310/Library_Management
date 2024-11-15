@@ -629,7 +629,7 @@ public:
 
         setColor(CYAN);
         cout << string(83, '-') << "\n";  // Table border
-        cout << left << setw(30) << "| Book Title" 
+        cout << setfill(' ') << left << setw(30) << "| Book Title" 
                 << setw(30) << "Borrow Date" 
                 << setw(25) << "Predicted Return Date |" << "\n";
         cout << string(83, '-') << "\n";  // Table border
@@ -663,7 +663,7 @@ public:
                 hasRentedBooks = true;
 
                 // Print each row with formatted columns
-                cout << left << setw(30) << bookTitle
+                cout << setfill(' ') << left << setw(30) << bookTitle
                         << setw(30) << borrowDate
                         << setw(25) << returnDate << "\n";
             }
