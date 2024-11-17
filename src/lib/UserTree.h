@@ -536,10 +536,12 @@ public:
                     cout << "Current Birthday: " << user->getBirthday().toString() << endl;
                     bool validDate = false;
                     int newDay, newMonth, newYear;
+
                     do {
                         cout << "Enter new birthday (dd mm yyyy, or leave empty to keep current): ";
                         string dateInput;
                         getline(cin, dateInput);
+
                         if (isExitCommand(dateInput)) {
                             continueUpdating = false; // Exit to menu
                             break;
@@ -550,9 +552,21 @@ public:
                             dateStream >> newDay >> newMonth >> newYear;
 
                             if (!dateStream.fail() && Date::isValidDate(newDay, newMonth, newYear)) {
-                                user->setBirthday(Date(newDay, newMonth, newYear));
-                                hasChanges = true;
-                                validDate = true; // Date is valid, exit the loop
+                                Date newBirthday(newDay, newMonth, newYear);
+                                Date currentDate = Date::currentDate();
+
+                                if (newBirthday < currentDate) { // Ensure the date is not in the future
+                                    user->setBirthday(newBirthday);
+                                    hasChanges = true;
+                                    validDate = true; // Exit loop
+                                } else {
+                                    setColor(RED);
+                                    cout << ".--------------------------------------------------.\n";
+                                    cout << "| Birthday cannot be today or in the future.       |\n";
+                                    cout << "'--------------------------------------------------'\n";
+                                    setColor(RESET);
+                                    system("pause");
+                                }
                             } else {
                                 setColor(RED);
                                 cout << ".--------------------------------------------------.\n";
@@ -565,6 +579,7 @@ public:
                             validDate = true; // No new date provided, keep the current one
                         }
                     } while (!validDate);
+
                     setColor(RESET);
                     break;
                 }

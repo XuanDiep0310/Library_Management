@@ -198,19 +198,12 @@ bool Date::isValidSecond(int second) {
     return second >= 0 && second < 60;
 }
 
-// Comparison Operators
 bool Date::operator<(const Date& dt) const {
-    return (year < dt.year) || (year == dt.year && (month < dt.month || (month == dt.month && day < dt.day))) ||
-           (year == dt.year && month == dt.month && hour < dt.hour) ||
-           (year == dt.year && month == dt.month && hour == dt.hour && minute < dt.minute) ||
-           (year == dt.year && month == dt.month && hour == dt.hour && minute == dt.minute && second < dt.second);
+    return (year < dt.year) || (year == dt.year && (month < dt.month || (month == dt.month && day < dt.day)));
 }
 
 bool Date::operator>(const Date& dt) const {
-    return (year > dt.year) || (year == dt.year && (month > dt.month || (month == dt.month && day > dt.day))) ||
-           (year == dt.year && month == dt.month && hour > dt.hour) ||
-           (year == dt.year && month == dt.month && hour == dt.hour && minute > dt.minute) ||
-           (year == dt.year && month == dt.month && hour == dt.hour && minute == dt.minute && second > dt.second);
+    return (year > dt.year) || (year == dt.year && (month > dt.month || (month == dt.month && day > dt.day)));
 }
 
 bool Date::operator==(const Date& dt) const {

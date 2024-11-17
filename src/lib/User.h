@@ -50,7 +50,7 @@ public:
 
 	// Method to check if the user has borrowed a specific book
     bool hasBorrowed(int bookId) const {
-        return std::find(rentedBooks.begin(), rentedBooks.end(), bookId) != rentedBooks.end();
+        return find(rentedBooks.begin(), rentedBooks.end(), bookId) != rentedBooks.end();
     }
 
 	// Method to set the predicted return date for a specific book
@@ -77,7 +77,7 @@ public:
     }
 
 	// Static method for creating a new account
-	static User* createAccount(const std::vector<User*>& existingUsers) {
+	static User* createAccount(const vector<User*>& existingUsers) {
 		string name, email, username, password;
 		int day, month, year;
 
@@ -171,7 +171,7 @@ public:
 
 			if (cin.fail()) {
 				cin.clear(); // Clear error flags
-				std::string exitCheck;
+				string exitCheck;
 				cin >> exitCheck;
 				if (exitCheck == "exit") return nullptr;
 
@@ -185,16 +185,26 @@ public:
 			}
 
 			if (Date::isValidDate(day, month, year)) {
-				validDate = true;
+				Date birthday(day, month, year, 0, 0, 0);
+				Date current = Date::currentDate();
+				if (birthday < current) {
+					validDate = true;
+				} else {
+					setColor(RED);
+					cout << "\n.--------------------------------------------------.\n";
+					cout << "| Birthday cannot be today or in the future.       |\n";
+					cout << "'--------------------------------------------------'\n";
+					setColor(RESET);
+				}
 			} else {
 				setColor(RED);
 				cout << "\n.-----------------------------------.\n";
 				cout << "| Invalid date. Enter a valid date. |\n";
 				cout << "'-----------------------------------'\n";
 				setColor(RESET);
-				cin.clear();
-				cin.ignore(numeric_limits<streamsize>::max(), '\n');
 			}
+			cin.clear();
+			cin.ignore(numeric_limits<streamsize>::max(), '\n');
 		} while (!validDate);
 
 		Date birthday(day, month, year, 0, 0, 0);
