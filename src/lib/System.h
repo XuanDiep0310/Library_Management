@@ -67,11 +67,11 @@ void displayUserMenu() {
     setColor(BRIGHT_BLUE);
     cout << "|---------------------------------|\n";
     setColor(BLUE);
-    cout << "|   4. Search User by Username    |\n";
+    cout << "|   4. Search User by Email       |\n";
     setColor(MAGENTA);
     cout << "|---------------------------------|\n";
     setColor(BRIGHT_MAGENTA);
-    cout << "|   5. Delete User by Username    |\n";
+    cout << "|   5. Delete User by Email       |\n";
     setColor(BRIGHT_BLUE);
     cout << "|---------------------------------|\n";
     setColor(BLUE);

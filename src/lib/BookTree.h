@@ -154,6 +154,31 @@ public:
         return ""; // No valid status found
     }
 
+    bool isTitleExists(const std::string& title, const std::string& filename) {
+        std::ifstream file(filename);
+        std::string line;
+
+        while (std::getline(file, line)) {
+            std::stringstream ss(line);
+            std::string id, currentTitle, author, genre, year, quantity;
+
+            // Extract each field based on commas
+            std::getline(ss, id, ',');  // Skip ID
+            std::getline(ss, currentTitle, ',');  // Get title
+            std::getline(ss, author, ',');  // Skip author
+            std::getline(ss, genre, ',');  // Skip genre
+            std::getline(ss, year, ',');  // Skip year
+            std::getline(ss, quantity, ',');  // Skip quantity
+
+            // Compare the extracted title with the input title
+            if (currentTitle == title) {
+                return true;  // Title exists
+            }
+        }
+
+        return false;  // Title doesn't exist
+    }
+
     void addBook(int id, const string& title, const string& author, const string& genre,
         int publicationYear, int quantity) {
         Book* newBook = new Book(id, title, author, genre, publicationYear, quantity);
@@ -224,10 +249,6 @@ public:
                 setColor(GREEN);
                 cout << "|  5. Quantity                 |\n";
                 setColor(BRIGHT_CYAN);
-                cout << "|------------------------------|\n";
-                setColor(CYAN);
-                cout << "|  6. Status                   |\n";
-                setColor(BRIGHT_BLUE);
                 cout << "|------------------------------|\n";
                 setColor(BLUE);
                 cout << "|  0. Done                     |\n";
@@ -301,26 +322,6 @@ public:
                             cin.clear();
                         }
                         cin.ignore();
-                        break;
-                    }
-                    case 6: {
-                        string newStatus;
-                        do {
-                            setColor(CYAN);
-                            cout << "Enter new Status (current: " << bookToUpdate->getStatus() << "): ";
-                            setColor(RESET);
-                            getline(cin, newStatus);
-                            newStatus = matchStatus(newStatus);
-                            if (!newStatus.empty()) {
-                                bookToUpdate->setStatus(newStatus);
-                            } else {
-                                setColor(RED);
-                                cout << ".----------------------------------------.\n";
-                                cout << "| Invalid Status. Keeping current value. |\n";
-                                cout << "'----------------------------------------'\n";
-                                setColor(RESET);
-                            }
-                        } while (newStatus.empty());
                         break;
                     }
                     case 0:

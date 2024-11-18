@@ -116,10 +116,17 @@ int main() {
 
                                 if (title.empty()) {
                                     setColor(RED);
-                                    cout << ".-----------------------------------------------.\n";
+                                    cout << ".----------------------------------------------.\n";
                                     cout << "| Title cannot be empty. Please enter a title. |\n";
-                                    cout << "'-----------------------------------------------'\n";
+                                    cout << "'----------------------------------------------'\n";
                                     setColor(YELLOW);
+                                } else if(library.isTitleExists(title, filename)) {
+                                    setColor(RED);
+                                    cout << ".-------------------------------------------------.\n";
+                                    cout << "| Error: A book with this title already exists.   |\n";
+                                    cout << "| Please enter a unique title.                    |\n";
+                                    cout << "'-------------------------------------------------'\n";
+                                    setColor(RESET);
                                 } else {
                                     break;  // Valid title entered
                                 }
@@ -259,7 +266,7 @@ int main() {
 
                             // Display initial empty suggestions
                             setColor(CYAN);
-                            cout << "\nSuggestions: ";
+                            cout << "\nSuggestions: \n";
                             setColor(RESET);
 
                             while (true) {
@@ -297,10 +304,10 @@ int main() {
 
                                 // Display updated suggestions
                                 setColor(CYAN);
-                                cout << "\nSuggestions: ";
+                                cout << "\nSuggestions: \n";
                                 if (!suggestions.empty()) {
                                     for (auto* book : suggestions) {
-                                        cout << book->getTitle() << "  ";
+                                        cout << "- " << book->getTitle() << endl;
                                     }
                                 } else {
                                     cout << "No matches found.\n";
@@ -354,7 +361,7 @@ int main() {
 
                             // Display initial empty suggestions
                             setColor(CYAN);
-                            cout << "\nSuggestions: ";
+                            cout << "\nSuggestions: \n";
                             setColor(RESET);
 
                             while (true) {
@@ -392,10 +399,10 @@ int main() {
 
                                 // Display updated suggestions
                                 setColor(CYAN);
-                                cout << "\nSuggestions: ";
+                                cout << "\nSuggestions: \n";
                                 if (!suggestions.empty()) {
                                     for (auto* book : suggestions) {
-                                        cout << book->getTitle() << "  ";
+                                        cout << "- " << book->getTitle() << endl;
                                     }
                                 } else {
                                     cout << " ";
@@ -416,21 +423,19 @@ int main() {
                                     cout << "\nFound Book:\n";
 
                                     // Table header
-                                    cout << "------------------------------------------------------------------------------------" << endl;
+                                    cout << "-------------------------------------------------------------------------" << endl;
                                     cout << left << setw(10) << "ID" 
                                         << setw(30) << "Title" 
                                         << setw(20) << "Author"
-                                        << setw(15) << "Quantity"
-                                        << setw(10) << "Status" 
+                                        << setw(15) << "Quantity" 
                                         << endl;
-                                    cout << "------------------------------------------------------------------------------------" << endl;
+                                    cout << "--------------------------------------------------------------------------" << endl;
 
                                     // Book information
                                     cout << left << setw(10) << foundBook->getBookId()
                                         << setw(30) << foundBook->getTitle()
                                         << setw(20) << foundBook->getAuthor()
                                         << setw(15) << foundBook->getQuantity()
-                                        << setw(10) << foundBook->getStatus()
                                         << endl;
 
                                     setColor(RESET);
@@ -506,10 +511,10 @@ int main() {
                                 // Display suggestions (assuming library.getSuggestionsByTitle provides book title suggestions)
                                 vector<Book*> suggestions = library.getSuggestionsByTitle(lowerTitle);
                                 setColor(GREEN);
-                                cout << "\nSuggestions: ";
+                                cout << "\nSuggestions: \n";
                                 if (!suggestions.empty()) {
                                     for (const auto& book : suggestions) {
-                                        cout << book->getTitle() << "  ";
+                                        cout <<"- " << book->getTitle() << endl;
                                     }
                                 } else {
                                     setColor(RED);
